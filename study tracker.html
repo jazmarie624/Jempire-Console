@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J Empire · Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --cream:#F4EFE8; --cream-deep:#EDE6DC;
+  --terra:#C4714F; --terra-light:#D4906E;
+  --rose-gold:#B8896E; --rose-light:#D4A574;
+  --brown-dark:#2C1A0E; --brown-mid:#6B4232;
+  --brown-muted:#9A6E58; --brown-soft:#C4A090;
+  --white-warm:rgba(255,252,248,0.95);
+  --green:#5A8A5E;
+}
+body { min-height:100vh; font-family:'Inter',sans-serif; background:var(--cream-deep); color:var(--brown-dark); }
+
+.header { position:relative; overflow:hidden; padding:44px 24px 24px; text-align:center; background:var(--cream); background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(180,140,105,0.07) 3px,rgba(180,140,105,0.07) 4px),repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(180,140,105,0.05) 3px,rgba(180,140,105,0.05) 4px); }
+.header::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,transparent,var(--terra) 20%,var(--rose-light) 50%,var(--rose-gold) 80%,transparent); }
+.header-marble { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.header-glow { position:absolute; inset:0; background:radial-gradient(ellipse 70% 50% at 85% 10%,rgba(196,113,79,0.14) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 10% 85%,rgba(184,137,110,0.1) 0%,transparent 50%); }
+.bracket { position:absolute; width:22px; height:22px; opacity:0.3; }
+.btl { top:12px; left:14px; border-top:1.5px solid var(--terra); border-left:1.5px solid var(--terra); }
+.btr { top:12px; right:14px; border-top:1.5px solid var(--terra); border-right:1.5px solid var(--terra); }
+.header-content { position:relative; z-index:2; }
+.header-eyebrow { font-size:9px; font-weight:600; letter-spacing:0.3em; text-transform:uppercase; color:var(--rose-gold); margin-bottom:5px; }
+.header-title { font-family:'Cormorant Garamond',serif; font-size:42px; font-weight:300; color:var(--brown-dark); line-height:0.92; letter-spacing:0.06em; margin-bottom:8px; }
+.header-title em { font-style:italic; color:var(--terra); }
+.header-divider { display:flex; align-items:center; gap:8px; width:140px; margin:0 auto 8px; }
+.hdl { flex:1; height:1px; background:rgba(196,113,79,0.3); }
+.hdg { width:4px; height:4px; background:var(--terra); transform:rotate(45deg); opacity:0.7; }
+.header-quote { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:12px; color:var(--brown-muted); }
+
+/* STREAK */
+.streak-banner { padding:13px 18px; display:flex; align-items:center; gap:12px; }
+.streak-icon { font-size:28px; flex-shrink:0; }
+.streak-num { font-family:'Cormorant Garamond',serif; font-size:36px; font-weight:300; color:var(--terra); line-height:1; }
+.streak-info { flex:1; }
+.streak-title { font-size:12px; font-weight:700; color:var(--brown-dark); }
+.streak-sub { font-size:10px; color:var(--brown-muted); margin-top:1px; }
+
+/* SUBJECT TABS */
+.subject-tabs { background:var(--cream); border-bottom:1px solid rgba(196,113,79,0.14); padding:10px 14px; display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; }
+.subject-tabs::-webkit-scrollbar { display:none; }
+.subject-tab { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:8px 13px; border-radius:18px; border:1.5px solid transparent; background:var(--white-warm); color:var(--brown-muted); cursor:pointer; transition:all 0.18s; font-family:'Inter',sans-serif; white-space:nowrap; flex-shrink:0; box-shadow:0 1px 5px rgba(196,113,79,0.06); }
+.subject-tab.active { color:white; box-shadow:0 3px 10px rgba(196,113,79,0.22); }
+
+.main { padding:14px 16px 100px; max-width:500px; margin:0 auto; }
+
+/* SUBJECT HEADER CARD */
+.subject-hero { border-radius:18px; padding:18px 18px 14px; margin-bottom:14px; position:relative; overflow:hidden; }
+.subject-hero::before { content:''; position:absolute; inset:0; opacity:0.08; background:repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 1px,transparent 8px); }
+.subject-hero-icon { font-size:32px; margin-bottom:6px; display:block; position:relative; z-index:1; }
+.subject-hero-name { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:400; color:#FFF8F0; line-height:1; margin-bottom:4px; position:relative; z-index:1; }
+.subject-hero-sub { font-size:10px; color:rgba(255,252,248,0.75); position:relative; z-index:1; line-height:1.5; }
+.subject-hero-progress { margin-top:12px; position:relative; z-index:1; }
+.shp-label { display:flex; justify-content:space-between; font-size:9.5px; color:rgba(255,252,248,0.8); font-weight:600; margin-bottom:5px; }
+.shp-bar { height:6px; background:rgba(255,252,248,0.2); border-radius:10px; overflow:hidden; }
+.shp-fill { height:100%; background:rgba(255,252,248,0.85); border-radius:10px; transition:width 0.5s ease; }
+
+/* SUB-TABS (Checklist / Notes / Sessions) */
+.sub-tabs { display:flex; gap:6px; margin-bottom:14px; }
+.sub-tab { flex:1; padding:8px; border-radius:12px; border:1.5px solid rgba(196,113,79,0.2); background:transparent; color:var(--brown-muted); font-size:10px; font-weight:600; cursor:pointer; text-align:center; transition:all 0.18s; font-family:'Inter',sans-serif; letter-spacing:0.06em; }
+.sub-tab.active { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border-color:transparent; box-shadow:0 3px 10px rgba(196,113,79,0.28); }
+
+/* CHECKLIST */
+.checklist { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+.checklist-section { margin-bottom:4px; }
+.checklist-section-label { font-size:8.5px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--rose-gold); padding:6px 0 5px; display:flex; align-items:center; gap:6px; }
+.checklist-section-label::after { content:''; flex:1; height:1px; background:rgba(196,113,79,0.18); }
+.checklist-item { background:var(--white-warm); border:1px solid rgba(196,113,79,0.13); border-radius:12px; padding:10px 13px; display:flex; align-items:flex-start; gap:10px; box-shadow:0 1px 4px rgba(196,113,79,0.04); transition:all 0.16s; }
+.checklist-item:hover { box-shadow:0 3px 12px rgba(196,113,79,0.1); }
+.checklist-item.checked-item { opacity:0.5; }
+.checklist-item.checked-item .cl-text { text-decoration:line-through; }
+.cl-check { width:20px; height:20px; border-radius:5px; border:1.5px solid rgba(196,113,79,0.32); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; color:transparent; cursor:pointer; transition:all 0.16s; background:transparent; margin-top:1px; }
+.cl-check.checked { background:var(--terra); border-color:var(--terra); color:white; }
+.cl-content { flex:1; }
+.cl-text { font-size:13px; font-weight:500; color:var(--brown-dark); line-height:1.4; }
+.cl-note { font-size:10.5px; color:var(--brown-muted); margin-top:2px; font-style:italic; line-height:1.4; }
+.cl-cost { font-size:10px; font-weight:700; color:var(--terra); background:rgba(196,113,79,0.1); padding:1px 7px; border-radius:7px; display:inline-block; margin-top:3px; }
+.cl-del { background:none; border:none; font-size:11px; cursor:pointer; opacity:0.3; transition:opacity 0.16s; flex-shrink:0; margin-top:2px; }
+.cl-del:hover { opacity:1; }
+
+/* ADD CHECKLIST ITEM */
+.add-cl-row { display:flex; gap:7px; margin-top:6px; }
+.add-cl-inp { flex:1; padding:9px 12px; border:1.5px dashed rgba(196,113,79,0.25); border-radius:10px; background:var(--cream); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:13px; outline:none; transition:border-color 0.16s; }
+.add-cl-inp:focus { border-color:var(--terra); border-style:solid; }
+.add-cl-inp::placeholder { color:var(--brown-soft); font-style:italic; }
+.add-cl-btn { padding:9px 14px; border-radius:10px; background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border:none; font-family:'Inter',sans-serif; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap; }
+
+/* NOTES */
+.notes-area { background:var(--white-warm); border:1px solid rgba(196,113,79,0.18); border-radius:16px; padding:14px; margin-bottom:12px; box-shadow:0 2px 8px rgba(196,113,79,0.06); }
+.notes-textarea { width:100%; border:none; background:transparent; font-family:'Inter',sans-serif; font-size:13px; color:var(--brown-dark); outline:none; resize:none; min-height:160px; line-height:1.7; }
+.notes-textarea::placeholder { color:var(--brown-soft); font-style:italic; }
+.notes-footer { display:flex; align-items:center; justify-content:space-between; padding-top:10px; border-top:1px solid rgba(196,113,79,0.1); margin-top:8px; }
+.notes-chars { font-size:9.5px; color:var(--brown-soft); }
+.notes-save-btn { padding:7px 16px; border-radius:10px; background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border:none; font-family:'Inter',sans-serif; font-size:11px; font-weight:600; cursor:pointer; }
+
+/* SESSIONS */
+.log-form { background:var(--white-warm); border:1px solid rgba(196,113,79,0.2); border-radius:15px; padding:13px; margin-bottom:12px; display:none; flex-direction:column; gap:8px; box-shadow:0 3px 12px rgba(196,113,79,0.08); }
+.log-form.visible { display:flex; }
+.form-input { width:100%; padding:9px 12px; border:1px solid rgba(196,113,79,0.22); border-radius:9px; background:var(--cream); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:13px; outline:none; }
+.form-input:focus { border-color:var(--terra); }
+.form-input::placeholder { color:var(--brown-soft); }
+.form-row { display:flex; gap:7px; }
+.form-btn { padding:9px 16px; border-radius:9px; border:none; font-family:'Inter',sans-serif; font-size:11px; font-weight:600; cursor:pointer; transition:all 0.16s; }
+.form-btn-save { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); }
+.form-btn-cancel { background:rgba(196,113,79,0.09); color:var(--brown-muted); }
+
+.section-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.section-title { font-size:9px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--rose-gold); display:flex; align-items:center; gap:6px; }
+.section-title::after { content:''; display:block; width:22px; height:1px; background:rgba(196,113,79,0.22); }
+.add-btn { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--terra); background:rgba(196,113,79,0.1); padding:5px 11px; border-radius:14px; cursor:pointer; border:none; font-family:'Inter',sans-serif; }
+.add-btn:hover { background:var(--terra); color:var(--cream); }
+
+.session-list { display:flex; flex-direction:column; gap:7px; }
+.session-card { background:var(--white-warm); border:1px solid rgba(196,113,79,0.12); border-radius:13px; padding:11px 13px; display:flex; align-items:flex-start; gap:10px; box-shadow:0 1px 5px rgba(196,113,79,0.04); }
+.session-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+.session-topic { font-size:13px; font-weight:600; color:var(--brown-dark); margin-bottom:2px; }
+.session-meta { font-size:10px; color:var(--brown-muted); }
+.session-notes-text { font-size:11px; color:var(--brown-muted); font-style:italic; margin-top:3px; }
+.session-hours-disp { font-family:'Cormorant Garamond',serif; font-size:20px; flex-shrink:0; }
+.session-del { background:none; border:none; font-size:12px; cursor:pointer; opacity:0.3; flex-shrink:0; }
+.session-del:hover { opacity:1; }
+
+/* GOALS BAR */
+.goals-mini { background:var(--white-warm); border:1px solid rgba(196,113,79,0.14); border-radius:14px; padding:12px 14px; margin-bottom:12px; }
+.goals-mini-row { margin-bottom:7px; }
+.goals-mini-row:last-of-type { margin-bottom:0; }
+.gm-label { display:flex; justify-content:space-between; font-size:10px; font-weight:600; color:var(--brown-muted); margin-bottom:3px; }
+.gm-bar { height:5px; background:rgba(196,113,79,0.1); border-radius:8px; overflow:hidden; }
+.gm-fill { height:100%; border-radius:8px; transition:width 0.4s; }
+
+.empty-state { text-align:center; padding:24px 12px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:14px; color:var(--brown-muted); line-height:1.6; }
+
+.sparkle { position:fixed; pointer-events:none; z-index:9999; animation:sparkle-fly 1.2s ease-out forwards; }
+@keyframes sparkle-fly { 0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg);}100%{opacity:0;transform:translateY(-80px) scale(0.3) rotate(180deg);} }
+.toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px); background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); padding:9px 20px; border-radius:22px; font-size:12px; font-weight:600; letter-spacing:0.08em; box-shadow:0 5px 18px rgba(196,113,79,0.38); opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap; z-index:999; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.nav-bar { position:fixed; bottom:0; left:0; right:0; background:var(--cream); border-top:1px solid rgba(196,113,79,0.14); padding:9px 18px 16px; display:flex; justify-content:space-around; align-items:center; z-index:50; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:2px; text-decoration:none; font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--brown-soft); transition:color 0.16s; }
+.nav-item.active { color:var(--terra); }
+.nav-icon { font-size:19px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <svg class="header-marble" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <filter id="mf"><feGaussianBlur stdDeviation="2.5"/></filter>
+    <g filter="url(#mf)">
+      <path d="M -10 65 Q 80 30 165 80 Q 265 138 355 65 Q 425 12 515 60" stroke="rgba(184,137,110,0.27)" stroke-width="2.5" fill="none"/>
+    </g>
+  </svg>
+  <div class="header-glow"></div>
+  <div class="bracket btl"></div><div class="bracket btr"></div>
+  <div class="header-content">
+    <div class="header-eyebrow">Growth & Self · J Empire</div>
+    <div class="header-title">📜 <em>Study</em></div>
+    <div class="header-divider"><div class="hdl"></div><div class="hdg"></div><div class="hdl"></div></div>
+    <div class="header-quote">"Every hour you study is a brick in your empire." ✦</div>
+  </div>
+</div>
+
+<!-- STREAK -->
+<div class="streak-banner">
+  <div class="streak-icon" id="streakIcon">📚</div>
+  <div class="streak-info">
+    <div class="streak-title" id="streakTitle">Start your streak today!</div>
+    <div class="streak-sub" id="streakSub">Log a session to begin building momentum</div>
+  </div>
+  <div class="streak-num" id="streakNum">0</div>
+</div>
+
+<!-- SUBJECT TABS -->
+<div class="subject-tabs" id="subjectTabs"></div>
+
+<div class="main" id="mainContent"></div>
+
+<div class="toast" id="toast"></div>
+
+<div class="nav-bar">
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/index.html"><span class="nav-icon">🏠</span><span>Home</span></a>
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/goals.html"><span class="nav-icon">🌿</span><span>Goals</span></a>
+  <a class="nav-item active" href="#"><span class="nav-icon">📜</span><span>Study</span></a>
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/self_care.html"><span class="nav-icon">🕊️</span><span>Self Care</span></a>
+</div>
+
+<script>
+const SUPABASE_URL='https://zjggivlpqqaybiuvlwmf.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpqZ2dpdmxwcXFheWJpdXZsd21mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODgwNzEsImV4cCI6MjA5NzU2NDA3MX0.Axa4YjnuC005Pe-ADQyRiWkdk4622KnV_piTpjIK0Os';
+
+// ── SUBJECT CONFIG ──
+const SUBJECTS = [
+  { id:'notary',   name:'Notary',           emoji:'📋', color:'#C4714F',
+    desc:'Florida Notary Public Certification',
+    checklist:[
+      {section:'Education', items:[
+        {text:'Complete notary education course (3 hrs required)',note:'Must be from FL-approved provider',cost:'~$20–40',done:false},
+        {text:'Pass notary education exam (if required by provider)',done:false},
+        {text:'Save your education certificate (valid 1 year)',note:'Must submit with application',done:false},
+      ]},
+      {section:'Application', items:[
+        {text:'Submit Florida Notary Public application online',note:'dos.myflorida.com',done:false},
+        {text:'Pay state application fee',cost:'~$25',done:false},
+        {text:'Purchase notary bond (4-year bond required)',cost:'~$40',done:false},
+        {text:'Purchase Errors & Omissions (E&O) insurance',cost:'~$25–75/yr',done:false},
+        {text:'Application approved — receive commission certificate',done:false},
+      ]},
+      {section:'Setup', items:[
+        {text:'Take oath of office at county clerk (Osceola County)',note:'Bring commission certificate + bond',done:false},
+        {text:'Purchase official notary stamp/seal',cost:'~$20–30',done:false},
+        {text:'Purchase notary journal/record book',cost:'~$10',done:false},
+        {text:'Register with local businesses needing notary services',done:false},
+        {text:'Set your notary fee schedule ($10/signature max in FL)',done:false},
+      ]},
+      {section:'Business', items:[
+        {text:'Create J Empire Notary service listing',done:false},
+        {text:'Set up mobile notary schedule around gig work',done:false},
+        {text:'Research remote online notarization (RON) certification',done:false},
+      ]}
+    ]
+  },
+  { id:'process',  name:'Process Server',   emoji:'⚖️', color:'#8B6914',
+    desc:'9th Judicial Circuit Certified Process Server',
+    checklist:[
+      {section:'FAPPS Course', items:[
+        {text:'Register for FAPPS (FL Association of Professional Process Servers) course',note:'fapps.org',cost:'$180',done:false},
+        {text:'Complete all FAPPS course modules',note:'Self-paced online',done:false},
+        {text:'Score 80% or higher on FAPPS certification exam',done:false},
+        {text:'Download and save FAPPS certificate',done:false},
+      ]},
+      {section:'9th Circuit Application', items:[
+        {text:'Contact Helene Welch — 9th Circuit Court',note:'hwelch@ninthcircuit.org · 407-836-0471',done:false},
+        {text:'Obtain application packet from 9th Circuit',done:false},
+        {text:'Gather required documents: ID, background check, references',done:false},
+        {text:'Complete background check (fingerprinting via Livescan)',cost:'~$75',done:false},
+        {text:'Get 2 character references (non-family)',done:false},
+        {text:'Submit completed application + all documents',done:false},
+        {text:'Pay 9th Circuit application fee',cost:'~$375',done:false},
+        {text:'Attend in-person interview if required',done:false},
+        {text:'Receive 9th Circuit certification',done:false},
+      ]},
+      {section:'Business Setup', items:[
+        {text:'Total estimated cost confirmed: ~$555–$560',note:'FAPPS $180 + Circuit $375',done:false},
+        {text:'Purchase process server bag/supplies',done:false},
+        {text:'Set service rates ($20–45/serve typical)',done:false},
+        {text:'Register with local law firms and attorneys',done:false},
+        {text:'Consider forming J Empire Consult LLC for liability protection',done:false},
+      ]}
+    ]
+  },
+  { id:'valencia', name:'Valencia',         emoji:'🏛️', color:'#6B8EC4',
+    desc:'Valencia Community College — Fall 2025',
+    checklist:[
+      {section:'Enrollment (Fall 2025)', items:[
+        {text:'Complete Valencia admission application',note:'valenciacollege.edu',done:false},
+        {text:'Submit placement assessment or transcripts',done:false},
+        {text:'Apply for FAFSA financial aid',note:'fafsa.ed.gov — deadline April',done:false},
+        {text:'Apply for Florida Bright Futures or state grants',done:false},
+        {text:'Meet with academic advisor — declare AA in Psychology',done:false},
+        {text:'Register for Fall 2025 classes',done:false},
+        {text:'Purchase textbooks and supplies',done:false},
+      ]},
+      {section:'Recommended Fall Courses', items:[
+        {text:'ENC 1101 — English Composition I',note:'Required core class',done:false},
+        {text:'PSY 2012 — General Psychology',note:'Foundation for BCBA path',done:false},
+        {text:'STA 2023 — Elementary Statistics',note:'Required for psychology major',done:false},
+        {text:'AMH 2010 or other Humanities elective',note:'AA requirement',done:false},
+      ]},
+      {section:'BCBA Path Planning', items:[
+        {text:'Confirm Valencia → UCF DirectConnect agreement',note:'Guarantees UCF transfer admission',done:false},
+        {text:'Maintain 2.0+ GPA for DirectConnect eligibility',done:false},
+        {text:'Complete AA degree (60 credits)',done:false},
+        {text:'Apply to UCF through DirectConnect program',done:false},
+        {text:'Declare Psychology major at UCF',done:false},
+        {text:'Research UCF BCBA-track courses: BSC 4052, EDF 4214',done:false},
+        {text:'Look into RBT certification while completing AA',note:'Can work as RBT during school',done:false},
+      ]},
+      {section:'Sophia Learning (Transfer Credit)', items:[
+        {text:'Research Sophia Learning courses that transfer to Valencia',note:'sophia.org — $99/mo, self-paced',done:false},
+        {text:'Identify elective credits to complete via Sophia',done:false},
+        {text:'Complete Sophia courses to reduce time at Valencia',done:false},
+      ]}
+    ]
+  },
+  { id:'rbt',      name:'RBT / ABA',        emoji:'🧠', color:'#5A8A5E',
+    desc:'Registered Behavior Technician → BCBA Path',
+    checklist:[
+      {section:'RBT Certification', items:[
+        {text:'Complete 40-hour RBT training program',note:'Must be BACB-approved supervisor',done:false},
+        {text:'Pass RBT competency assessment with supervisor',done:false},
+        {text:'Submit RBT application to BACB',note:'bacb.com',cost:'$50',done:false},
+        {text:'Pass RBT exam (85 questions, 90 min)',done:false},
+        {text:'Begin working as RBT at ABA clinic',note:'Gain supervised experience',done:false},
+      ]},
+      {section:'BCBA Requirements', items:[
+        {text:"Complete Bachelor's degree in Psychology (UCF)",done:false},
+        {text:"Enroll in BCBA-verified Master's program",note:'FIT, UCF, or Nova Southeastern',done:false},
+        {text:'Complete 2,000 hours supervised fieldwork (Concentration)',done:false},
+        {text:'Complete required coursework: behavior analysis series',done:false},
+        {text:'Apply to take BCBA board exam',note:'BACB.com — application opens after hours complete',done:false},
+        {text:'Pass BCBA exam',done:false},
+        {text:'Maintain BCBA certification (CEUs required)',done:false},
+      ]},
+      {section:'J Empire ABA Clinic', items:[
+        {text:'Research ABA clinic startup costs and licensing in FL',done:false},
+        {text:'Get familiar with Florida Medicaid billing for ABA',done:false},
+        {text:'Network with current BCBAs in Orlando/Osceola area',done:false},
+        {text:'Begin J Empire ABA Clinic business plan',done:false},
+        {text:'Register J Empire Consult LLC as business entity',done:false},
+      ]}
+    ]
+  },
+  { id:'other',    name:'Other',            emoji:'📚', color:'#B8896E',
+    desc:'General Study & Notes',
+    checklist:[
+      {section:'My Study Items', items:[
+        {text:'Add your own study items here',note:'Tap + below to add',done:false},
+      ]}
+    ]
+  },
+];
+
+let sessions = [], activeSub = 'notary', activeSubTab = 'checklist';
+let checklists = {}, notes = {};
+let dailyGoal = parseFloat(localStorage.getItem('study-daily-goal')||'1');
+let weeklyGoal = parseFloat(localStorage.getItem('study-weekly-goal')||'5');
+
+function lsGet(k){ try{return JSON.parse(localStorage.getItem(k)||'null');}catch{return null;} }
+function lsSet(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch{} }
+function fmtH(h){ const v=parseFloat(h||0); return v===Math.floor(v)?v+'h':v.toFixed(1)+'h'; }
+function todayKey(){ return new Date().toISOString().split('T')[0]; }
+function fmtDate(d){ if(!d) return ''; const x=new Date(d+'T12:00:00'); return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][x.getDay()]+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][x.getMonth()]+' '+x.getDate(); }
+function thisMonthKey(){ const n=new Date(); return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0'); }
+
+async function sbFetch(path,opts={}){
+  try{
+    const res=await fetch(SUPABASE_URL+'/rest/v1/'+path,{
+      method:opts.method||'GET',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+      body:opts.body||undefined
+    });
+    if(!res.ok) return null;
+    const t=await res.text(); return t?JSON.parse(t):[];
+  }catch{return null;}
+}
+
+function loadChecklists(){
+  SUBJECTS.forEach(sub=>{
+    const saved = lsGet('study_cl_'+sub.id);
+    if(saved){
+      // Merge saved checked states into default checklist
+      checklists[sub.id] = JSON.parse(JSON.stringify(sub.checklist));
+      checklists[sub.id].forEach(section=>{
+        section.items.forEach(item=>{
+          const savedItem = saved.flatMap(s=>s.items).find(si=>si.text===item.text);
+          if(savedItem) item.done = savedItem.done;
+        });
+      });
+    } else {
+      checklists[sub.id] = JSON.parse(JSON.stringify(sub.checklist));
+    }
+    notes[sub.id] = lsGet('study_notes_'+sub.id)||'';
+  });
+}
+
+function saveChecklist(subId){ lsSet('study_cl_'+subId, checklists[subId]); }
+function saveNotes(subId){ lsSet('study_notes_'+subId, notes[subId]); }
+
+async function init(){
+  const data = await sbFetch('study_tracker?order=date.desc');
+  sessions = data || lsGet('je_study')||[];
+  if(data) lsSet('je_study', sessions);
+  loadChecklists();
+  buildSubjectTabs();
+  updateStreak();
+  renderMain();
+  setInterval(()=>{
+    sbFetch('study_tracker?order=date.desc').then(d=>{ if(d){ sessions=d; lsSet('je_study',sessions); updateStreak(); if(activeSubTab==='sessions') renderSessionsTab(); } });
+  },30000);
+}
+
+function buildSubjectTabs(){
+  document.getElementById('subjectTabs').innerHTML = SUBJECTS.map(s=>{
+    const isActive = s.id===activeSub;
+    const subSessions = sessions.filter(x=>x.subject===s.id);
+    const hrs = subSessions.reduce((a,x)=>a+parseFloat(x.hours||0),0);
+    return `<button class="subject-tab ${isActive?'active':''}"
+      style="${isActive?'background:'+s.color+';border-color:'+s.color:'border-color:'+s.color+'55;color:'+s.color}"
+      onclick="switchSubject('${s.id}')">
+      ${s.emoji} ${s.name}${hrs>0?' · '+fmtH(hrs):''}
+    </button>`;
+  }).join('');
+}
+
+function switchSubject(id){ activeSub=id; activeSubTab='checklist'; buildSubjectTabs(); renderMain(); }
+function switchSubTab(tab){ activeSubTab=tab; renderMain(); }
+
+function renderMain(){
+  const sub = SUBJECTS.find(s=>s.id===activeSub);
+  const cl = checklists[activeSub]||[];
+  const totalItems = cl.flatMap(s=>s.items).length;
+  const doneItems = cl.flatMap(s=>s.items).filter(i=>i.done).length;
+  const pct = totalItems>0?Math.round((doneItems/totalItems)*100):0;
+
+  let html = `
+    <div class="subject-hero" style="background:linear-gradient(135deg,${sub.color},${sub.color}CC)">
+      <span class="subject-hero-icon">${sub.emoji}</span>
+      <div class="subject-hero-name">${sub.name}</div>
+      <div class="subject-hero-sub">${sub.desc}</div>
+      <div class="subject-hero-progress">
+        <div class="shp-label"><span>${doneItems} of ${totalItems} steps complete</span><span>${pct}%</span></div>
+        <div class="shp-bar"><div class="shp-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>
+
+    <div class="sub-tabs">
+      <button class="sub-tab ${activeSubTab==='checklist'?'active':''}" onclick="switchSubTab('checklist')">✅ Checklist</button>
+      <button class="sub-tab ${activeSubTab==='notes'?'active':''}" onclick="switchSubTab('notes')">📝 Notes</button>
+      <button class="sub-tab ${activeSubTab==='sessions'?'active':''}" onclick="switchSubTab('sessions')">📖 Sessions</button>
+    </div>`;
+
+  if(activeSubTab==='checklist') html += renderChecklistTab();
+  else if(activeSubTab==='notes') html += renderNotesTab();
+  else html += renderSessionsTab(true);
+
+  document.getElementById('mainContent').innerHTML = html;
+
+  // Restore notes textarea value
+  if(activeSubTab==='notes'){
+    const ta = document.getElementById('notesTA');
+    if(ta) ta.value = notes[activeSub]||'';
+  }
+}
+
+function renderChecklistTab(){
+  const cl = checklists[activeSub]||[];
+  let html = '';
+  cl.forEach((section,si)=>{
+    html += `<div class="checklist-section">
+      <div class="checklist-section-label">${section.section}</div>
+      <div class="checklist">
+        ${section.items.map((item,ii)=>`
+          <div class="checklist-item ${item.done?'checked-item':''}" id="cl-${si}-${ii}">
+            <div class="cl-check ${item.done?'checked':''}" onclick="toggleCL(${si},${ii})">✓</div>
+            <div class="cl-content">
+              <div class="cl-text">${item.text}</div>
+              ${item.note?`<div class="cl-note">${item.note}</div>`:''}
+              ${item.cost?`<span class="cl-cost">${item.cost}</span>`:''}
+            </div>
+            <button class="cl-del" onclick="deleteCL(${si},${ii})">🗑️</button>
+          </div>`).join('')}
+        <div class="add-cl-row">
+          <input class="add-cl-inp" id="cl-inp-${si}" placeholder="Add a step..." onkeydown="if(event.key==='Enter')addCL(${si})" />
+          <button class="add-cl-btn" onclick="addCL(${si})" style="background:linear-gradient(135deg,${SUBJECTS.find(s=>s.id===activeSub).color},${SUBJECTS.find(s=>s.id===activeSub).color}CC)">+ Add</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  return html;
+}
+
+function renderNotesTab(){
+  const sub = SUBJECTS.find(s=>s.id===activeSub);
+  return `
+    <div class="notes-area">
+      <textarea class="notes-textarea" id="notesTA"
+        placeholder="Study notes for ${sub.name}... key terms, reminders, things to follow up on. This is your space. ✦"
+        oninput="notes['${activeSub}']=this.value"></textarea>
+      <div class="notes-footer">
+        <span class="notes-chars" id="notesChars"></span>
+        <button class="notes-save-btn" onclick="saveNotesNow()">Save Notes ✦</button>
+      </div>
+    </div>`;
+}
+
+function renderSessionsTab(returnHtml=false){
+  const sub = SUBJECTS.find(s=>s.id===activeSub);
+  const subSessions = sessions.filter(s=>s.subject===activeSub);
+  const todayH = subSessions.filter(s=>s.date===todayKey()).reduce((a,x)=>a+parseFloat(x.hours||0),0);
+  const weekStart=new Date(); weekStart.setDate(weekStart.getDate()-weekStart.getDay());
+  const weekH = subSessions.filter(s=>s.date>=weekStart.toISOString().split('T')[0]).reduce((a,x)=>a+parseFloat(x.hours||0),0);
+  const totalH = subSessions.reduce((a,x)=>a+parseFloat(x.hours||0),0);
+  const dp=Math.min(100,Math.round((todayH/dailyGoal)*100));
+  const wp=Math.min(100,Math.round((weekH/weeklyGoal)*100));
+
+  let html = `
+    <div class="goals-mini">
+      <div class="goals-mini-row">
+        <div class="gm-label"><span>📅 Today (${sub.name})</span><span>${fmtH(todayH)} / ${fmtH(dailyGoal)}${dp>=100?' 🌟':''}</span></div>
+        <div class="gm-bar"><div class="gm-fill" style="width:${dp}%;background:${dp>=100?'var(--green)':sub.color}"></div></div>
+      </div>
+      <div class="goals-mini-row">
+        <div class="gm-label"><span>📆 This Week</span><span>${fmtH(weekH)} / ${fmtH(weeklyGoal)}${wp>=100?' 🌟':''}</span></div>
+        <div class="gm-bar"><div class="gm-fill" style="width:${wp}%;background:${wp>=100?'var(--green)':sub.color}88"></div></div>
+      </div>
+    </div>
+    <div class="log-form" id="logForm">
+      <input class="form-input" id="sTopic" placeholder="What did you study?" />
+      <div class="form-row">
+        <input class="form-input" id="sHours" type="number" placeholder="Hours" min="0.25" step="0.25" style="flex:0.7" />
+        <input class="form-input" id="sDate" type="date" style="flex:1" value="${todayKey()}" />
+      </div>
+      <input class="form-input" id="sNotes" placeholder="Key takeaways (optional)" />
+      <div class="form-row">
+        <button class="form-btn form-btn-cancel" onclick="closeLogForm()">Cancel</button>
+        <button class="form-btn form-btn-save" onclick="logSession()" style="background:linear-gradient(135deg,${sub.color},${sub.color}CC)">Log Session ✦</button>
+      </div>
+    </div>
+    <div class="section-hdr">
+      <div class="section-title">${sub.emoji} ${sub.name} Sessions · ${fmtH(totalH)} total</div>
+      <button class="add-btn" style="color:${sub.color}" onclick="openLogForm()">+ Log</button>
+    </div>
+    <div class="session-list">
+      ${!subSessions.length
+        ?`<div class="empty-state">"No ${sub.name} sessions yet. Log your first one and start building! ✦"</div>`
+        :subSessions.map(s=>`
+          <div class="session-card">
+            <div class="session-dot" style="background:${sub.color}"></div>
+            <div style="flex:1">
+              <div class="session-topic">${s.topic}</div>
+              <div class="session-meta">${fmtDate(s.date)}</div>
+              ${s.notes?`<div class="session-notes-text">${s.notes}</div>`:''}
+            </div>
+            <div class="session-hours-disp" style="color:${sub.color}">${fmtH(s.hours)}</div>
+            <button class="session-del" onclick="delSession('${s.id}')">🗑️</button>
+          </div>`).join('')
+      }
+    </div>`;
+
+  if(returnHtml) return html;
+  document.getElementById('mainContent').innerHTML = html.replace('<!-- sessions content -->', '');
+}
+
+function toggleCL(si,ii){
+  checklists[activeSub][si].items[ii].done = !checklists[activeSub][si].items[ii].done;
+  saveChecklist(activeSub); renderMain();
+  if(checklists[activeSub][si].items[ii].done){ showToast('Step done! ✦ Keep going!'); spawnSparkles(); }
+}
+
+function deleteCL(si,ii){
+  checklists[activeSub][si].items.splice(ii,1);
+  saveChecklist(activeSub); renderMain();
+}
+
+function addCL(si){
+  const inp = document.getElementById('cl-inp-'+si);
+  const text = inp?.value?.trim(); if(!text) return;
+  checklists[activeSub][si].items.push({text,done:false});
+  saveChecklist(activeSub); renderMain(); showToast('Step added ✦');
+}
+
+function saveNotesNow(){
+  const ta = document.getElementById('notesTA');
+  if(ta) notes[activeSub]=ta.value;
+  saveNotes(activeSub); showToast('Notes saved ✦');
+}
+
+function openLogForm(){ document.getElementById('logForm')?.classList.add('visible'); }
+function closeLogForm(){ document.getElementById('logForm')?.classList.remove('visible'); }
+
+async function logSession(){
+  const topic=document.getElementById('sTopic')?.value?.trim();
+  const hours=parseFloat(document.getElementById('sHours')?.value);
+  const date=document.getElementById('sDate')?.value;
+  const sNotes=document.getElementById('sNotes')?.value?.trim();
+  if(!topic||!hours||!date){ showToast('Fill in topic, hours and date'); return; }
+  const s={id:Date.now().toString(),subject:activeSub,topic,hours,date,notes:sNotes,created_at:new Date().toISOString()};
+  sessions.unshift(s); lsSet('je_study',sessions);
+  sbFetch('study_tracker',{method:'POST',body:JSON.stringify(s)});
+  closeLogForm();
+  buildSubjectTabs(); updateStreak(); renderMain();
+  const msgs=["Session logged ✦ You are building your empire!","That's another brick laid. Keep going! ✦","Every session counts. Unstoppable queen ✦","BCBA is getting closer. You've got this! ✦"];
+  showToast(msgs[Math.floor(Math.random()*msgs.length)]);
+  spawnSparkles();
+}
+
+async function delSession(id){
+  sessions=sessions.filter(x=>x.id!==id); lsSet('je_study',sessions);
+  sbFetch('study_tracker?id=eq.'+id,{method:'DELETE'});
+  buildSubjectTabs(); updateStreak(); renderMain();
+}
+
+function updateStreak(){
+  if(!sessions.length) return;
+  const dates=new Set(sessions.map(s=>s.date));
+  let streak=0; const d=new Date();
+  while(true){ const k=d.toISOString().split('T')[0]; if(dates.has(k)){streak++;d.setDate(d.getDate()-1);}else break; }
+  const icon=streak>=14?'🔥':streak>=7?'⚡':streak>=3?'📖':'📚';
+  document.getElementById('streakIcon').textContent=icon;
+  document.getElementById('streakNum').textContent=streak;
+  document.getElementById('streakTitle').textContent=streak===0?'Start your streak today!':streak+' day study streak!';
+  document.getElementById('streakSub').textContent=streak===0?'Log a session to begin building momentum':streak>=7?'Unstoppable! Don\'t break the chain ✦':'Building momentum — keep going! ✦';
+}
+
+function spawnSparkles(){
+  const s=['✦','✧','⋆','📜','⭑'],c=['#C4714F','#D4A574','#B8896E','#5A8A5E'];
+  for(let i=0;i<7;i++){
+    const el=document.createElement('div'); el.className='sparkle';
+    el.textContent=s[Math.floor(Math.random()*s.length)];
+    el.style.cssText=`left:${20+Math.random()*60}vw;top:${15+Math.random()*55}vh;color:${c[Math.floor(Math.random()*c.length)]};font-size:${12+Math.random()*14}px;animation-delay:${Math.random()*0.4}s`;
+    document.body.appendChild(el); setTimeout(()=>el.remove(),1600);
+  }
+}
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
+
+init();
+</script>
+</body>
+</html>

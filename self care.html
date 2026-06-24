@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J Empire · Self Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --cream:#F4EFE8; --cream-deep:#EDE6DC;
+  --terra:#C4714F; --terra-light:#D4906E;
+  --rose-gold:#B8896E; --rose-light:#D4A574;
+  --brown-dark:#2C1A0E; --brown-mid:#6B4232;
+  --brown-muted:#9A6E58; --brown-soft:#C4A090;
+  --white-warm:rgba(255,252,248,0.95);
+  --green:#5A8A5E;
+}
+body { min-height:100vh; font-family:'Inter',sans-serif; background:var(--cream-deep); color:var(--brown-dark); }
+
+.header { position:relative; overflow:hidden; padding:48px 24px 28px; text-align:center; background:var(--cream); background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(180,140,105,0.07) 3px,rgba(180,140,105,0.07) 4px),repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(180,140,105,0.05) 3px,rgba(180,140,105,0.05) 4px); }
+.header::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,transparent,var(--terra) 20%,var(--rose-light) 50%,var(--rose-gold) 80%,transparent); }
+.header-marble { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.header-glow { position:absolute; inset:0; background:radial-gradient(ellipse 70% 50% at 85% 10%,rgba(196,113,79,0.15) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 10% 85%,rgba(184,137,110,0.11) 0%,transparent 50%); }
+.bracket { position:absolute; width:24px; height:24px; opacity:0.3; }
+.btl { top:14px; left:16px; border-top:1.5px solid var(--terra); border-left:1.5px solid var(--terra); }
+.btr { top:14px; right:16px; border-top:1.5px solid var(--terra); border-right:1.5px solid var(--terra); }
+.header-content { position:relative; z-index:2; }
+.header-eyebrow { font-size:9px; font-weight:600; letter-spacing:0.3em; text-transform:uppercase; color:var(--rose-gold); margin-bottom:6px; }
+.header-title { font-family:'Cormorant Garamond',serif; font-size:44px; font-weight:300; color:var(--brown-dark); line-height:0.95; letter-spacing:0.06em; margin-bottom:10px; }
+.header-title em { font-style:italic; color:var(--terra); }
+.header-divider { display:flex; align-items:center; gap:8px; width:160px; margin:0 auto 10px; }
+.hdl { flex:1; height:1px; background:rgba(196,113,79,0.3); }
+.hdg { width:4px; height:4px; background:var(--terra); transform:rotate(45deg); opacity:0.7; }
+.header-quote { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13px; color:var(--brown-muted); }
+
+/* TAB BAR */
+.tab-bar { background:var(--cream); border-bottom:1px solid rgba(196,113,79,0.15); padding:10px 16px; display:flex; gap:7px; overflow-x:auto; scrollbar-width:none; }
+.tab-bar::-webkit-scrollbar { display:none; }
+.tab-btn { font-size:9.5px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:7px 14px; border-radius:20px; border:1px solid rgba(196,113,79,0.22); background:transparent; color:var(--brown-muted); cursor:pointer; transition:all 0.18s; font-family:'Inter',sans-serif; white-space:nowrap; }
+.tab-btn.active { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border-color:transparent; box-shadow:0 3px 10px rgba(196,113,79,0.28); }
+
+.main { padding:18px 16px 100px; max-width:500px; margin:0 auto; }
+
+/* QUOTE CARD */
+.quote-card { background:linear-gradient(135deg,var(--terra),var(--terra-light)); border-radius:18px; padding:18px 20px; margin-bottom:16px; position:relative; overflow:hidden; box-shadow:0 5px 20px rgba(196,113,79,0.28); }
+.quote-card::before { content:'❝'; position:absolute; left:14px; top:8px; font-size:34px; color:rgba(255,252,248,0.15); font-family:'Cormorant Garamond',serif; }
+.quote-card::after { content:'✦'; position:absolute; right:14px; bottom:10px; font-size:18px; color:rgba(255,252,248,0.15); }
+.quote-label { font-size:9px; font-weight:600; letter-spacing:0.22em; text-transform:uppercase; color:rgba(255,252,248,0.7); margin-bottom:7px; }
+.quote-text { font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; color:#FFF8F0; line-height:1.55; }
+
+/* CHECK-IN CARD */
+.checkin-card { background:var(--white-warm); border:1px solid rgba(196,113,79,0.16); border-radius:18px; padding:16px; margin-bottom:12px; box-shadow:0 2px 10px rgba(196,113,79,0.07); }
+.card-title { font-size:9px; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--rose-gold); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.card-title::after { content:''; flex:1; height:1px; background:rgba(196,113,79,0.2); }
+
+/* MOOD */
+.mood-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; }
+.mood-btn { padding:10px 4px; border-radius:12px; border:2px solid rgba(196,113,79,0.15); background:transparent; cursor:pointer; text-align:center; transition:all 0.18s; }
+.mood-btn:hover { border-color:rgba(196,113,79,0.4); background:rgba(196,113,79,0.06); transform:scale(1.05); }
+.mood-btn.selected { border-color:var(--terra); background:rgba(196,113,79,0.12); transform:scale(1.08); }
+.mood-emoji { font-size:24px; display:block; margin-bottom:3px; }
+.mood-label { font-size:8px; font-weight:600; color:var(--brown-muted); }
+
+/* WATER */
+.water-track { display:flex; gap:6px; flex-wrap:wrap; }
+.water-cup { font-size:26px; cursor:pointer; transition:all 0.2s; filter:grayscale(1) opacity(0.3); border-radius:8px; padding:4px; }
+.water-cup.filled { filter:none; transform:scale(1.1); }
+.water-cup:hover { transform:scale(1.15); }
+.water-label { font-size:10px; color:var(--brown-muted); margin-top:6px; font-weight:600; }
+
+/* MOVEMENT */
+.movement-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.movement-btn { padding:10px 6px; border-radius:12px; border:1.5px solid rgba(196,113,79,0.18); background:transparent; cursor:pointer; text-align:center; transition:all 0.18s; font-family:'Inter',sans-serif; }
+.movement-btn:hover { border-color:rgba(196,113,79,0.4); background:rgba(196,113,79,0.06); }
+.movement-btn.selected { border-color:var(--terra); background:rgba(196,113,79,0.12); }
+.movement-icon { font-size:22px; display:block; margin-bottom:4px; }
+.movement-text { font-size:9.5px; font-weight:600; color:var(--brown-dark); }
+
+/* SLEEP */
+.sleep-btns { display:flex; gap:7px; flex-wrap:wrap; }
+.sleep-btn { padding:7px 14px; border-radius:12px; border:1.5px solid rgba(196,113,79,0.18); background:transparent; cursor:pointer; font-size:12px; font-weight:600; color:var(--brown-muted); transition:all 0.18s; font-family:'Inter',sans-serif; }
+.sleep-btn.selected { border-color:var(--terra); background:rgba(196,113,79,0.12); color:var(--terra); }
+
+/* TOGGLES */
+.toggle-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.toggle-item { border:1.5px solid rgba(196,113,79,0.18); border-radius:14px; padding:12px 10px; cursor:pointer; text-align:center; transition:all 0.18s; background:transparent; }
+.toggle-item:hover { background:rgba(196,113,79,0.06); border-color:rgba(196,113,79,0.35); }
+.toggle-item.on { background:rgba(196,113,79,0.1); border-color:var(--terra); }
+.toggle-icon { font-size:24px; display:block; margin-bottom:5px; }
+.toggle-label { font-size:10px; font-weight:600; color:var(--brown-dark); display:block; }
+.toggle-status { font-size:9px; color:var(--brown-muted); margin-top:2px; display:block; }
+.toggle-item.on .toggle-status { color:var(--terra); font-weight:700; }
+
+/* SELF CARE ACTIVITIES */
+.activity-grid { display:flex; flex-wrap:wrap; gap:7px; }
+.activity-chip { padding:7px 13px; border-radius:20px; border:1.5px solid rgba(196,113,79,0.2); background:transparent; cursor:pointer; font-size:11px; font-weight:600; color:var(--brown-muted); transition:all 0.18s; font-family:'Inter',sans-serif; display:flex; align-items:center; gap:5px; }
+.activity-chip:hover { border-color:rgba(196,113,79,0.45); background:rgba(196,113,79,0.07); }
+.activity-chip.selected { border-color:var(--terra); background:rgba(196,113,79,0.12); color:var(--terra); }
+
+/* TEXT INPUT */
+.sc-input { width:100%; padding:9px 12px; border:1px solid rgba(196,113,79,0.22); border-radius:10px; background:var(--cream); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:13px; outline:none; margin-top:8px; }
+.sc-input:focus { border-color:var(--terra); }
+.sc-input::placeholder { color:var(--brown-soft); font-style:italic; }
+
+/* SAVE BTN */
+.save-checkin-btn { width:100%; padding:14px; border-radius:16px; background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border:none; font-family:'Inter',sans-serif; font-size:13px; font-weight:700; cursor:pointer; letter-spacing:0.1em; box-shadow:0 5px 18px rgba(196,113,79,0.35); transition:all 0.2s; margin-top:4px; }
+.save-checkin-btn:hover { transform:translateY(-2px); box-shadow:0 8px 26px rgba(196,113,79,0.45); }
+
+/* END OF DAY */
+.eod-question { margin-bottom:14px; }
+.eod-label { font-size:12px; font-weight:600; color:var(--brown-dark); margin-bottom:6px; display:block; }
+.eod-options { display:flex; flex-wrap:wrap; gap:6px; }
+.eod-chip { padding:6px 13px; border-radius:14px; border:1.5px solid rgba(196,113,79,0.2); background:transparent; cursor:pointer; font-size:11px; font-weight:500; color:var(--brown-muted); transition:all 0.18s; font-family:'Inter',sans-serif; }
+.eod-chip.selected { border-color:var(--terra); background:rgba(196,113,79,0.1); color:var(--terra); font-weight:700; }
+
+/* HISTORY */
+.history-list { display:flex; flex-direction:column; gap:12px; }
+.history-card { background:var(--white-warm); border:1px solid rgba(196,113,79,0.15); border-radius:16px; padding:14px 16px; box-shadow:0 2px 8px rgba(196,113,79,0.06); }
+.history-date { font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--rose-gold); margin-bottom:10px; }
+.history-chips { display:flex; flex-wrap:wrap; gap:5px; }
+.history-chip { font-size:10px; font-weight:600; padding:3px 9px; border-radius:10px; background:rgba(196,113,79,0.09); color:var(--terra); border:1px solid rgba(196,113,79,0.18); }
+.history-score { font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--terra); margin-left:auto; }
+
+/* STREAK */
+.streak-banner { background:rgba(196,113,79,0.08); border:1px solid rgba(196,113,79,0.18); border-radius:14px; padding:12px 16px; margin-bottom:14px; display:flex; align-items:center; gap:12px; }
+.streak-icon { font-size:28px; }
+.streak-days { font-family:'Cormorant Garamond',serif; font-size:26px; color:var(--terra); }
+.streak-text { font-size:11px; color:var(--brown-muted); margin-top:2px; }
+
+.empty-state { text-align:center; padding:28px 16px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:15px; color:var(--brown-muted); line-height:1.6; }
+
+.sparkle { position:fixed; pointer-events:none; z-index:9999; animation:sparkle-fly 1.2s ease-out forwards; }
+@keyframes sparkle-fly { 0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg);}100%{opacity:0;transform:translateY(-80px) scale(0.3) rotate(180deg);} }
+.toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px); background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); padding:10px 22px; border-radius:24px; font-size:12px; font-weight:600; letter-spacing:0.08em; box-shadow:0 6px 20px rgba(196,113,79,0.4); opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap; z-index:999; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.nav-bar { position:fixed; bottom:0; left:0; right:0; background:var(--cream); border-top:1px solid rgba(196,113,79,0.15); padding:10px 20px 18px; display:flex; justify-content:space-around; align-items:center; z-index:50; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--brown-soft); transition:color 0.18s; }
+.nav-item.active { color:var(--terra); }
+.nav-icon { font-size:20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <svg class="header-marble" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <filter id="mf"><feGaussianBlur stdDeviation="2.5"/></filter>
+    <g filter="url(#mf)">
+      <path d="M -10 70 Q 80 35 170 85 Q 270 145 360 70 Q 430 15 520 65" stroke="rgba(184,137,110,0.28)" stroke-width="2.5" fill="none"/>
+      <path d="M 40 160 Q 130 120 200 158 Q 295 205 385 145" stroke="rgba(196,113,79,0.16)" stroke-width="1.5" fill="none"/>
+    </g>
+  </svg>
+  <div class="header-glow"></div>
+  <div class="bracket btl"></div><div class="bracket btr"></div>
+  <div class="header-content">
+    <div class="header-eyebrow">Growth & Self · J Empire</div>
+    <div class="header-title">🕊️ <em>Self Care</em></div>
+    <div class="header-divider"><div class="hdl"></div><div class="hdg"></div><div class="hdl"></div></div>
+    <div class="header-quote">"You can't pour from an empty cup. Fill yours first." ✦</div>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab0" onclick="switchTab(0)">✨ Today</button>
+  <button class="tab-btn" id="tab1" onclick="switchTab(1)">🌙 End of Day</button>
+  <button class="tab-btn" id="tab2" onclick="switchTab(2)">📅 History</button>
+</div>
+
+<div class="main">
+
+  <!-- TODAY TAB -->
+  <div id="view0">
+
+    <!-- QUOTE -->
+    <div class="quote-card">
+      <div class="quote-label">✦ Your Glow Up Reminder</div>
+      <div class="quote-text" id="quoteText">"Loading..."</div>
+    </div>
+
+    <!-- MOOD -->
+    <div class="checkin-card">
+      <div class="card-title">How are you feeling?</div>
+      <div class="mood-grid">
+        <button class="mood-btn" data-mood="thriving" onclick="pick('mood',this)"><span class="mood-emoji">🌟</span><span class="mood-label">Thriving</span></button>
+        <button class="mood-btn" data-mood="good" onclick="pick('mood',this)"><span class="mood-emoji">😊</span><span class="mood-label">Good</span></button>
+        <button class="mood-btn" data-mood="okay" onclick="pick('mood',this)"><span class="mood-emoji">😐</span><span class="mood-label">Okay</span></button>
+        <button class="mood-btn" data-mood="tired" onclick="pick('mood',this)"><span class="mood-emoji">😴</span><span class="mood-label">Tired</span></button>
+        <button class="mood-btn" data-mood="stressed" onclick="pick('mood',this)"><span class="mood-emoji">💪</span><span class="mood-label">Pushing</span></button>
+      </div>
+    </div>
+
+    <!-- WATER -->
+    <div class="checkin-card">
+      <div class="card-title">💧 Water Intake</div>
+      <div class="water-track" id="waterCups"></div>
+      <div class="water-label" id="waterLabel">0 of 8 cups</div>
+    </div>
+
+    <!-- SLEEP -->
+    <div class="checkin-card">
+      <div class="card-title">😴 How'd You Sleep?</div>
+      <div class="sleep-btns">
+        <button class="sleep-btn" data-sleep="less4" onclick="pick('sleep',this)">😵 Less than 4h</button>
+        <button class="sleep-btn" data-sleep="4-6" onclick="pick('sleep',this)">😴 4–6 hrs</button>
+        <button class="sleep-btn" data-sleep="6-8" onclick="pick('sleep',this)">😌 6–8 hrs</button>
+        <button class="sleep-btn" data-sleep="8plus" onclick="pick('sleep',this)">🌟 8+ hrs</button>
+      </div>
+    </div>
+
+    <!-- MOVEMENT -->
+    <div class="checkin-card">
+      <div class="card-title">🏃 Movement Today</div>
+      <div class="movement-grid">
+        <button class="movement-btn" data-move="none" onclick="pick('movement',this)"><span class="movement-icon">🛋️</span><span class="movement-text">Rest Day</span></button>
+        <button class="movement-btn" data-move="walk" onclick="pick('movement',this)"><span class="movement-icon">🚶</span><span class="movement-text">Walked</span></button>
+        <button class="movement-btn" data-move="workout" onclick="pick('movement',this)"><span class="movement-icon">💪</span><span class="movement-text">Worked Out</span></button>
+        <button class="movement-btn" data-move="stretch" onclick="pick('movement',this)"><span class="movement-icon">🧘</span><span class="movement-text">Stretched</span></button>
+        <button class="movement-btn" data-move="dance" onclick="pick('movement',this)"><span class="movement-icon">💃</span><span class="movement-text">Danced</span></button>
+        <button class="movement-btn" data-move="other" onclick="pick('movement',this)"><span class="movement-icon">⚡</span><span class="movement-text">Other</span></button>
+      </div>
+    </div>
+
+    <!-- QUICK TOGGLES -->
+    <div class="checkin-card">
+      <div class="card-title">Daily Glow-Up Check</div>
+      <div class="toggle-grid">
+        <div class="toggle-item" id="tog-skincare" onclick="toggleItem('skincare')">
+          <span class="toggle-icon">🌸</span>
+          <span class="toggle-label">Skin Routine</span>
+          <span class="toggle-status" id="ts-skincare">Not done</span>
+        </div>
+        <div class="toggle-item" id="tog-ate" onclick="toggleItem('ate')">
+          <span class="toggle-icon">🍽️</span>
+          <span class="toggle-label">Ate Today</span>
+          <span class="toggle-status" id="ts-ate">Not yet</span>
+        </div>
+        <div class="toggle-item" id="tog-meds" onclick="toggleItem('meds')">
+          <span class="toggle-icon">💊</span>
+          <span class="toggle-label">Vitamins/Meds</span>
+          <span class="toggle-status" id="ts-meds">Not taken</span>
+        </div>
+        <div class="toggle-item" id="tog-outside" onclick="toggleItem('outside')">
+          <span class="toggle-icon">☀️</span>
+          <span class="toggle-label">Got Outside</span>
+          <span class="toggle-status" id="ts-outside">Not yet</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SELF CARE ACTIVITIES -->
+    <div class="checkin-card">
+      <div class="card-title">✨ Self Care Activity</div>
+      <div class="activity-grid">
+        <button class="activity-chip" onclick="toggleActivity(this)">🛁 Bath/Shower</button>
+        <button class="activity-chip" onclick="toggleActivity(this)">💅 Nails Done</button>
+        <button class="activity-chip" onclick="toggleActivity(this)">📱 Social Detox</button>
+        <button class="activity-chip" onclick="toggleActivity(this)">🎵 Music/Podcast</button>
+        <button class="activity-chip" onclick="toggleActivity(this)">📚 Read</button>
+        <button class="activity-chip" onclick="toggleActivity(this)">😴 Nap</button>
+        <button class="activity-chip" onclick="toggleActivity(this)">🕯️ Me Time</button>
+        <button class="activity-chip" onclick="toggleActivity(this)">🧖 Face Mask</button>
+        <button class="activity-chip" onclick="toggleActivity(this)">🛍️ Treat Myself</button>
+        <button class="activity-chip" onclick="toggleActivity(this)">🙏 Prayer/Meditation</button>
+        <button class="activity-chip" onclick="toggleActivity(this)">📞 Called Someone I Love</button>
+        <button class="activity-chip" onclick="toggleActivity(this)">✦ Other</button>
+      </div>
+      <input class="sc-input" id="activityNote" placeholder="Anything else you did for yourself today?" />
+    </div>
+
+    <button class="save-checkin-btn" onclick="saveCheckin()">Save Today's Check-In ✦</button>
+  </div>
+
+  <!-- END OF DAY TAB -->
+  <div id="view1" style="display:none">
+
+    <div class="quote-card" style="background:linear-gradient(135deg,var(--rose-gold),var(--rose-light))">
+      <div class="quote-label">🌙 Wind Down</div>
+      <div class="quote-text">"Rest is not a reward. It is a requirement. You earned this." ✦</div>
+    </div>
+
+    <div class="checkin-card">
+      <div class="eod-question">
+        <span class="eod-label">⭑ One win from today:</span>
+        <div class="eod-options">
+          <button class="eod-chip" onclick="toggleEod('win',this)">Got through it all 💪</button>
+          <button class="eod-chip" onclick="toggleEod('win',this)">Kids were taken care of 🏡</button>
+          <button class="eod-chip" onclick="toggleEod('win',this)">Handled my money 💰</button>
+          <button class="eod-chip" onclick="toggleEod('win',this)">Did something for me 🌸</button>
+          <button class="eod-chip" onclick="toggleEod('win',this)">Stayed consistent 🌿</button>
+          <button class="eod-chip" onclick="toggleEod('win',this)">Asked for help 🤍</button>
+        </div>
+        <input class="sc-input" id="eodWinCustom" placeholder="Or write your own win..." />
+      </div>
+
+      <div class="eod-question">
+        <span class="eod-label">🌙 Energy level at end of day:</span>
+        <div class="eod-options">
+          <button class="eod-chip" onclick="toggleEod('energy',this)">😵 Completely drained</button>
+          <button class="eod-chip" onclick="toggleEod('energy',this)">😮‍💨 Tired but okay</button>
+          <button class="eod-chip" onclick="toggleEod('energy',this)">😊 Pretty good</button>
+          <button class="eod-chip" onclick="toggleEod('energy',this)">🌟 Energized</button>
+        </div>
+      </div>
+
+      <div class="eod-question">
+        <span class="eod-label">🕊️ One thing to release before bed:</span>
+        <div class="eod-options">
+          <button class="eod-chip" onclick="toggleEod('release',this)">Stress about money</button>
+          <button class="eod-chip" onclick="toggleEod('release',this)">Mom guilt</button>
+          <button class="eod-chip" onclick="toggleEod('release',this)">Things I can't control</button>
+          <button class="eod-chip" onclick="toggleEod('release',this)">What people think</button>
+          <button class="eod-chip" onclick="toggleEod('release',this)">Comparison</button>
+          <button class="eod-chip" onclick="toggleEod('release',this)">The to-do list</button>
+        </div>
+        <input class="sc-input" id="eodReleaseCustom" placeholder="Or write your own..." />
+      </div>
+
+      <button class="save-checkin-btn" style="background:linear-gradient(135deg,var(--rose-gold),var(--rose-light))" onclick="saveEod()">Save End of Day ✦</button>
+    </div>
+  </div>
+
+  <!-- HISTORY TAB -->
+  <div id="view2" style="display:none">
+    <div class="streak-banner" id="streakBanner">
+      <div class="streak-icon">🔥</div>
+      <div>
+        <div class="streak-days" id="streakDays">0</div>
+        <div class="streak-text" id="streakText">day check-in streak</div>
+      </div>
+    </div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="nav-bar">
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/index.html"><span class="nav-icon">🏠</span><span>Home</span></a>
+  <a class="nav-item active" href="#"><span class="nav-icon">🕊️</span><span>Self Care</span></a>
+</div>
+
+<script>
+const QUOTES=[
+  "You can't pour from an empty cup. Fill yours first. ✦",
+  "Rest is productive. Recovery is progress. ✦",
+  "A queen who takes care of herself takes care of everything. ✦",
+  "Your body hears everything your mind says. Be kind to both. ✦",
+  "Self care is not selfish. It is how you survive and thrive. ✦",
+  "You deserve the same love you give everyone else. ✦",
+  "Glow up starts from within. Water. Sleep. Peace. ✦",
+  "Taking care of you is taking care of your empire. ✦",
+  "You are allowed to be both a masterpiece and a work in progress. ✦",
+  "Small acts of self care compound into big transformations. ✦",
+  "She who rests, rises. ✦",
+  "Your energy is precious. Protect it like the queen you are. ✦",
+];
+
+const MOOD_EMOJI={thriving:'🌟',good:'😊',okay:'😐',tired:'😴',stressed:'💪'};
+const TOGGLE_STATUS={skincare:['Not done','Done ✦'],ate:['Not yet','Nourished ✦'],meds:['Not taken','Taken ✦'],outside:['Not yet','Got out ✦']};
+
+let state = { mood:'', sleep:'', movement:'', water:0, toggles:{skincare:false,ate:false,meds:false,outside:false}, activities:[], actNote:'', eod:{win:'',energy:'',release:''} };
+let history = [];
+let eodSelections = {};
+
+function lsGet(k){ try{return JSON.parse(localStorage.getItem(k)||'null');}catch{return null;} }
+function lsSet(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch{} }
+
+function todayKey(){ return new Date().toISOString().split('T')[0]; }
+function fmtDate(d){ const x=new Date(d+'T12:00:00'); return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][x.getDay()]+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][x.getMonth()]+' '+x.getDate(); }
+
+function init(){
+  history=lsGet('je_selfcare_history')||[];
+  const saved=lsGet('je_selfcare_today_'+todayKey());
+  if(saved){ state=saved; restoreState(); }
+  const idx=new Date().getDate()%QUOTES.length;
+  document.getElementById('quoteText').textContent='"'+QUOTES[idx]+'"';
+  buildWaterCups();
+  renderHistory();
+  renderStreak();
+}
+
+function buildWaterCups(){
+  const wrap=document.getElementById('waterCups');
+  wrap.innerHTML='';
+  for(let i=0;i<8;i++){
+    const cup=document.createElement('span');
+    cup.className='water-cup'+(i<state.water?' filled':'');
+    cup.textContent='💧';
+    cup.onclick=()=>setWater(i+1);
+    wrap.appendChild(cup);
+  }
+  document.getElementById('waterLabel').textContent=state.water+' of 8 cups'+(state.water>=8?' — Hydrated queen! 🌟':'');
+}
+
+function setWater(n){
+  state.water = state.water===n ? n-1 : n;
+  buildWaterCups(); autoSave();
+  if(state.water>=8) showToast('Fully hydrated! You\'re glowing ✦');
+}
+
+function pick(type, btn){
+  const group = type==='mood'?'.mood-btn':type==='sleep'?'.sleep-btn':'.movement-btn';
+  document.querySelectorAll(group).forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state[type]=btn.dataset[type==='movement'?'move':type];
+  autoSave(); spawnMiniSparkle();
+}
+
+function toggleItem(key){
+  state.toggles[key]=!state.toggles[key];
+  document.getElementById('tog-'+key).classList.toggle('on',state.toggles[key]);
+  document.getElementById('ts-'+key).textContent=TOGGLE_STATUS[key][state.toggles[key]?1:0];
+  autoSave();
+  if(state.toggles[key]) spawnMiniSparkle();
+}
+
+function toggleActivity(btn){
+  btn.classList.toggle('selected');
+  const label=btn.textContent;
+  if(btn.classList.contains('selected')) state.activities.push(label);
+  else state.activities=state.activities.filter(a=>a!==label);
+  autoSave();
+}
+
+function toggleEod(type,btn){
+  document.querySelectorAll(`[onclick="toggleEod('${type}',this)"]`).forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  eodSelections[type]=btn.textContent;
+}
+
+function restoreState(){
+  // Restore mood
+  if(state.mood) document.querySelector(`[data-mood="${state.mood}"]`)?.classList.add('selected');
+  if(state.sleep) document.querySelector(`[data-sleep="${state.sleep}"]`)?.classList.add('selected');
+  if(state.movement) document.querySelector(`[data-move="${state.movement}"]`)?.classList.add('selected');
+  Object.keys(state.toggles).forEach(k=>{
+    if(state.toggles[k]){
+      document.getElementById('tog-'+k)?.classList.add('on');
+      if(document.getElementById('ts-'+k)) document.getElementById('ts-'+k).textContent=TOGGLE_STATUS[k][1];
+    }
+  });
+  state.activities.forEach(a=>{
+    document.querySelectorAll('.activity-chip').forEach(chip=>{ if(chip.textContent===a) chip.classList.add('selected'); });
+  });
+}
+
+function autoSave(){
+  state.actNote=document.getElementById('activityNote')?.value||'';
+  lsSet('je_selfcare_today_'+todayKey(),state);
+}
+
+function saveCheckin(){
+  autoSave();
+  const entry={
+    date:todayKey(),
+    mood:state.mood,
+    sleep:state.sleep,
+    movement:state.movement,
+    water:state.water,
+    toggles:{...state.toggles},
+    activities:[...state.activities],
+    note:state.actNote,
+    created_at:new Date().toISOString()
+  };
+  const existing=history.findIndex(h=>h.date===todayKey());
+  if(existing>=0) history[existing]=entry;
+  else history.unshift(entry);
+  lsSet('je_selfcare_history',history);
+  renderHistory(); renderStreak();
+  showToast('Check-in saved ✦ You showed up for yourself today!');
+  spawnSparkles();
+}
+
+function saveEod(){
+  const win=eodSelections.win||document.getElementById('eodWinCustom')?.value||'';
+  const energy=eodSelections.energy||'';
+  const release=eodSelections.release||document.getElementById('eodReleaseCustom')?.value||'';
+  const eodEntry={date:todayKey(),win,energy,release,created_at:new Date().toISOString()};
+  lsSet('je_selfcare_eod_'+todayKey(),eodEntry);
+  showToast('End of day saved ✦ Rest well, queen!');
+  spawnSparkles();
+}
+
+function renderHistory(){
+  const list=document.getElementById('historyList');
+  if(!history.length){ list.innerHTML='<div class="empty-state">"Start your first check-in today. Your future self will thank you." ✦</div>'; return; }
+  list.innerHTML=history.slice(0,30).map(h=>{
+    const chips=[];
+    if(h.mood) chips.push(MOOD_EMOJI[h.mood]||'😊'+' '+h.mood);
+    if(h.water) chips.push('💧 '+h.water+'/8');
+    if(h.sleep) chips.push('😴 '+h.sleep);
+    if(h.movement&&h.movement!=='none') chips.push('🏃 '+h.movement);
+    if(h.toggles?.skincare) chips.push('🌸 Skin');
+    if(h.toggles?.ate) chips.push('🍽️ Ate');
+    if(h.toggles?.meds) chips.push('💊 Meds');
+    if(h.activities?.length) chips.push('✨ '+h.activities.length+' activity');
+    const score=Math.round(((h.water||0)/8*20)+((h.movement&&h.movement!=='none'?15:0))+(h.mood==='thriving'?20:h.mood==='good'?15:10)+(Object.values(h.toggles||{}).filter(Boolean).length*5)+(Math.min(h.activities?.length||0,3)*5));
+    return `<div class="history-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div class="history-date">${fmtDate(h.date)}</div>
+        <div class="history-score">${score}pts</div>
+      </div>
+      <div class="history-chips">${chips.map(c=>`<span class="history-chip">${c}</span>`).join('')}</div>
+      ${h.note?`<div style="font-size:11px;color:var(--brown-muted);font-style:italic;margin-top:7px">${h.note}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function renderStreak(){
+  if(!history.length){ document.getElementById('streakDays').textContent='0'; return; }
+  const dates=new Set(history.map(h=>h.date));
+  let streak=0; const d=new Date();
+  while(true){
+    const key=d.toISOString().split('T')[0];
+    if(dates.has(key)){ streak++; d.setDate(d.getDate()-1); } else break;
+  }
+  document.getElementById('streakDays').textContent=streak;
+  document.getElementById('streakText').textContent=streak===1?'day streak — keep going! ✦':'day check-in streak'+(streak>=7?' 🔥 On fire!':streak>=3?' ⚡ Building momentum!':' — keep going! ✦');
+}
+
+function switchTab(i){ for(let t=0;t<3;t++){ document.getElementById('view'+t).style.display=t===i?'block':'none'; document.getElementById('tab'+t).classList.toggle('active',t===i); } }
+
+function spawnMiniSparkle(){
+  const el=document.createElement('div'); el.className='sparkle';
+  el.textContent='✦';
+  el.style.cssText=`left:${30+Math.random()*40}vw;top:${20+Math.random()*50}vh;color:#C4714F;font-size:16px;animation-delay:0s`;
+  document.body.appendChild(el); setTimeout(()=>el.remove(),1400);
+}
+
+function spawnSparkles(){
+  const s=['✦','✧','⋆','🕊️','🌸','⭑'],c=['#C4714F','#D4A574','#B8896E'];
+  for(let i=0;i<10;i++){
+    const el=document.createElement('div'); el.className='sparkle';
+    el.textContent=s[Math.floor(Math.random()*s.length)];
+    el.style.cssText=`left:${10+Math.random()*80}vw;top:${10+Math.random()*70}vh;color:${c[Math.floor(Math.random()*c.length)]};font-size:${12+Math.random()*16}px;animation-delay:${Math.random()*0.5}s`;
+    document.body.appendChild(el); setTimeout(()=>el.remove(),1600);
+  }
+}
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
+
+init();
+</script>
+</body>
+</html>
