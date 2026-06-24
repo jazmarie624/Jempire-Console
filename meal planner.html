@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J Empire · Meal Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --cream:#F4EFE8; --cream-deep:#EDE6DC;
+  --terra:#C4714F; --terra-light:#D4906E;
+  --rose-gold:#B8896E; --rose-light:#D4A574;
+  --brown-dark:#2C1A0E; --brown-mid:#6B4232;
+  --brown-muted:#9A6E58; --brown-soft:#C4A090;
+  --white-warm:rgba(255,252,248,0.95);
+  --green:#5A8A5E;
+  --football:#8B6914; --football-bg:rgba(196,113,79,0.13);
+}
+body { min-height:100vh; font-family:'Inter',sans-serif; background:var(--cream-deep); color:var(--brown-dark); }
+
+.header { position:relative; overflow:hidden; padding:44px 24px 24px; text-align:center; background:var(--cream); background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(180,140,105,0.07) 3px,rgba(180,140,105,0.07) 4px),repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(180,140,105,0.05) 3px,rgba(180,140,105,0.05) 4px); }
+.header::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,transparent,var(--terra) 20%,var(--rose-light) 50%,var(--rose-gold) 80%,transparent); }
+.header-marble { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.header-glow { position:absolute; inset:0; background:radial-gradient(ellipse 70% 50% at 85% 10%,rgba(196,113,79,0.15) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 10% 85%,rgba(184,137,110,0.11) 0%,transparent 50%); }
+.bracket { position:absolute; width:22px; height:22px; opacity:0.3; }
+.btl { top:12px; left:14px; border-top:1.5px solid var(--terra); border-left:1.5px solid var(--terra); }
+.btr { top:12px; right:14px; border-top:1.5px solid var(--terra); border-right:1.5px solid var(--terra); }
+.header-content { position:relative; z-index:2; }
+.header-eyebrow { font-size:9px; font-weight:600; letter-spacing:0.3em; text-transform:uppercase; color:var(--rose-gold); margin-bottom:5px; }
+.header-title { font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:300; color:var(--brown-dark); line-height:0.92; letter-spacing:0.06em; margin-bottom:8px; }
+.header-title em { font-style:italic; color:var(--terra); }
+.header-divider { display:flex; align-items:center; gap:8px; width:140px; margin:0 auto 8px; }
+.hdl { flex:1; height:1px; background:rgba(196,113,79,0.3); }
+.hdg { width:4px; height:4px; background:var(--terra); transform:rotate(45deg); opacity:0.7; }
+.header-quote { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:12px; color:var(--brown-muted); }
+
+/* WEEK NAV */
+.week-nav { background:var(--cream); border-bottom:1px solid rgba(196,113,79,0.12); padding:10px 16px; display:flex; align-items:center; justify-content:space-between; }
+.week-nav-btn { width:32px; height:32px; border-radius:50%; border:1px solid rgba(196,113,79,0.25); background:var(--white-warm); color:var(--terra); font-size:15px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.18s; }
+.week-nav-btn:hover { background:var(--terra); color:var(--cream); }
+.week-nav-center { text-align:center; }
+.week-nav-label { font-family:'Cormorant Garamond',serif; font-size:19px; color:var(--brown-dark); }
+.week-nav-sub { font-size:9px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--brown-muted); margin-top:1px; }
+
+/* TAB BAR */
+.tab-bar { background:var(--cream); border-bottom:1px solid rgba(196,113,79,0.15); padding:9px 16px; display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; }
+.tab-bar::-webkit-scrollbar { display:none; }
+.tab-btn { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:7px 13px; border-radius:20px; border:1px solid rgba(196,113,79,0.22); background:transparent; color:var(--brown-muted); cursor:pointer; transition:all 0.18s; font-family:'Inter',sans-serif; white-space:nowrap; }
+.tab-btn.active { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border-color:transparent; box-shadow:0 3px 10px rgba(196,113,79,0.28); }
+
+.main { padding:14px 14px 100px; max-width:500px; margin:0 auto; }
+
+/* ── COMPACT WEEK GRID ── */
+/* Football banner */
+.football-banner { background:linear-gradient(135deg,var(--terra),var(--terra-light)); border-radius:13px; padding:10px 14px; margin-bottom:12px; display:none; align-items:center; gap:10px; box-shadow:0 3px 12px rgba(196,113,79,0.25); }
+.football-banner.visible { display:flex; }
+.fb-icon { font-size:22px; }
+.fb-title { font-size:11px; font-weight:700; color:#FFF8F0; }
+.fb-sub { font-size:9.5px; color:rgba(255,252,248,0.75); margin-top:1px; }
+
+/* WEEKDAY ROWS (Mon-Fri) */
+.weekday-grid { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+
+.day-row { background:var(--white-warm); border:1px solid rgba(196,113,79,0.14); border-radius:14px; overflow:hidden; box-shadow:0 1px 6px rgba(196,113,79,0.05); }
+.day-row.football-row { border-color:rgba(196,113,79,0.4); border-width:2px; background:linear-gradient(135deg,rgba(255,252,248,1),rgba(255,245,235,0.6)); }
+.day-row.today-row { border-color:rgba(196,113,79,0.45); }
+
+/* DAY HEADER — compact horizontal */
+.day-header { display:flex; align-items:center; gap:8px; padding:7px 12px; border-bottom:1px solid rgba(196,113,79,0.08); background:rgba(196,113,79,0.03); }
+.day-row.football-row .day-header { background:var(--football-bg); border-bottom-color:rgba(196,113,79,0.15); }
+.day-row.today-row .day-header { background:rgba(196,113,79,0.08); }
+.day-name { font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--terra); min-width:28px; }
+.day-date-num { font-family:'Cormorant Garamond',serif; font-size:16px; color:var(--brown-dark); }
+.day-badges { display:flex; gap:5px; margin-left:auto; align-items:center; }
+.day-badge { font-size:8.5px; font-weight:700; padding:2px 7px; border-radius:8px; letter-spacing:0.05em; }
+.badge-football { background:rgba(196,113,79,0.15); color:var(--terra); }
+.badge-today { background:rgba(196,113,79,0.12); color:var(--terra); }
+
+/* MEAL SLOTS — horizontal compact */
+.meal-slots { display:flex; gap:5px; padding:7px 10px; }
+.meal-slot { flex:1; }
+.meal-slot-label { font-size:7.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--brown-soft); margin-bottom:3px; text-align:center; }
+.meal-filled { background:rgba(196,113,79,0.08); border:1px solid rgba(196,113,79,0.18); border-radius:8px; padding:5px 6px; text-align:center; cursor:pointer; transition:all 0.15s; min-height:38px; display:flex; flex-direction:column; justify-content:center; }
+.meal-filled:hover { background:rgba(196,113,79,0.14); }
+.meal-filled-emoji { font-size:14px; display:block; }
+.meal-filled-name { font-size:9px; font-weight:600; color:var(--brown-dark); line-height:1.3; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.meal-empty { background:transparent; border:1.5px dashed rgba(196,113,79,0.18); border-radius:8px; min-height:38px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s; }
+.meal-empty:hover { border-color:rgba(196,113,79,0.45); background:rgba(196,113,79,0.04); }
+.meal-empty-icon { font-size:12px; color:rgba(196,113,79,0.35); }
+
+/* WEEKEND SECTION — muted, smaller */
+.weekend-divider { display:flex; align-items:center; gap:8px; margin:4px 0 10px; }
+.weekend-divider-line { flex:1; height:1px; background:rgba(196,113,79,0.15); }
+.weekend-divider-text { font-size:9px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--brown-soft); }
+
+.weekend-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:14px; opacity:0.75; }
+.weekend-card { background:rgba(255,252,248,0.7); border:1px solid rgba(196,113,79,0.1); border-radius:13px; overflow:hidden; }
+.weekend-header { padding:6px 10px; background:rgba(196,113,79,0.04); border-bottom:1px solid rgba(196,113,79,0.07); }
+.weekend-day-name { font-size:9.5px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--brown-soft); }
+.weekend-date { font-family:'Cormorant Garamond',serif; font-size:13px; color:var(--brown-muted); }
+.weekend-meals { padding:6px 8px; display:flex; flex-direction:column; gap:4px; }
+.weekend-meal-slot { display:flex; align-items:center; gap:6px; }
+.weekend-meal-lbl { font-size:7.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--brown-soft); width:32px; flex-shrink:0; }
+.weekend-filled { flex:1; background:rgba(196,113,79,0.07); border:1px solid rgba(196,113,79,0.14); border-radius:6px; padding:4px 7px; font-size:10px; font-weight:600; color:var(--brown-dark); cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.weekend-empty { flex:1; border:1.5px dashed rgba(196,113,79,0.14); border-radius:6px; padding:4px 7px; font-size:10px; color:rgba(196,113,79,0.3); cursor:pointer; text-align:center; }
+.weekend-empty:hover { border-color:rgba(196,113,79,0.35); color:var(--terra); }
+
+/* RECIPE LIST */
+.recipe-search-wrap { padding:10px 0 4px; }
+.recipe-search { width:100%; padding:9px 13px; border:1px solid rgba(196,113,79,0.22); border-radius:12px; background:var(--white-warm); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:13px; outline:none; }
+.recipe-search:focus { border-color:var(--terra); }
+.recipe-search::placeholder { color:var(--brown-soft); font-style:italic; }
+.cat-filter { display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; padding:8px 0; }
+.cat-filter::-webkit-scrollbar { display:none; }
+.cat-pill { font-size:9px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; padding:5px 11px; border-radius:14px; border:1px solid rgba(196,113,79,0.2); background:transparent; color:var(--brown-muted); cursor:pointer; transition:all 0.15s; font-family:'Inter',sans-serif; white-space:nowrap; flex-shrink:0; }
+.cat-pill.active { background:rgba(196,113,79,0.12); color:var(--terra); border-color:rgba(196,113,79,0.35); }
+
+.recipe-list { display:flex; flex-direction:column; gap:7px; }
+.recipe-item { background:var(--white-warm); border:1px solid rgba(196,113,79,0.14); border-radius:13px; padding:11px 14px; display:flex; align-items:center; gap:11px; cursor:pointer; transition:all 0.18s; box-shadow:0 1px 5px rgba(196,113,79,0.04); }
+.recipe-item:hover { box-shadow:0 5px 16px rgba(196,113,79,0.13); border-color:rgba(196,113,79,0.3); transform:translateX(3px); }
+.recipe-emoji { font-size:24px; flex-shrink:0; }
+.recipe-info { flex:1; }
+.recipe-name { font-size:13px; font-weight:600; color:var(--brown-dark); margin-bottom:3px; }
+.recipe-meta { display:flex; gap:6px; flex-wrap:wrap; }
+.recipe-tag { font-size:8px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:2px 7px; border-radius:7px; background:rgba(196,113,79,0.09); color:var(--terra); }
+.recipe-ing { font-size:10px; color:var(--brown-muted); margin-top:2px; }
+.recipe-arrow { font-size:15px; color:var(--brown-soft); flex-shrink:0; }
+
+/* CUSTOM MEAL MODAL */
+.custom-meal-sheet { background:var(--cream); border-radius:20px 20px 0 0; padding:20px 18px 44px; width:100%; max-width:500px; }
+.custom-meal-emoji { font-size:32px; margin-bottom:6px; }
+.custom-meal-title { font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--brown-dark); margin-bottom:4px; }
+.custom-meal-sub { font-size:11px; color:var(--brown-muted); margin-bottom:16px; font-style:italic; }
+
+/* AUTOCOMPLETE */
+.autocomplete-wrap { position:relative; }
+.autocomplete-list { position:absolute; bottom:100%; top:auto; margin-bottom:6px; left:0; right:0; background:var(--cream); border:1px solid rgba(196,113,79,0.25); border-radius:10px; box-shadow:0 6px 20px rgba(196,113,79,0.15); z-index:100; max-height:200px; overflow-y:auto; display:none; }
+.autocomplete-list.visible { display:block; }
+.autocomplete-item { padding:10px 14px; font-size:13px; color:var(--brown-dark); cursor:pointer; display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(196,113,79,0.07); transition:background 0.14s; }
+.autocomplete-item:last-child { border-bottom:none; }
+.autocomplete-item:hover { background:rgba(196,113,79,0.07); }
+.autocomplete-emoji { font-size:16px; flex-shrink:0; }
+
+/* MODAL */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(44,26,14,0.52); z-index:200; align-items:flex-end; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal-sheet { background:var(--cream); border-radius:20px 20px 0 0; padding:18px 18px 44px; width:100%; max-width:500px; max-height:85vh; overflow-y:auto; }
+.modal-handle { width:34px; height:4px; background:rgba(196,113,79,0.22); border-radius:2px; margin:0 auto 13px; }
+.modal-emoji { font-size:30px; margin-bottom:5px; }
+.modal-title { font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--brown-dark); margin-bottom:4px; }
+.modal-meta { font-size:10px; color:var(--brown-muted); margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; }
+.modal-section { font-size:9px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--rose-gold); margin:10px 0 7px; display:flex; align-items:center; gap:7px; }
+.modal-section::after { content:''; flex:1; height:1px; background:rgba(196,113,79,0.2); }
+.ing-list { display:flex; flex-direction:column; gap:4px; }
+.ing-item { background:var(--white-warm); border:1px solid rgba(196,113,79,0.11); border-radius:9px; padding:7px 11px; font-size:12px; color:var(--brown-dark); }
+.modal-btn { width:100%; padding:11px; border-radius:13px; border:none; font-family:'Inter',sans-serif; font-size:12px; font-weight:600; cursor:pointer; margin-top:7px; letter-spacing:0.08em; transition:all 0.18s; }
+.modal-btn-primary { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); box-shadow:0 3px 12px rgba(196,113,79,0.28); }
+.modal-btn-secondary { background:rgba(196,113,79,0.09); color:var(--brown-mid); }
+
+/* ASSIGN MODAL */
+.assign-sheet { background:var(--cream); border-radius:20px 20px 0 0; padding:18px 18px 44px; width:100%; max-width:500px; }
+.assign-title { font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--brown-dark); margin-bottom:12px; }
+.form-input { width:100%; padding:9px 12px; border:1px solid rgba(196,113,79,0.22); border-radius:9px; background:var(--cream); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:13px; outline:none; margin-bottom:8px; }
+.form-input:focus { border-color:var(--terra); }
+.form-select { width:100%; padding:8px 10px; border:1px solid rgba(196,113,79,0.22); border-radius:9px; background:var(--cream); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:12px; outline:none; margin-bottom:8px; }
+.form-row { display:flex; gap:7px; }
+.form-btn { padding:10px 18px; border-radius:9px; border:none; font-family:'Inter',sans-serif; font-size:11px; font-weight:600; cursor:pointer; transition:all 0.18s; flex:1; }
+.form-btn-save { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); }
+.form-btn-cancel { background:rgba(196,113,79,0.1); color:var(--brown-muted); }
+
+/* LOG */
+.meal-log { display:flex; flex-direction:column; gap:7px; }
+.log-item { background:var(--white-warm); border:1px solid rgba(196,113,79,0.13); border-left:3px solid var(--rose-gold); border-radius:0 13px 13px 0; padding:10px 13px; display:flex; align-items:center; justify-content:space-between; }
+.log-name { font-size:13px; font-weight:600; color:var(--brown-dark); }
+.log-meta { font-size:10px; color:var(--brown-muted); margin-top:2px; }
+.log-del { background:none; border:none; font-size:13px; cursor:pointer; opacity:0.4; }
+
+.empty-state { text-align:center; padding:24px 16px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:14px; color:var(--brown-muted); line-height:1.6; }
+
+.sparkle { position:fixed; pointer-events:none; z-index:9999; animation:sparkle-fly 1.2s ease-out forwards; }
+@keyframes sparkle-fly { 0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg);}100%{opacity:0;transform:translateY(-80px) scale(0.3) rotate(180deg);} }
+.toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px); background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); padding:9px 20px; border-radius:22px; font-size:12px; font-weight:600; letter-spacing:0.08em; box-shadow:0 5px 18px rgba(196,113,79,0.38); opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap; z-index:999; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.nav-bar { position:fixed; bottom:0; left:0; right:0; background:var(--cream); border-top:1px solid rgba(196,113,79,0.14); padding:9px 18px 16px; display:flex; justify-content:space-around; align-items:center; z-index:50; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:2px; text-decoration:none; font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--brown-soft); transition:color 0.16s; }
+.nav-item.active { color:var(--terra); }
+.nav-icon { font-size:19px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <svg class="header-marble" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <filter id="mf"><feGaussianBlur stdDeviation="2.5"/></filter>
+    <g filter="url(#mf)">
+      <path d="M -10 65 Q 80 30 165 80 Q 265 138 355 65 Q 425 12 515 60" stroke="rgba(184,137,110,0.27)" stroke-width="2.5" fill="none"/>
+    </g>
+  </svg>
+  <div class="header-glow"></div>
+  <div class="bracket btl"></div><div class="bracket btr"></div>
+  <div class="header-content">
+    <div class="header-eyebrow">Life · J Empire</div>
+    <div class="header-title">🫙 <em>Meal Planner</em></div>
+    <div class="header-divider"><div class="hdl"></div><div class="hdg"></div><div class="hdl"></div></div>
+    <div class="header-quote">"Feed your family well. Plan once, eat all week." ✦</div>
+  </div>
+</div>
+
+<div class="week-nav">
+  <button class="week-nav-btn" onclick="changeWeek(-1)">‹</button>
+  <div class="week-nav-center">
+    <div class="week-nav-label" id="weekLabel">This Week</div>
+    <div class="week-nav-sub" id="weekRange"></div>
+  </div>
+  <button class="week-nav-btn" onclick="changeWeek(1)">›</button>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab0" onclick="switchTab(0)">📅 Week</button>
+  <button class="tab-btn" id="tab1" onclick="switchTab(1)">🍽️ Recipes</button>
+  <button class="tab-btn" id="tab2" onclick="switchTab(2)">📋 Log</button>
+  <button class="tab-btn" id="tab3" onclick="switchTab(3)">➕ Add</button>
+</div>
+
+<div class="main">
+
+  <!-- WEEK VIEW -->
+  <div id="view0">
+    <div class="football-banner" id="footballBanner">
+      <div class="fb-icon">🏈</div>
+      <div><div class="fb-title">Football Night — Juliusz!</div><div class="fb-sub">Quick & easy dinner tonight. Go team! ✦</div></div>
+    </div>
+
+    <!-- MON–FRI -->
+    <div class="weekday-grid" id="weekdayGrid"></div>
+
+    <!-- WEEKEND -->
+    <div class="weekend-divider">
+      <div class="weekend-divider-line"></div>
+      <div class="weekend-divider-text">Weekend</div>
+      <div class="weekend-divider-line"></div>
+    </div>
+    <div class="weekend-grid" id="weekendGrid"></div>
+  </div>
+
+  <!-- RECIPES -->
+  <div id="view1" style="display:none">
+    <div class="recipe-search-wrap">
+      <input class="recipe-search" id="recipeSearch" placeholder="Search recipes..." oninput="filterRecipes()" />
+    </div>
+    <div class="cat-filter" id="catFilter"></div>
+    <div style="padding-top:8px">
+      <div class="recipe-list" id="recipeList"></div>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div id="view2" style="display:none">
+    <div class="section-hdr" style="margin-bottom:12px">
+      <div style="font-size:9px;font-weight:700;letter-spacing:0.26em;text-transform:uppercase;color:var(--rose-gold)">Meal History</div>
+    </div>
+    <div class="meal-log" id="mealLog"><div class="empty-state">"Plan your meals and they'll appear here." ✦</div></div>
+  </div>
+
+  <!-- ADD -->
+  <div id="view3" style="display:none">
+    <div style="background:var(--white-warm);border:1px solid rgba(196,113,79,0.2);border-radius:15px;padding:14px;box-shadow:0 3px 12px rgba(196,113,79,0.08)">
+      <div class="autocomplete-wrap">
+        <input class="form-input" id="mealName" placeholder="Meal name — start typing to search..." oninput="showAutocomplete(this.value)" onblur="setTimeout(hideAutocomplete,200)" autocomplete="off" />
+        <div class="autocomplete-list" id="autocompleteList"></div>
+      </div>
+      <div class="form-row" style="margin-bottom:8px">
+        <select class="form-select" id="mealDay" style="margin-bottom:0">
+          <option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option>
+          <option value="4">Thursday</option><option value="5">Friday</option>
+          <option value="6">Saturday</option><option value="0">Sunday</option>
+        </select>
+        <select class="form-select" id="mealType" style="margin-bottom:0">
+          <option>Breakfast</option><option>Lunch</option><option selected>Dinner</option><option>Snack</option>
+        </select>
+      </div>
+      <select class="form-select" id="mealCat">
+        <option>Latin</option><option>American</option><option>Quick</option><option>Batch Cook</option>
+        <option>Kids Fave</option><option>Healthy</option><option>Budget</option><option>Football Night</option><option>Seafood</option>
+      </select>
+      <input class="form-input" id="mealNotes" placeholder="Notes (optional)" />
+      <button class="form-btn form-btn-save" style="width:100%;padding:11px" onclick="saveMeal()">Add to Plan ✦</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- RECIPE MODAL -->
+<div class="modal-overlay" id="recipeModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-emoji" id="modalEmoji">🍽️</div>
+    <div class="modal-title" id="modalName"></div>
+    <div class="modal-meta" id="modalMeta"></div>
+    <div class="modal-section">Ingredients</div>
+    <div class="ing-list" id="modalIngredients"></div>
+    <button class="modal-btn modal-btn-primary" onclick="addIngredientsToList()">🛒 Save to Grocery List ✦</button>
+    <button class="modal-btn modal-btn-secondary" onclick="planFromRecipe()">📅 Plan This Meal ✦</button>
+    <button class="modal-btn" id="modalDeleteBtn" style="display:none;background:rgba(196,113,79,0.12);color:var(--terra);border:1.5px solid rgba(196,113,79,0.3)" onclick="deleteMealFromModal()">🗑️ Remove from Plan</button>
+    <button class="modal-btn modal-btn-secondary" onclick="closeRecipeModal()">Close</button>
+  </div>
+</div>
+
+<!-- ASSIGN MODAL -->
+<div class="modal-overlay" id="assignModal">
+  <div class="assign-sheet">
+    <div class="modal-handle"></div>
+    <div class="assign-title" id="assignTitle">Add Meal</div>
+    <div class="autocomplete-wrap">
+      <input class="form-input" id="assignName" placeholder="Meal name — start typing..." oninput="showAssignAutocomplete(this.value)" onblur="setTimeout(hideAssignAutocomplete,200)" autocomplete="off" />
+      <div class="autocomplete-list" id="assignAutocompleteList"></div>
+    </div>
+    <div class="form-row">
+      <select class="form-select" id="assignType" style="margin-bottom:0"><option>Breakfast</option><option>Lunch</option><option selected>Dinner</option><option>Snack</option></select>
+      <select class="form-select" id="assignCat" style="margin-bottom:0"><option>Latin</option><option>American</option><option>Quick</option><option>Kids Fave</option><option>Football Night</option><option>Healthy</option><option>Budget</option><option>Seafood</option></select>
+    </div>
+    <div class="form-row" style="margin-top:8px">
+      <button class="form-btn form-btn-cancel" onclick="closeAssign()">Cancel</button>
+      <button class="form-btn form-btn-save" onclick="saveAssign()">Add ✦</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOM MEAL MODAL -->
+<div class="modal-overlay" id="customMealModal">
+  <div class="custom-meal-sheet">
+    <div class="modal-handle"></div>
+    <div class="custom-meal-emoji">🍽️</div>
+    <div class="custom-meal-title" id="customMealName">Meal</div>
+    <div class="custom-meal-sub">Custom meal — not in recipe list</div>
+    <button class="modal-btn modal-btn-primary" onclick="editCustomMeal()" style="background:linear-gradient(135deg,var(--rose-gold),var(--rose-light))">✏️ Edit Meal Name</button>
+    <button class="modal-btn" style="background:rgba(196,113,79,0.12);color:var(--terra);border:1.5px solid rgba(196,113,79,0.3);margin-top:7px" onclick="deleteCustomMeal()">🗑️ Remove from Plan</button>
+    <button class="modal-btn modal-btn-secondary" style="margin-top:7px" onclick="closeCustomMealModal()">Close</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="nav-bar">
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/index.html"><span class="nav-icon">🏠</span><span>Home</span></a>
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/planner.html"><span class="nav-icon">📋</span><span>Lists</span></a>
+  <a class="nav-item active" href="#"><span class="nav-icon">🫙</span><span>Meals</span></a>
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/brain_dump.html"><span class="nav-icon">🎒</span><span>BTS</span></a>
+</div>
+
+<script>
+const SUPABASE_URL='https://ejseathlglvvnmkpchib.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqc2VhdGhsZ2x2dm5ta3BjaGliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODc4NTUsImV4cCI6MjA5NzU2Mzg1NX0.o4crd1W5-NbVNXSOWNT-WPHS7R6orRe9CRYFZfZ41L8';
+
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MEAL_TYPES=['Breakfast','Lunch','Dinner','Snack'];
+// Football: Tuesday(2) and Thursday(4) ONLY
+const FOOTBALL_DAYS=[2,4];
+const CAT_EMOJI={'Breakfast':'🍳','Lunch':'🥪','Snack':'🍎','Latin':'🌶️','American':'🍔','Quick':'⚡','Batch Cook':'🫙','Kids Fave':'🏡','Healthy':'🌿','Budget':'💰','Football Night':'🏈','Seafood':'🐟'};
+
+const MEAL_DB={
+  "Lasagna":["Lasagna noodles","Ground beef","Ricotta cheese","Mozzarella","Parmesan","Marinara sauce","Eggs","Italian seasoning","Garlic","Onion"],
+  "Spaghetti":["Spaghetti","Ground beef","Marinara sauce","Garlic","Onion","Parmesan","Olive oil"],
+  "Tacos":["Ground beef or chicken","Taco shells","Shredded cheese","Lettuce","Tomatoes","Sour cream","Salsa","Taco seasoning"],
+  "Taco Night":["Ground beef","Taco shells","Flour tortillas","Cheese","Lettuce","Tomatoes","Sour cream","Salsa","Lime"],
+  "Chicken Alfredo":["Fettuccine","Chicken breast","Heavy cream","Butter","Parmesan","Garlic","Salt","Pepper"],
+  "Baked Chicken":["Chicken thighs","Olive oil","Garlic powder","Paprika","Salt","Pepper","Lemon"],
+  "Grilled Chicken":["Chicken breast","Olive oil","Garlic","Lemon juice","Paprika","Salt","Pepper"],
+  "Fried Chicken":["Chicken pieces","Flour","Eggs","Milk","Garlic powder","Paprika","Salt","Oil"],
+  "Chicken Tenders":["Chicken tenders","Flour","Eggs","Breadcrumbs","Garlic powder","Salt","Oil"],
+  "Dino Nuggets":["Dino nuggets (frozen)","Ketchup"],
+  "Chicken Nuggets":["Chicken breast","Breadcrumbs","Eggs","Flour","Garlic powder","Salt","Oil"],
+  "Mac and Cheese":["Elbow macaroni","Butter","Flour","Milk","Cheddar cheese","Salt","Mustard powder"],
+  "Butter Noodles":["Egg noodles","Butter","Salt","Garlic powder","Parmesan"],
+  "Rice and Beans":["White rice","Black beans","Chicken broth","Onion","Garlic","Cumin","Olive oil"],
+  "Hamburgers":["Ground beef","Buns","Lettuce","Tomatoes","Onion","Cheese","Ketchup","Mustard"],
+  "Hot Dogs":["Hot dogs","Buns","Ketchup","Mustard","Relish","Onion"],
+  "Pizza":["Pizza dough","Pizza sauce","Mozzarella","Toppings","Olive oil"],
+  "French Fries":["Potatoes or frozen fries","Oil","Salt","Ketchup"],
+  "Wings":["Chicken wings","Hot sauce","Butter","Garlic powder","Salt","Ranch dressing"],
+  "Nachos":["Tortilla chips","Cheese","Ground beef","Jalapeños","Sour cream","Salsa","Guacamole"],
+  "Chili":["Ground beef","Kidney beans","Diced tomatoes","Tomato sauce","Onion","Bell pepper","Garlic","Chili powder","Cumin"],
+  "Salmon":["Salmon fillets","Lemon","Garlic","Butter","Olive oil","Salt","Dill"],
+  "Pork Chops":["Pork chops","Olive oil","Garlic powder","Paprika","Salt","Pepper","Butter"],
+  "Beef Stew":["Beef chuck","Potatoes","Carrots","Onion","Celery","Beef broth","Tomato paste","Garlic"],
+  "Chicken Soup":["Chicken","Chicken broth","Carrots","Celery","Onion","Garlic","Egg noodles","Salt"],
+  "Quesadillas":["Flour tortillas","Cheese","Chicken","Bell peppers","Onion","Sour cream","Salsa"],
+  "Chicken Fried Rice":["Cooked rice","Chicken","Eggs","Soy sauce","Garlic","Onion","Peas","Sesame oil"],
+  "Shrimp Fried Rice":["Shrimp","Cooked rice","Eggs","Soy sauce","Garlic","Onion","Peas","Sesame oil"],
+  "Empanadas":["Empanada dough","Ground beef","Onion","Bell pepper","Garlic","Cumin","Sazon","Olives"],
+  "Arroz con Pollo":["Chicken thighs","White rice","Chicken broth","Onion","Bell pepper","Garlic","Tomato sauce","Sazon","Adobo","Cilantro"],
+  "Pernil":["Pork shoulder","Garlic","Oregano","Cumin","Adobo","Sazon","Vinegar","Olive oil"],
+  "Sofrito Chicken":["Chicken","Sofrito","Sazon","Adobo","Tomato sauce","Onion","Garlic","Potatoes"],
+  "Rice and Chicken":["Chicken thighs","White rice","Chicken broth","Sofrito","Sazon","Adobo","Tomato sauce"],
+  "Beans and Rice":["Red beans","White rice","Sofrito","Sazon","Garlic","Onion","Olive oil"],
+  "Tostones":["Green plantains","Oil","Salt","Garlic"],
+  "Mofongo":["Green plantains","Garlic","Pork rinds","Olive oil","Salt","Chicken broth"],
+  "Sancocho":["Chicken or beef","Yuca","Plantains","Potatoes","Corn","Onion","Garlic","Cilantro","Sazon"],
+  "Oxtail":["Oxtail","Onion","Garlic","Thyme","Allspice","Soy sauce","Ketchup","Carrots","Butter beans"],
+  "Jerk Chicken":["Chicken","Jerk seasoning","Allspice","Thyme","Garlic","Ginger","Soy sauce","Brown sugar","Lime"],
+  "Sloppy Joes":["Ground beef","Buns","Ketchup","Mustard","Brown sugar","Onion","Bell pepper"],
+  "Grilled Cheese":["Bread","Butter","American cheese"],
+  "Chicken Sandwiches":["Chicken breast","Buns","Lettuce","Tomatoes","Mayo","Hot sauce","Pickles"],
+  "Meatballs":["Ground beef","Breadcrumbs","Egg","Parmesan","Garlic","Italian seasoning","Marinara sauce"],
+  "Chicken Stir Fry":["Chicken breast","Broccoli","Bell peppers","Soy sauce","Garlic","Ginger","Rice"],
+  "Ramen":["Ramen noodles","Chicken broth","Soy sauce","Eggs","Green onions","Garlic","Sesame oil"],
+  "Fish Fry":["Fish fillets","Cornmeal","Flour","Cajun seasoning","Garlic powder","Salt","Oil","Lemon"],
+  "Fish Sticks":["Frozen fish sticks","Tartar sauce","Ketchup","Lemon"],
+  "Baked Fish":["Fish fillets","Lemon","Butter","Garlic","Paprika","Salt","Parsley"],
+  "Salmon Patties":["Canned salmon","Eggs","Breadcrumbs","Onion","Garlic powder","Salt","Oil"],
+  "Ribs":["Pork ribs","BBQ sauce","Brown sugar","Garlic powder","Paprika","Salt","Apple cider vinegar"],
+  "BBQ Ribs":["Spare ribs","BBQ sauce","Brown sugar","Smoked paprika","Garlic powder","Salt","Cayenne"],
+  "Chicken Drumsticks":["Drumsticks","Olive oil","Garlic powder","Paprika","Salt","Pepper","Lemon"],
+  "Baked Drumsticks":["Drumsticks","Butter","Garlic","Paprika","Salt","Pepper","Lemon juice"],
+  "Fried Drumsticks":["Drumsticks","Flour","Eggs","Milk","Garlic powder","Paprika","Salt","Oil"],
+  "Caldo de Pollo":["Whole chicken","Corn","Potatoes","Carrots","Zucchini","Cabbage","Cilantro","Garlic","Onion","Bouillon","Lime"],
+  "Baked Ziti":["Ziti pasta","Ground beef","Marinara","Ricotta","Mozzarella","Parmesan","Egg","Italian seasoning"],
+  "Smash Burgers":["Ground beef 80/20","Brioche buns","American cheese","Lettuce","Tomatoes","Pickles","Mayo","Ketchup"],
+  "Breakfast Burritos":["Eggs","Flour tortillas","Breakfast sausage","Cheese","Bell peppers","Onion","Salsa","Butter"],
+  "Fried Rice":["Day-old rice","Eggs","Frozen veggies","Soy sauce","Sesame oil","Green onions","Garlic","Butter"],
+  "Big Family Salad":["Romaine lettuce","Cherry tomatoes","Cucumber","Red onion","Avocado","Grilled chicken","Cheese","Croutons"],
+  "Baked Tilapia":["Tilapia fillets","Lemon","Garlic powder","Paprika","Olive oil","Parsley","Salt","Pepper"],
+
+  "Scrambled Eggs":["Eggs","Butter","Milk","Salt","Pepper"],
+  "Fried Eggs":["Eggs","Butter","Salt","Pepper"],
+  "Boiled Eggs":["Eggs","Water","Salt"],
+  "Egg Omelet":["Eggs","Butter","Cheese","Bell peppers","Onion","Salt","Pepper"],
+  "Pancakes":["Pancake mix","Eggs","Milk","Butter","Maple syrup"],
+  "Waffles":["Waffle mix","Eggs","Milk","Butter","Maple syrup"],
+  "French Toast":["Bread","Eggs","Milk","Butter","Cinnamon","Maple syrup","Powdered sugar"],
+  "Bacon and Eggs":["Bacon","Eggs","Butter","Salt","Pepper","Toast"],
+  "Sausage and Eggs":["Breakfast sausage","Eggs","Butter","Toast","Salt","Pepper"],
+  "Grits":["Grits","Butter","Salt","Cheese","Water or Milk"],
+  "Oatmeal":["Oats","Milk or Water","Honey","Cinnamon","Banana","Berries"],
+  "Cereal":["Cereal","Milk","Banana or berries"],
+  "Avocado Toast":["Bread","Avocado","Eggs","Red pepper flakes","Salt","Lemon juice"],
+  "Breakfast Sandwich":["English muffin","Eggs","Cheese","Bacon or Sausage","Butter"],
+  "Yogurt Parfait":["Greek yogurt","Granola","Berries","Honey"],
+  "Bagel and Cream Cheese":["Bagel","Cream cheese","Lox (optional)"],
+  "Banana Pancakes":["Bananas","Eggs","Pancake mix","Butter","Maple syrup"],
+  "Egg Muffins":["Eggs","Cheese","Spinach","Bell peppers","Onion","Salt","Pepper"],
+  "Breakfast Quesadilla":["Flour tortilla","Eggs","Cheese","Sausage","Salsa","Butter"],
+  "Smoothie Bowl":["Frozen berries","Banana","Greek yogurt","Granola","Honey","Milk"],
+  "Toaster Waffles":["Frozen waffles","Maple syrup","Butter","Strawberries"],
+  "Peanut Butter Toast":["Bread","Peanut butter","Banana","Honey"],
+  "Turkey Sandwich":["Deli turkey","Bread","Lettuce","Tomatoes","Mayo","Mustard","Cheese"],
+  "Ham Sandwich":["Deli ham","Bread","Lettuce","Tomatoes","Mayo","Cheese","Mustard"],
+  "Publix Sub":["Sub roll","Deli meat","Cheese","Lettuce","Tomatoes","Onion","Mayo","Mustard","Pickles"],
+  "PB&J":["Bread","Peanut butter","Jelly"],
+  "Chicken Wrap":["Flour tortilla","Grilled chicken","Lettuce","Tomatoes","Cheese","Ranch","Avocado"],
+  "Caesar Salad":["Romaine lettuce","Caesar dressing","Croutons","Parmesan","Grilled chicken"],
+  "Tuna Sandwich":["Canned tuna","Mayo","Celery","Onion","Bread","Lettuce","Tomatoes"],
+  "BLT Sandwich":["Bacon","Lettuce","Tomatoes","Mayo","Bread"],
+  "Chicken Caesar Wrap":["Flour tortilla","Grilled chicken","Romaine","Caesar dressing","Parmesan"],
+  "Leftovers":["Whatever is leftover from dinner"],
+  "Soup and Sandwich":["Canned soup","Bread","Deli meat","Cheese","Butter"],
+  "Chef Salad":["Romaine","Deli turkey","Deli ham","Cheese","Hard boiled eggs","Tomatoes","Croutons","Ranch"],
+  "Avocado Chicken Salad":["Chicken breast","Avocado","Mayo","Lime","Cilantro","Salt","Pepper","Bread or crackers"],
+  "Kids Lunchable":["Crackers","Deli meat","Cheese slices","Fruit","Juice"],
+  "Grilled Cheese and Tomato Soup":["Bread","Cheese","Butter","Canned tomato soup","Milk"],
+  "Egg Salad Sandwich":["Eggs","Mayo","Mustard","Celery","Salt","Pepper","Bread","Lettuce"],
+  "Pasta Salad":["Rotini pasta","Cherry tomatoes","Cucumber","Olives","Cheese","Italian dressing"],
+  "Apple Slices and Peanut Butter":["Apple","Peanut butter","Cinnamon"],
+  "Fruit Salad":["Strawberries","Grapes","Watermelon","Cantaloupe","Blueberries","Honey"],
+  "String Cheese and Crackers":["String cheese","Crackers","Grapes","Apple"],
+  "Hummus and Veggies":["Hummus","Carrots","Celery","Cucumber","Bell peppers","Pita chips"],
+  "Chips and Salsa":["Tortilla chips","Salsa","Guacamole"],
+  "Popcorn":["Popcorn","Butter","Salt"],
+  "Trail Mix":["Mixed nuts","Dried fruit","Chocolate chips","Pretzels"],
+  "Goldfish Crackers":["Goldfish crackers","Juice box"],
+  "Cheese Quesadilla":["Flour tortilla","Cheese","Butter","Salsa","Sour cream"],
+  "Rice Cakes":["Rice cakes","Peanut butter","Banana","Honey"],
+};
+  "Scrambled Eggs":{cat:"Breakfast",emoji:"🍳",time:"10 min",kids:true},
+  "Fried Eggs":{cat:"Breakfast",emoji:"🍳",time:"5 min",kids:true},
+  "Boiled Eggs":{cat:"Breakfast",emoji:"🥚",time:"12 min",kids:true},
+  "Egg Omelet":{cat:"Breakfast",emoji:"🍳",time:"15 min",kids:true},
+  "Pancakes":{cat:"Breakfast",emoji:"🥞",time:"20 min",kids:true},
+  "Waffles":{cat:"Breakfast",emoji:"🧇",time:"20 min",kids:true},
+  "French Toast":{cat:"Breakfast",emoji:"🍞",time:"15 min",kids:true},
+  "Bacon and Eggs":{cat:"Breakfast",emoji:"🥓",time:"15 min",kids:true},
+  "Sausage and Eggs":{cat:"Breakfast",emoji:"🍳",time:"15 min",kids:true},
+  "Grits":{cat:"Breakfast",emoji:"🍚",time:"15 min",kids:true},
+  "Oatmeal":{cat:"Breakfast",emoji:"🥣",time:"10 min",kids:true},
+  "Cereal":{cat:"Breakfast",emoji:"🥣",time:"5 min",kids:true},
+  "Avocado Toast":{cat:"Breakfast",emoji:"🥑",time:"10 min",kids:false},
+  "Breakfast Sandwich":{cat:"Breakfast",emoji:"🥪",time:"15 min",kids:true},
+  "Yogurt Parfait":{cat:"Breakfast",emoji:"🍓",time:"5 min",kids:true},
+  "Bagel and Cream Cheese":{cat:"Breakfast",emoji:"🥯",time:"5 min",kids:true},
+  "Banana Pancakes":{cat:"Breakfast",emoji:"🥞",time:"20 min",kids:true},
+  "Egg Muffins":{cat:"Breakfast",emoji:"🧁",time:"25 min",kids:true},
+  "Breakfast Quesadilla":{cat:"Breakfast",emoji:"🫓",time:"15 min",kids:true},
+  "Smoothie Bowl":{cat:"Breakfast",emoji:"🍓",time:"10 min",kids:true},
+  "Toaster Waffles":{cat:"Breakfast",emoji:"🧇",time:"5 min",kids:true},
+  "Peanut Butter Toast":{cat:"Breakfast",emoji:"🍞",time:"5 min",kids:true},
+  "Turkey Sandwich":{cat:"Lunch",emoji:"🥪",time:"5 min",kids:true},
+  "Ham Sandwich":{cat:"Lunch",emoji:"🥪",time:"5 min",kids:true},
+  "Publix Sub":{cat:"Lunch",emoji:"🥖",time:"5 min",kids:true},
+  "PB&J":{cat:"Lunch",emoji:"🥜",time:"5 min",kids:true},
+  "Chicken Wrap":{cat:"Lunch",emoji:"🌯",time:"10 min",kids:true},
+  "Caesar Salad":{cat:"Lunch",emoji:"🥗",time:"10 min",kids:false},
+  "Tuna Sandwich":{cat:"Lunch",emoji:"🥪",time:"10 min",kids:true},
+  "BLT Sandwich":{cat:"Lunch",emoji:"🥪",time:"10 min",kids:true},
+  "Chicken Caesar Wrap":{cat:"Lunch",emoji:"🌯",time:"10 min",kids:true},
+  "Leftovers":{cat:"Lunch",emoji:"🍱",time:"5 min",kids:true},
+  "Soup and Sandwich":{cat:"Lunch",emoji:"🍲",time:"15 min",kids:true},
+  "Chef Salad":{cat:"Lunch",emoji:"🥗",time:"10 min",kids:true},
+  "Avocado Chicken Salad":{cat:"Lunch",emoji:"🥑",time:"15 min",kids:false},
+  "Kids Lunchable":{cat:"Lunch",emoji:"🧀",time:"5 min",kids:true},
+  "Grilled Cheese and Tomato Soup":{cat:"Lunch",emoji:"🫕",time:"20 min",kids:true},
+  "Egg Salad Sandwich":{cat:"Lunch",emoji:"🥚",time:"10 min",kids:true},
+  "Pasta Salad":{cat:"Lunch",emoji:"🍝",time:"20 min",kids:true},
+  "Apple Slices and Peanut Butter":{cat:"Snack",emoji:"🍎",time:"2 min",kids:true},
+  "Fruit Salad":{cat:"Snack",emoji:"🍓",time:"10 min",kids:true},
+  "String Cheese and Crackers":{cat:"Snack",emoji:"🧀",time:"2 min",kids:true},
+  "Hummus and Veggies":{cat:"Snack",emoji:"🥕",time:"5 min",kids:true},
+  "Chips and Salsa":{cat:"Snack",emoji:"🌮",time:"2 min",kids:true},
+  "Popcorn":{cat:"Snack",emoji:"🍿",time:"5 min",kids:true},
+  "Trail Mix":{cat:"Snack",emoji:"🥜",time:"2 min",kids:true},
+  "Goldfish Crackers":{cat:"Snack",emoji:"🐟",time:"2 min",kids:true},
+  "Cheese Quesadilla":{cat:"Snack",emoji:"🫓",time:"10 min",kids:true},
+  "Rice Cakes":{cat:"Snack",emoji:"🍚",time:"2 min",kids:true},
+};
+!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J Empire · Meal Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --cream:#F4EFE8; --cream-deep:#EDE6DC;
+  --terra:#C4714F; --terra-light:#D4906E;
+  --rose-gold:#B8896E; --rose-light:#D4A574;
+  --brown-dark:#2C1A0E; --brown-mid:#6B4232;
+  --brown-muted:#9A6E58; --brown-soft:#C4A090;
+  --white-warm:rgba(255,252,248,0.95);
+  --green:#5A8A5E;
+  --football:#8B6914; --football-bg:rgba(196,113,79,0.13);
+}
+body { min-height:100vh; font-family:'Inter',sans-serif; background:var(--cream-deep); color:var(--brown-dark); }
+
+.header { position:relative; overflow:hidden; padding:44px 24px 24px; text-align:center; background:var(--cream); background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(180,140,105,0.07) 3px,rgba(180,140,105,0.07) 4px),repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(180,140,105,0.05) 3px,rgba(180,140,105,0.05) 4px); }
+.header::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,transparent,var(--terra) 20%,var(--rose-light) 50%,var(--rose-gold) 80%,transparent); }
+.header-marble { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.header-glow { position:absolute; inset:0; background:radial-gradient(ellipse 70% 50% at 85% 10%,rgba(196,113,79,0.15) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 10% 85%,rgba(184,137,110,0.11) 0%,transparent 50%); }
+.bracket { position:absolute; width:22px; height:22px; opacity:0.3; }
+.btl { top:12px; left:14px; border-top:1.5px solid var(--terra); border-left:1.5px solid var(--terra); }
+.btr { top:12px; right:14px; border-top:1.5px solid var(--terra); border-right:1.5px solid var(--terra); }
+.header-content { position:relative; z-index:2; }
+.header-eyebrow { font-size:9px; font-weight:600; letter-spacing:0.3em; text-transform:uppercase; color:var(--rose-gold); margin-bottom:5px; }
+.header-title { font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:300; color:var(--brown-dark); line-height:0.92; letter-spacing:0.06em; margin-bottom:8px; }
+.header-title em { font-style:italic; color:var(--terra); }
+.header-divider { display:flex; align-items:center; gap:8px; width:140px; margin:0 auto 8px; }
+.hdl { flex:1; height:1px; background:rgba(196,113,79,0.3); }
+.hdg { width:4px; height:4px; background:var(--terra); transform:rotate(45deg); opacity:0.7; }
+.header-quote { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:12px; color:var(--brown-muted); }
+
+/* WEEK NAV */
+.week-nav { background:var(--cream); border-bottom:1px solid rgba(196,113,79,0.12); padding:10px 16px; display:flex; align-items:center; justify-content:space-between; }
+.week-nav-btn { width:32px; height:32px; border-radius:50%; border:1px solid rgba(196,113,79,0.25); background:var(--white-warm); color:var(--terra); font-size:15px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.18s; }
+.week-nav-btn:hover { background:var(--terra); color:var(--cream); }
+.week-nav-center { text-align:center; }
+.week-nav-label { font-family:'Cormorant Garamond',serif; font-size:19px; color:var(--brown-dark); }
+.week-nav-sub { font-size:9px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--brown-muted); margin-top:1px; }
+
+/* TAB BAR */
+.tab-bar { background:var(--cream); border-bottom:1px solid rgba(196,113,79,0.15); padding:9px 16px; display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; }
+.tab-bar::-webkit-scrollbar { display:none; }
+.tab-btn { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:7px 13px; border-radius:20px; border:1px solid rgba(196,113,79,0.22); background:transparent; color:var(--brown-muted); cursor:pointer; transition:all 0.18s; font-family:'Inter',sans-serif; white-space:nowrap; }
+.tab-btn.active { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border-color:transparent; box-shadow:0 3px 10px rgba(196,113,79,0.28); }
+
+.main { padding:14px 14px 100px; max-width:500px; margin:0 auto; }
+
+/* ── COMPACT WEEK GRID ── */
+/* Football banner */
+.football-banner { background:linear-gradient(135deg,var(--terra),var(--terra-light)); border-radius:13px; padding:10px 14px; margin-bottom:12px; display:none; align-items:center; gap:10px; box-shadow:0 3px 12px rgba(196,113,79,0.25); }
+.football-banner.visible { display:flex; }
+.fb-icon { font-size:22px; }
+.fb-title { font-size:11px; font-weight:700; color:#FFF8F0; }
+.fb-sub { font-size:9.5px; color:rgba(255,252,248,0.75); margin-top:1px; }
+
+/* WEEKDAY ROWS (Mon-Fri) */
+.weekday-grid { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+
+.day-row { background:var(--white-warm); border:1px solid rgba(196,113,79,0.14); border-radius:14px; overflow:hidden; box-shadow:0 1px 6px rgba(196,113,79,0.05); }
+.day-row.football-row { border-color:rgba(196,113,79,0.4); border-width:2px; background:linear-gradient(135deg,rgba(255,252,248,1),rgba(255,245,235,0.6)); }
+.day-row.today-row { border-color:rgba(196,113,79,0.45); }
+
+/* DAY HEADER — compact horizontal */
+.day-header { display:flex; align-items:center; gap:8px; padding:7px 12px; border-bottom:1px solid rgba(196,113,79,0.08); background:rgba(196,113,79,0.03); }
+.day-row.football-row .day-header { background:var(--football-bg); border-bottom-color:rgba(196,113,79,0.15); }
+.day-row.today-row .day-header { background:rgba(196,113,79,0.08); }
+.day-name { font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--terra); min-width:28px; }
+.day-date-num { font-family:'Cormorant Garamond',serif; font-size:16px; color:var(--brown-dark); }
+.day-badges { display:flex; gap:5px; margin-left:auto; align-items:center; }
+.day-badge { font-size:8.5px; font-weight:700; padding:2px 7px; border-radius:8px; letter-spacing:0.05em; }
+.badge-football { background:rgba(196,113,79,0.15); color:var(--terra); }
+.badge-today { background:rgba(196,113,79,0.12); color:var(--terra); }
+
+/* MEAL SLOTS — horizontal compact */
+.meal-slots { display:flex; gap:5px; padding:7px 10px; }
+.meal-slot { flex:1; }
+.meal-slot-label { font-size:7.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--brown-soft); margin-bottom:3px; text-align:center; }
+.meal-filled { background:rgba(196,113,79,0.08); border:1px solid rgba(196,113,79,0.18); border-radius:8px; padding:5px 6px; text-align:center; cursor:pointer; transition:all 0.15s; min-height:38px; display:flex; flex-direction:column; justify-content:center; }
+.meal-filled:hover { background:rgba(196,113,79,0.14); }
+.meal-filled-emoji { font-size:14px; display:block; }
+.meal-filled-name { font-size:9px; font-weight:600; color:var(--brown-dark); line-height:1.3; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.meal-empty { background:transparent; border:1.5px dashed rgba(196,113,79,0.18); border-radius:8px; min-height:38px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s; }
+.meal-empty:hover { border-color:rgba(196,113,79,0.45); background:rgba(196,113,79,0.04); }
+.meal-empty-icon { font-size:12px; color:rgba(196,113,79,0.35); }
+
+/* WEEKEND SECTION — muted, smaller */
+.weekend-divider { display:flex; align-items:center; gap:8px; margin:4px 0 10px; }
+.weekend-divider-line { flex:1; height:1px; background:rgba(196,113,79,0.15); }
+.weekend-divider-text { font-size:9px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--brown-soft); }
+
+.weekend-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:14px; opacity:0.75; }
+.weekend-card { background:rgba(255,252,248,0.7); border:1px solid rgba(196,113,79,0.1); border-radius:13px; overflow:hidden; }
+.weekend-header { padding:6px 10px; background:rgba(196,113,79,0.04); border-bottom:1px solid rgba(196,113,79,0.07); }
+.weekend-day-name { font-size:9.5px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--brown-soft); }
+.weekend-date { font-family:'Cormorant Garamond',serif; font-size:13px; color:var(--brown-muted); }
+.weekend-meals { padding:6px 8px; display:flex; flex-direction:column; gap:4px; }
+.weekend-meal-slot { display:flex; align-items:center; gap:6px; }
+.weekend-meal-lbl { font-size:7.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--brown-soft); width:32px; flex-shrink:0; }
+.weekend-filled { flex:1; background:rgba(196,113,79,0.07); border:1px solid rgba(196,113,79,0.14); border-radius:6px; padding:4px 7px; font-size:10px; font-weight:600; color:var(--brown-dark); cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.weekend-empty { flex:1; border:1.5px dashed rgba(196,113,79,0.14); border-radius:6px; padding:4px 7px; font-size:10px; color:rgba(196,113,79,0.3); cursor:pointer; text-align:center; }
+.weekend-empty:hover { border-color:rgba(196,113,79,0.35); color:var(--terra); }
+
+/* RECIPE LIST */
+.recipe-search-wrap { padding:10px 0 4px; }
+.recipe-search { width:100%; padding:9px 13px; border:1px solid rgba(196,113,79,0.22); border-radius:12px; background:var(--white-warm); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:13px; outline:none; }
+.recipe-search:focus { border-color:var(--terra); }
+.recipe-search::placeholder { color:var(--brown-soft); font-style:italic; }
+.cat-filter { display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; padding:8px 0; }
+.cat-filter::-webkit-scrollbar { display:none; }
+.cat-pill { font-size:9px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; padding:5px 11px; border-radius:14px; border:1px solid rgba(196,113,79,0.2); background:transparent; color:var(--brown-muted); cursor:pointer; transition:all 0.15s; font-family:'Inter',sans-serif; white-space:nowrap; flex-shrink:0; }
+.cat-pill.active { background:rgba(196,113,79,0.12); color:var(--terra); border-color:rgba(196,113,79,0.35); }
+
+.recipe-list { display:flex; flex-direction:column; gap:7px; }
+.recipe-item { background:var(--white-warm); border:1px solid rgba(196,113,79,0.14); border-radius:13px; padding:11px 14px; display:flex; align-items:center; gap:11px; cursor:pointer; transition:all 0.18s; box-shadow:0 1px 5px rgba(196,113,79,0.04); }
+.recipe-item:hover { box-shadow:0 5px 16px rgba(196,113,79,0.13); border-color:rgba(196,113,79,0.3); transform:translateX(3px); }
+.recipe-emoji { font-size:24px; flex-shrink:0; }
+.recipe-info { flex:1; }
+.recipe-name { font-size:13px; font-weight:600; color:var(--brown-dark); margin-bottom:3px; }
+.recipe-meta { display:flex; gap:6px; flex-wrap:wrap; }
+.recipe-tag { font-size:8px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:2px 7px; border-radius:7px; background:rgba(196,113,79,0.09); color:var(--terra); }
+.recipe-ing { font-size:10px; color:var(--brown-muted); margin-top:2px; }
+.recipe-arrow { font-size:15px; color:var(--brown-soft); flex-shrink:0; }
+
+/* CUSTOM MEAL MODAL */
+.custom-meal-sheet { background:var(--cream); border-radius:20px 20px 0 0; padding:20px 18px 44px; width:100%; max-width:500px; }
+.custom-meal-emoji { font-size:32px; margin-bottom:6px; }
+.custom-meal-title { font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--brown-dark); margin-bottom:4px; }
+.custom-meal-sub { font-size:11px; color:var(--brown-muted); margin-bottom:16px; font-style:italic; }
+
+/* AUTOCOMPLETE */
+.autocomplete-wrap { position:relative; }
+.autocomplete-list { position:absolute; bottom:100%; top:auto; margin-bottom:6px; left:0; right:0; background:var(--cream); border:1px solid rgba(196,113,79,0.25); border-radius:10px; box-shadow:0 6px 20px rgba(196,113,79,0.15); z-index:100; max-height:200px; overflow-y:auto; display:none; }
+.autocomplete-list.visible { display:block; }
+.autocomplete-item { padding:10px 14px; font-size:13px; color:var(--brown-dark); cursor:pointer; display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(196,113,79,0.07); transition:background 0.14s; }
+.autocomplete-item:last-child { border-bottom:none; }
+.autocomplete-item:hover { background:rgba(196,113,79,0.07); }
+.autocomplete-emoji { font-size:16px; flex-shrink:0; }
+
+/* MODAL */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(44,26,14,0.52); z-index:200; align-items:flex-end; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal-sheet { background:var(--cream); border-radius:20px 20px 0 0; padding:18px 18px 44px; width:100%; max-width:500px; max-height:85vh; overflow-y:auto; }
+.modal-handle { width:34px; height:4px; background:rgba(196,113,79,0.22); border-radius:2px; margin:0 auto 13px; }
+.modal-emoji { font-size:30px; margin-bottom:5px; }
+.modal-title { font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--brown-dark); margin-bottom:4px; }
+.modal-meta { font-size:10px; color:var(--brown-muted); margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; }
+.modal-section { font-size:9px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--rose-gold); margin:10px 0 7px; display:flex; align-items:center; gap:7px; }
+.modal-section::after { content:''; flex:1; height:1px; background:rgba(196,113,79,0.2); }
+.ing-list { display:flex; flex-direction:column; gap:4px; }
+.ing-item { background:var(--white-warm); border:1px solid rgba(196,113,79,0.11); border-radius:9px; padding:7px 11px; font-size:12px; color:var(--brown-dark); }
+.modal-btn { width:100%; padding:11px; border-radius:13px; border:none; font-family:'Inter',sans-serif; font-size:12px; font-weight:600; cursor:pointer; margin-top:7px; letter-spacing:0.08em; transition:all 0.18s; }
+.modal-btn-primary { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); box-shadow:0 3px 12px rgba(196,113,79,0.28); }
+.modal-btn-secondary { background:rgba(196,113,79,0.09); color:var(--brown-mid); }
+
+/* ASSIGN MODAL */
+.assign-sheet { background:var(--cream); border-radius:20px 20px 0 0; padding:18px 18px 44px; width:100%; max-width:500px; }
+.assign-title { font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--brown-dark); margin-bottom:12px; }
+.form-input { width:100%; padding:9px 12px; border:1px solid rgba(196,113,79,0.22); border-radius:9px; background:var(--cream); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:13px; outline:none; margin-bottom:8px; }
+.form-input:focus { border-color:var(--terra); }
+.form-select { width:100%; padding:8px 10px; border:1px solid rgba(196,113,79,0.22); border-radius:9px; background:var(--cream); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:12px; outline:none; margin-bottom:8px; }
+.form-row { display:flex; gap:7px; }
+.form-btn { padding:10px 18px; border-radius:9px; border:none; font-family:'Inter',sans-serif; font-size:11px; font-weight:600; cursor:pointer; transition:all 0.18s; flex:1; }
+.form-btn-save { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); }
+.form-btn-cancel { background:rgba(196,113,79,0.1); color:var(--brown-muted); }
+
+/* LOG */
+.meal-log { display:flex; flex-direction:column; gap:7px; }
+.log-item { background:var(--white-warm); border:1px solid rgba(196,113,79,0.13); border-left:3px solid var(--rose-gold); border-radius:0 13px 13px 0; padding:10px 13px; display:flex; align-items:center; justify-content:space-between; }
+.log-name { font-size:13px; font-weight:600; color:var(--brown-dark); }
+.log-meta { font-size:10px; color:var(--brown-muted); margin-top:2px; }
+.log-del { background:none; border:none; font-size:13px; cursor:pointer; opacity:0.4; }
+
+.empty-state { text-align:center; padding:24px 16px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:14px; color:var(--brown-muted); line-height:1.6; }
+
+.sparkle { position:fixed; pointer-events:none; z-index:9999; animation:sparkle-fly 1.2s ease-out forwards; }
+@keyframes sparkle-fly { 0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg);}100%{opacity:0;transform:translateY(-80px) scale(0.3) rotate(180deg);} }
+.toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px); background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); padding:9px 20px; border-radius:22px; font-size:12px; font-weight:600; letter-spacing:0.08em; box-shadow:0 5px 18px rgba(196,113,79,0.38); opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap; z-index:999; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.nav-bar { position:fixed; bottom:0; left:0; right:0; background:var(--cream); border-top:1px solid rgba(196,113,79,0.14); padding:9px 18px 16px; display:flex; justify-content:space-around; align-items:center; z-index:50; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:2px; text-decoration:none; font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--brown-soft); transition:color 0.16s; }
+.nav-item.active { color:var(--terra); }
+.nav-icon { font-size:19px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <svg class="header-marble" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <filter id="mf"><feGaussianBlur stdDeviation="2.5"/></filter>
+    <g filter="url(#mf)">
+      <path d="M -10 65 Q 80 30 165 80 Q 265 138 355 65 Q 425 12 515 60" stroke="rgba(184,137,110,0.27)" stroke-width="2.5" fill="none"/>
+    </g>
+  </svg>
+  <div class="header-glow"></div>
+  <div class="bracket btl"></div><div class="bracket btr"></div>
+  <div class="header-content">
+    <div class="header-eyebrow">Life · J Empire</div>
+    <div class="header-title">🫙 <em>Meal Planner</em></div>
+    <div class="header-divider"><div class="hdl"></div><div class="hdg"></div><div class="hdl"></div></div>
+    <div class="header-quote">"Feed your family well. Plan once, eat all week." ✦</div>
+  </div>
+</div>
+
+<div class="week-nav">
+  <button class="week-nav-btn" onclick="changeWeek(-1)">‹</button>
+  <div class="week-nav-center">
+    <div class="week-nav-label" id="weekLabel">This Week</div>
+    <div class="week-nav-sub" id="weekRange"></div>
+  </div>
+  <button class="week-nav-btn" onclick="changeWeek(1)">›</button>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab0" onclick="switchTab(0)">📅 Week</button>
+  <button class="tab-btn" id="tab1" onclick="switchTab(1)">🍽️ Recipes</button>
+  <button class="tab-btn" id="tab2" onclick="switchTab(2)">📋 Log</button>
+  <button class="tab-btn" id="tab3" onclick="switchTab(3)">➕ Add</button>
+</div>
+
+<div class="main">
+
+  <!-- WEEK VIEW -->
+  <div id="view0">
+    <div class="football-banner" id="footballBanner">
+      <div class="fb-icon">🏈</div>
+      <div><div class="fb-title">Football Night — Juliusz!</div><div class="fb-sub">Quick & easy dinner tonight. Go team! ✦</div></div>
+    </div>
+
+    <!-- MON–FRI -->
+    <div class="weekday-grid" id="weekdayGrid"></div>
+
+    <!-- WEEKEND -->
+    <div class="weekend-divider">
+      <div class="weekend-divider-line"></div>
+      <div class="weekend-divider-text">Weekend</div>
+      <div class="weekend-divider-line"></div>
+    </div>
+    <div class="weekend-grid" id="weekendGrid"></div>
+  </div>
+
+  <!-- RECIPES -->
+  <div id="view1" style="display:none">
+    <div class="recipe-search-wrap">
+      <input class="recipe-search" id="recipeSearch" placeholder="Search recipes..." oninput="filterRecipes()" />
+    </div>
+    <div class="cat-filter" id="catFilter"></div>
+    <div style="padding-top:8px">
+      <div class="recipe-list" id="recipeList"></div>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div id="view2" style="display:none">
+    <div class="section-hdr" style="margin-bottom:12px">
+      <div style="font-size:9px;font-weight:700;letter-spacing:0.26em;text-transform:uppercase;color:var(--rose-gold)">Meal History</div>
+    </div>
+    <div class="meal-log" id="mealLog"><div class="empty-state">"Plan your meals and they'll appear here." ✦</div></div>
+  </div>
+
+  <!-- ADD -->
+  <div id="view3" style="display:none">
+    <div style="background:var(--white-warm);border:1px solid rgba(196,113,79,0.2);border-radius:15px;padding:14px;box-shadow:0 3px 12px rgba(196,113,79,0.08)">
+      <div class="autocomplete-wrap">
+        <input class="form-input" id="mealName" placeholder="Meal name — start typing to search..." oninput="showAutocomplete(this.value)" onblur="setTimeout(hideAutocomplete,200)" autocomplete="off" />
+        <div class="autocomplete-list" id="autocompleteList"></div>
+      </div>
+      <div class="form-row" style="margin-bottom:8px">
+        <select class="form-select" id="mealDay" style="margin-bottom:0">
+          <option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option>
+          <option value="4">Thursday</option><option value="5">Friday</option>
+          <option value="6">Saturday</option><option value="0">Sunday</option>
+        </select>
+        <select class="form-select" id="mealType" style="margin-bottom:0">
+          <option>Breakfast</option><option>Lunch</option><option selected>Dinner</option><option>Snack</option>
+        </select>
+      </div>
+      <select class="form-select" id="mealCat">
+        <option>Latin</option><option>American</option><option>Quick</option><option>Batch Cook</option>
+        <option>Kids Fave</option><option>Healthy</option><option>Budget</option><option>Football Night</option><option>Seafood</option>
+      </select>
+      <input class="form-input" id="mealNotes" placeholder="Notes (optional)" />
+      <button class="form-btn form-btn-save" style="width:100%;padding:11px" onclick="saveMeal()">Add to Plan ✦</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- RECIPE MODAL -->
+<div class="modal-overlay" id="recipeModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-emoji" id="modalEmoji">🍽️</div>
+    <div class="modal-title" id="modalName"></div>
+    <div class="modal-meta" id="modalMeta"></div>
+    <div class="modal-section">Ingredients</div>
+    <div class="ing-list" id="modalIngredients"></div>
+    <button class="modal-btn modal-btn-primary" onclick="addIngredientsToList()">🛒 Save to Grocery List ✦</button>
+    <button class="modal-btn modal-btn-secondary" onclick="planFromRecipe()">📅 Plan This Meal ✦</button>
+    <button class="modal-btn" id="modalDeleteBtn" style="display:none;background:rgba(196,113,79,0.12);color:var(--terra);border:1.5px solid rgba(196,113,79,0.3)" onclick="deleteMealFromModal()">🗑️ Remove from Plan</button>
+    <button class="modal-btn modal-btn-secondary" onclick="closeRecipeModal()">Close</button>
+  </div>
+</div>
+
+<!-- ASSIGN MODAL -->
+<div class="modal-overlay" id="assignModal">
+  <div class="assign-sheet">
+    <div class="modal-handle"></div>
+    <div class="assign-title" id="assignTitle">Add Meal</div>
+    <div class="autocomplete-wrap">
+      <input class="form-input" id="assignName" placeholder="Meal name — start typing..." oninput="showAssignAutocomplete(this.value)" onblur="setTimeout(hideAssignAutocomplete,200)" autocomplete="off" />
+      <div class="autocomplete-list" id="assignAutocompleteList"></div>
+    </div>
+    <div class="form-row">
+      <select class="form-select" id="assignType" style="margin-bottom:0"><option>Breakfast</option><option>Lunch</option><option selected>Dinner</option><option>Snack</option></select>
+      <select class="form-select" id="assignCat" style="margin-bottom:0"><option>Latin</option><option>American</option><option>Quick</option><option>Kids Fave</option><option>Football Night</option><option>Healthy</option><option>Budget</option><option>Seafood</option></select>
+    </div>
+    <div class="form-row" style="margin-top:8px">
+      <button class="form-btn form-btn-cancel" onclick="closeAssign()">Cancel</button>
+      <button class="form-btn form-btn-save" onclick="saveAssign()">Add ✦</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOM MEAL MODAL -->
+<div class="modal-overlay" id="customMealModal">
+  <div class="custom-meal-sheet">
+    <div class="modal-handle"></div>
+    <div class="custom-meal-emoji">🍽️</div>
+    <div class="custom-meal-title" id="customMealName">Meal</div>
+    <div class="custom-meal-sub">Custom meal — not in recipe list</div>
+    <button class="modal-btn modal-btn-primary" onclick="editCustomMeal()" style="background:linear-gradient(135deg,var(--rose-gold),var(--rose-light))">✏️ Edit Meal Name</button>
+    <button class="modal-btn" style="background:rgba(196,113,79,0.12);color:var(--terra);border:1.5px solid rgba(196,113,79,0.3);margin-top:7px" onclick="deleteCustomMeal()">🗑️ Remove from Plan</button>
+    <button class="modal-btn modal-btn-secondary" style="margin-top:7px" onclick="closeCustomMealModal()">Close</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="nav-bar">
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/index.html"><span class="nav-icon">🏠</span><span>Home</span></a>
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/planner.html"><span class="nav-icon">📋</span><span>Lists</span></a>
+  <a class="nav-item active" href="#"><span class="nav-icon">🫙</span><span>Meals</span></a>
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/brain_dump.html"><span class="nav-icon">🎒</span><span>BTS</span></a>
+</div>
+
+<script>
+const SUPABASE_URL='https://ejseathlglvvnmkpchib.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqc2VhdGhsZ2x2dm5ta3BjaGliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODc4NTUsImV4cCI6MjA5NzU2Mzg1NX0.o4crd1W5-NbVNXSOWNT-WPHS7R6orRe9CRYFZfZ41L8';
+
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MEAL_TYPES=['Breakfast','Lunch','Dinner','Snack'];
+// Football: Tuesday(2) and Thursday(4) ONLY
+const FOOTBALL_DAYS=[2,4];
+const CAT_EMOJI={'Breakfast':'🍳','Lunch':'🥪','Snack':'🍎','Latin':'🌶️','American':'🍔','Quick':'⚡','Batch Cook':'🫙','Kids Fave':'🏡','Healthy':'🌿','Budget':'💰','Football Night':'🏈','Seafood':'🐟'};
+
+const MEAL_DB={
+  "Lasagna":["Lasagna noodles","Ground beef","Ricotta cheese","Mozzarella","Parmesan","Marinara sauce","Eggs","Italian seasoning","Garlic","Onion"],
+  "Spaghetti":["Spaghetti","Ground beef","Marinara sauce","Garlic","Onion","Parmesan","Olive oil"],
+  "Tacos":["Ground beef or chicken","Taco shells","Shredded cheese","Lettuce","Tomatoes","Sour cream","Salsa","Taco seasoning"],
+  "Taco Night":["Ground beef","Taco shells","Flour tortillas","Cheese","Lettuce","Tomatoes","Sour cream","Salsa","Lime"],
+  "Chicken Alfredo":["Fettuccine","Chicken breast","Heavy cream","Butter","Parmesan","Garlic","Salt","Pepper"],
+  "Baked Chicken":["Chicken thighs","Olive oil","Garlic powder","Paprika","Salt","Pepper","Lemon"],
+  "Grilled Chicken":["Chicken breast","Olive oil","Garlic","Lemon juice","Paprika","Salt","Pepper"],
+  "Fried Chicken":["Chicken pieces","Flour","Eggs","Milk","Garlic powder","Paprika","Salt","Oil"],
+  "Chicken Tenders":["Chicken tenders","Flour","Eggs","Breadcrumbs","Garlic powder","Salt","Oil"],
+  "Dino Nuggets":["Dino nuggets (frozen)","Ketchup"],
+  "Chicken Nuggets":["Chicken breast","Breadcrumbs","Eggs","Flour","Garlic powder","Salt","Oil"],
+  "Mac and Cheese":["Elbow macaroni","Butter","Flour","Milk","Cheddar cheese","Salt","Mustard powder"],
+  "Butter Noodles":["Egg noodles","Butter","Salt","Garlic powder","Parmesan"],
+  "Rice and Beans":["White rice","Black beans","Chicken broth","Onion","Garlic","Cumin","Olive oil"],
+  "Hamburgers":["Ground beef","Buns","Lettuce","Tomatoes","Onion","Cheese","Ketchup","Mustard"],
+  "Hot Dogs":["Hot dogs","Buns","Ketchup","Mustard","Relish","Onion"],
+  "Pizza":["Pizza dough","Pizza sauce","Mozzarella","Toppings","Olive oil"],
+  "French Fries":["Potatoes or frozen fries","Oil","Salt","Ketchup"],
+  "Wings":["Chicken wings","Hot sauce","Butter","Garlic powder","Salt","Ranch dressing"],
+  "Nachos":["Tortilla chips","Cheese","Ground beef","Jalapeños","Sour cream","Salsa","Guacamole"],
+  "Chili":["Ground beef","Kidney beans","Diced tomatoes","Tomato sauce","Onion","Bell pepper","Garlic","Chili powder","Cumin"],
+  "Salmon":["Salmon fillets","Lemon","Garlic","Butter","Olive oil","Salt","Dill"],
+  "Pork Chops":["Pork chops","Olive oil","Garlic powder","Paprika","Salt","Pepper","Butter"],
+  "Beef Stew":["Beef chuck","Potatoes","Carrots","Onion","Celery","Beef broth","Tomato paste","Garlic"],
+  "Chicken Soup":["Chicken","Chicken broth","Carrots","Celery","Onion","Garlic","Egg noodles","Salt"],
+  "Quesadillas":["Flour tortillas","Cheese","Chicken","Bell peppers","Onion","Sour cream","Salsa"],
+  "Chicken Fried Rice":["Cooked rice","Chicken","Eggs","Soy sauce","Garlic","Onion","Peas","Sesame oil"],
+  "Shrimp Fried Rice":["Shrimp","Cooked rice","Eggs","Soy sauce","Garlic","Onion","Peas","Sesame oil"],
+  "Empanadas":["Empanada dough","Ground beef","Onion","Bell pepper","Garlic","Cumin","Sazon","Olives"],
+  "Arroz con Pollo":["Chicken thighs","White rice","Chicken broth","Onion","Bell pepper","Garlic","Tomato sauce","Sazon","Adobo","Cilantro"],
+  "Pernil":["Pork shoulder","Garlic","Oregano","Cumin","Adobo","Sazon","Vinegar","Olive oil"],
+  "Sofrito Chicken":["Chicken","Sofrito","Sazon","Adobo","Tomato sauce","Onion","Garlic","Potatoes"],
+  "Rice and Chicken":["Chicken thighs","White rice","Chicken broth","Sofrito","Sazon","Adobo","Tomato sauce"],
+  "Beans and Rice":["Red beans","White rice","Sofrito","Sazon","Garlic","Onion","Olive oil"],
+  "Tostones":["Green plantains","Oil","Salt","Garlic"],
+  "Mofongo":["Green plantains","Garlic","Pork rinds","Olive oil","Salt","Chicken broth"],
+  "Sancocho":["Chicken or beef","Yuca","Plantains","Potatoes","Corn","Onion","Garlic","Cilantro","Sazon"],
+  "Oxtail":["Oxtail","Onion","Garlic","Thyme","Allspice","Soy sauce","Ketchup","Carrots","Butter beans"],
+  "Jerk Chicken":["Chicken","Jerk seasoning","Allspice","Thyme","Garlic","Ginger","Soy sauce","Brown sugar","Lime"],
+  "Sloppy Joes":["Ground beef","Buns","Ketchup","Mustard","Brown sugar","Onion","Bell pepper"],
+  "Grilled Cheese":["Bread","Butter","American cheese"],
+  "Chicken Sandwiches":["Chicken breast","Buns","Lettuce","Tomatoes","Mayo","Hot sauce","Pickles"],
+  "Meatballs":["Ground beef","Breadcrumbs","Egg","Parmesan","Garlic","Italian seasoning","Marinara sauce"],
+  "Chicken Stir Fry":["Chicken breast","Broccoli","Bell peppers","Soy sauce","Garlic","Ginger","Rice"],
+  "Ramen":["Ramen noodles","Chicken broth","Soy sauce","Eggs","Green onions","Garlic","Sesame oil"],
+  "Fish Fry":["Fish fillets","Cornmeal","Flour","Cajun seasoning","Garlic powder","Salt","Oil","Lemon"],
+  "Fish Sticks":["Frozen fish sticks","Tartar sauce","Ketchup","Lemon"],
+  "Baked Fish":["Fish fillets","Lemon","Butter","Garlic","Paprika","Salt","Parsley"],
+  "Salmon Patties":["Canned salmon","Eggs","Breadcrumbs","Onion","Garlic powder","Salt","Oil"],
+  "Ribs":["Pork ribs","BBQ sauce","Brown sugar","Garlic powder","Paprika","Salt","Apple cider vinegar"],
+  "BBQ Ribs":["Spare ribs","BBQ sauce","Brown sugar","Smoked paprika","Garlic powder","Salt","Cayenne"],
+  "Chicken Drumsticks":["Drumsticks","Olive oil","Garlic powder","Paprika","Salt","Pepper","Lemon"],
+  "Baked Drumsticks":["Drumsticks","Butter","Garlic","Paprika","Salt","Pepper","Lemon juice"],
+  "Fried Drumsticks":["Drumsticks","Flour","Eggs","Milk","Garlic powder","Paprika","Salt","Oil"],
+  "Caldo de Pollo":["Whole chicken","Corn","Potatoes","Carrots","Zucchini","Cabbage","Cilantro","Garlic","Onion","Bouillon","Lime"],
+  "Baked Ziti":["Ziti pasta","Ground beef","Marinara","Ricotta","Mozzarella","Parmesan","Egg","Italian seasoning"],
+  "Smash Burgers":["Ground beef 80/20","Brioche buns","American cheese","Lettuce","Tomatoes","Pickles","Mayo","Ketchup"],
+  "Breakfast Burritos":["Eggs","Flour tortillas","Breakfast sausage","Cheese","Bell peppers","Onion","Salsa","Butter"],
+  "Fried Rice":["Day-old rice","Eggs","Frozen veggies","Soy sauce","Sesame oil","Green onions","Garlic","Butter"],
+  "Big Family Salad":["Romaine lettuce","Cherry tomatoes","Cucumber","Red onion","Avocado","Grilled chicken","Cheese","Croutons"],
+  "Baked Tilapia":["Tilapia fillets","Lemon","Garlic powder","Paprika","Olive oil","Parsley","Salt","Pepper"],
+
+  "Scrambled Eggs":["Eggs","Butter","Milk","Salt","Pepper"],
+  "Fried Eggs":["Eggs","Butter","Salt","Pepper"],
+  "Boiled Eggs":["Eggs","Water","Salt"],
+  "Egg Omelet":["Eggs","Butter","Cheese","Bell peppers","Onion","Salt","Pepper"],
+  "Pancakes":["Pancake mix","Eggs","Milk","Butter","Maple syrup"],
+  "Waffles":["Waffle mix","Eggs","Milk","Butter","Maple syrup"],
+  "French Toast":["Bread","Eggs","Milk","Butter","Cinnamon","Maple syrup","Powdered sugar"],
+  "Bacon and Eggs":["Bacon","Eggs","Butter","Salt","Pepper","Toast"],
+  "Sausage and Eggs":["Breakfast sausage","Eggs","Butter","Toast","Salt","Pepper"],
+  "Grits":["Grits","Butter","Salt","Cheese","Water or Milk"],
+  "Oatmeal":["Oats","Milk or Water","Honey","Cinnamon","Banana","Berries"],
+  "Cereal":["Cereal","Milk","Banana or berries"],
+  "Avocado Toast":["Bread","Avocado","Eggs","Red pepper flakes","Salt","Lemon juice"],
+  "Breakfast Sandwich":["English muffin","Eggs","Cheese","Bacon or Sausage","Butter"],
+  "Yogurt Parfait":["Greek yogurt","Granola","Berries","Honey"],
+  "Bagel and Cream Cheese":["Bagel","Cream cheese","Lox (optional)"],
+  "Banana Pancakes":["Bananas","Eggs","Pancake mix","Butter","Maple syrup"],
+  "Egg Muffins":["Eggs","Cheese","Spinach","Bell peppers","Onion","Salt","Pepper"],
+  "Breakfast Quesadilla":["Flour tortilla","Eggs","Cheese","Sausage","Salsa","Butter"],
+  "Smoothie Bowl":["Frozen berries","Banana","Greek yogurt","Granola","Honey","Milk"],
+  "Toaster Waffles":["Frozen waffles","Maple syrup","Butter","Strawberries"],
+  "Peanut Butter Toast":["Bread","Peanut butter","Banana","Honey"],
+  "Turkey Sandwich":["Deli turkey","Bread","Lettuce","Tomatoes","Mayo","Mustard","Cheese"],
+  "Ham Sandwich":["Deli ham","Bread","Lettuce","Tomatoes","Mayo","Cheese","Mustard"],
+  "Publix Sub":["Sub roll","Deli meat","Cheese","Lettuce","Tomatoes","Onion","Mayo","Mustard","Pickles"],
+  "PB&J":["Bread","Peanut butter","Jelly"],
+  "Chicken Wrap":["Flour tortilla","Grilled chicken","Lettuce","Tomatoes","Cheese","Ranch","Avocado"],
+  "Caesar Salad":["Romaine lettuce","Caesar dressing","Croutons","Parmesan","Grilled chicken"],
+  "Tuna Sandwich":["Canned tuna","Mayo","Celery","Onion","Bread","Lettuce","Tomatoes"],
+  "BLT Sandwich":["Bacon","Lettuce","Tomatoes","Mayo","Bread"],
+  "Chicken Caesar Wrap":["Flour tortilla","Grilled chicken","Romaine","Caesar dressing","Parmesan"],
+  "Leftovers":["Whatever is leftover from dinner"],
+  "Soup and Sandwich":["Canned soup","Bread","Deli meat","Cheese","Butter"],
+  "Chef Salad":["Romaine","Deli turkey","Deli ham","Cheese","Hard boiled eggs","Tomatoes","Croutons","Ranch"],
+  "Avocado Chicken Salad":["Chicken breast","Avocado","Mayo","Lime","Cilantro","Salt","Pepper","Bread or crackers"],
+  "Kids Lunchable":["Crackers","Deli meat","Cheese slices","Fruit","Juice"],
+  "Grilled Cheese and Tomato Soup":["Bread","Cheese","Butter","Canned tomato soup","Milk"],
+  "Egg Salad Sandwich":["Eggs","Mayo","Mustard","Celery","Salt","Pepper","Bread","Lettuce"],
+  "Pasta Salad":["Rotini pasta","Cherry tomatoes","Cucumber","Olives","Cheese","Italian dressing"],
+  "Apple Slices and Peanut Butter":["Apple","Peanut butter","Cinnamon"],
+  "Fruit Salad":["Strawberries","Grapes","Watermelon","Cantaloupe","Blueberries","Honey"],
+  "String Cheese and Crackers":["String cheese","Crackers","Grapes","Apple"],
+  "Hummus and Veggies":["Hummus","Carrots","Celery","Cucumber","Bell peppers","Pita chips"],
+  "Chips and Salsa":["Tortilla chips","Salsa","Guacamole"],
+  "Popcorn":["Popcorn","Butter","Salt"],
+  "Trail Mix":["Mixed nuts","Dried fruit","Chocolate chips","Pretzels"],
+  "Goldfish Crackers":["Goldfish crackers","Juice box"],
+  "Cheese Quesadilla":["Flour tortilla","Cheese","Butter","Salsa","Sour cream"],
+  "Rice Cakes":["Rice cakes","Peanut butter","Banana","Honey"],
+};
