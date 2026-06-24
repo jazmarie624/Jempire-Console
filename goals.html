@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J Empire · Goals</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --cream:#F4EFE8; --cream-deep:#EDE6DC;
+  --terra:#C4714F; --terra-light:#D4906E;
+  --rose-gold:#B8896E; --rose-light:#D4A574;
+  --brown-dark:#2C1A0E; --brown-mid:#6B4232;
+  --brown-muted:#9A6E58; --brown-soft:#C4A090;
+  --white-warm:rgba(255,252,248,0.95);
+  --green:#5A8A5E;
+}
+body { min-height:100vh; font-family:'Inter',sans-serif; background:var(--cream-deep); color:var(--brown-dark); }
+
+.header { position:relative; overflow:hidden; padding:48px 24px 28px; text-align:center; background:var(--cream); background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(180,140,105,0.07) 3px,rgba(180,140,105,0.07) 4px),repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(180,140,105,0.05) 3px,rgba(180,140,105,0.05) 4px); }
+.header::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,transparent,var(--terra) 20%,var(--rose-light) 50%,var(--rose-gold) 80%,transparent); }
+.header-marble { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.header-glow { position:absolute; inset:0; background:radial-gradient(ellipse 70% 50% at 85% 10%,rgba(196,113,79,0.15) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 10% 85%,rgba(184,137,110,0.11) 0%,transparent 50%); }
+.bracket { position:absolute; width:24px; height:24px; opacity:0.3; }
+.btl { top:14px; left:16px; border-top:1.5px solid var(--terra); border-left:1.5px solid var(--terra); }
+.btr { top:14px; right:16px; border-top:1.5px solid var(--terra); border-right:1.5px solid var(--terra); }
+.header-content { position:relative; z-index:2; }
+.header-eyebrow { font-size:9px; font-weight:600; letter-spacing:0.3em; text-transform:uppercase; color:var(--rose-gold); margin-bottom:6px; }
+.header-title { font-family:'Cormorant Garamond',serif; font-size:44px; font-weight:300; color:var(--brown-dark); line-height:0.95; letter-spacing:0.06em; margin-bottom:10px; }
+.header-title em { font-style:italic; color:var(--terra); }
+.header-divider { display:flex; align-items:center; gap:8px; width:160px; margin:0 auto 10px; }
+.hdl { flex:1; height:1px; background:rgba(196,113,79,0.3); }
+.hdg { width:4px; height:4px; background:var(--terra); transform:rotate(45deg); opacity:0.7; }
+.header-quote { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13px; color:var(--brown-muted); }
+
+/* SYNC */
+.sync-bar { background:var(--cream); border-bottom:1px solid rgba(196,113,79,0.12); padding:8px 16px; display:flex; align-items:center; justify-content:space-between; }
+.sync-badge { font-size:9.5px; font-weight:600; letter-spacing:0.1em; padding:4px 10px; border-radius:10px; }
+.sync-ok { background:rgba(90,138,94,0.12); color:var(--green); }
+.sync-loading { background:rgba(196,113,79,0.1); color:var(--terra); }
+.sync-error { background:rgba(196,113,79,0.1); color:var(--brown-muted); }
+
+/* CAT TABS */
+.cat-tabs { background:var(--cream); border-bottom:1px solid rgba(196,113,79,0.15); padding:10px 16px; display:flex; gap:7px; overflow-x:auto; scrollbar-width:none; }
+.cat-tabs::-webkit-scrollbar { display:none; }
+.cat-tab { font-size:9.5px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:7px 14px; border-radius:20px; border:1px solid rgba(196,113,79,0.22); background:transparent; color:var(--brown-muted); cursor:pointer; transition:all 0.18s; font-family:'Inter',sans-serif; white-space:nowrap; }
+.cat-tab.active { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border-color:transparent; box-shadow:0 3px 10px rgba(196,113,79,0.28); }
+
+.main { padding:18px 16px 100px; max-width:500px; margin:0 auto; }
+
+/* STATS */
+.stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
+.stat-card { background:var(--white-warm); border:1px solid rgba(196,113,79,0.16); border-radius:14px; padding:13px 10px; text-align:center; box-shadow:0 2px 8px rgba(196,113,79,0.06); }
+.stat-num { font-family:'Cormorant Garamond',serif; font-size:28px; color:var(--terra); }
+.stat-label { font-size:8.5px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--brown-muted); margin-top:2px; }
+
+/* ADD FORM */
+.add-form { background:var(--white-warm); border:1px solid rgba(196,113,79,0.22); border-radius:16px; padding:16px; margin-bottom:16px; display:none; flex-direction:column; gap:10px; box-shadow:0 4px 16px rgba(196,113,79,0.1); }
+.add-form.visible { display:flex; }
+.form-input { width:100%; padding:10px 14px; border:1px solid rgba(196,113,79,0.25); border-radius:10px; background:var(--cream); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:13px; outline:none; }
+.form-input:focus { border-color:var(--terra); }
+.form-input::placeholder { color:var(--brown-soft); }
+.form-row { display:flex; gap:8px; }
+.form-select { flex:1; padding:9px 12px; border:1px solid rgba(196,113,79,0.25); border-radius:10px; background:var(--cream); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:12px; outline:none; }
+.form-btn { padding:10px 20px; border-radius:10px; border:none; font-family:'Inter',sans-serif; font-size:12px; font-weight:600; cursor:pointer; transition:all 0.18s; }
+.form-btn-save { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); box-shadow:0 3px 10px rgba(196,113,79,0.3); }
+.form-btn-cancel { background:rgba(196,113,79,0.1); color:var(--brown-muted); }
+
+/* SECTION HDR */
+.section-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.section-title { font-size:9px; font-weight:700; letter-spacing:0.26em; text-transform:uppercase; color:var(--rose-gold); display:flex; align-items:center; gap:8px; }
+.section-title::after { content:''; display:block; width:30px; height:1px; background:rgba(196,113,79,0.25); }
+.add-btn { font-size:9px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--terra); background:rgba(196,113,79,0.1); padding:5px 12px; border-radius:20px; cursor:pointer; transition:all 0.18s; border:none; font-family:'Inter',sans-serif; }
+.add-btn:hover { background:var(--terra); color:var(--cream); }
+
+/* GOAL CARD */
+.goals-list { display:flex; flex-direction:column; gap:14px; }
+.goal-card { background:var(--white-warm); border:1px solid rgba(196,113,79,0.16); border-radius:18px; padding:16px; box-shadow:0 2px 10px rgba(196,113,79,0.07); transition:all 0.2s; }
+.goal-card.done-card { opacity:0.6; border-color:rgba(90,138,94,0.3); }
+
+.goal-top-row { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:6px; }
+.goal-name { font-family:'Cormorant Garamond',serif; font-size:21px; font-weight:400; color:var(--brown-dark); line-height:1.2; flex:1; }
+.goal-name.done-text { text-decoration:line-through; color:var(--brown-muted); }
+.goal-cat-badge { font-size:8.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:3px 10px; border-radius:10px; color:white; flex-shrink:0; margin-top:4px; }
+
+.goal-deadline { font-size:10px; color:var(--brown-muted); font-weight:600; margin-bottom:6px; display:flex; align-items:center; gap:5px; }
+.goal-deadline.urgent { color:var(--terra); }
+.goal-note { font-size:11.5px; color:var(--brown-muted); font-style:italic; line-height:1.5; background:rgba(196,113,79,0.05); border-radius:10px; padding:8px 12px; margin-bottom:10px; border-left:3px solid rgba(196,113,79,0.25); }
+
+/* PROGRESS */
+.progress-strip { margin-bottom:10px; }
+.strip-label { display:flex; justify-content:space-between; font-size:10px; color:var(--brown-muted); font-weight:600; margin-bottom:4px; }
+.strip-bg { height:6px; background:rgba(196,113,79,0.12); border-radius:10px; overflow:hidden; }
+.strip-fill { height:100%; border-radius:10px; transition:width 0.5s ease; }
+
+/* MILESTONES */
+.milestones-section { margin-bottom:12px; }
+.milestones-title { display:flex; justify-content:space-between; font-size:9px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--rose-gold); margin-bottom:8px; }
+.milestone-item { display:flex; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid rgba(196,113,79,0.07); }
+.milestone-item:last-child { border-bottom:none; }
+.milestone-check { width:20px; height:20px; cursor:pointer; flex-shrink:0; accent-color:var(--terra); }
+.milestone-num { width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; color:white; flex-shrink:0; }
+.milestone-text { flex:1; font-size:12.5px; color:var(--brown-dark); line-height:1.4; }
+.milestone-text.done-step { text-decoration:line-through; color:var(--brown-soft); }
+.milestone-del { background:none; border:none; font-size:12px; cursor:pointer; opacity:0.3; transition:opacity 0.18s; flex-shrink:0; }
+.milestone-del:hover { opacity:1; }
+
+/* ADD MILESTONE */
+.add-milestone-row { display:flex; gap:7px; margin-top:10px; }
+.mini-inp { flex:1; padding:8px 12px; border:1px solid rgba(196,113,79,0.22); border-radius:10px; background:var(--cream); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:12px; outline:none; }
+.mini-inp::placeholder { color:var(--brown-soft); font-style:italic; }
+.mini-inp:focus { border-color:var(--terra); }
+.small-btn { padding:8px 14px; border-radius:10px; color:white; border:none; font-family:'Inter',sans-serif; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap; transition:all 0.18s; }
+
+/* GOAL FOOTER */
+.goal-footer { display:flex; align-items:center; justify-content:space-between; padding-top:10px; border-top:1px solid rgba(196,113,79,0.1); }
+.done-check-label { display:flex; align-items:center; gap:7px; font-size:11px; font-weight:600; color:var(--brown-muted); cursor:pointer; }
+.done-check-label input { accent-color:var(--green); width:16px; height:16px; cursor:pointer; }
+.del-btn { background:rgba(196,113,79,0.08); border:1px solid rgba(196,113,79,0.15); border-radius:8px; color:var(--brown-muted); font-size:12px; cursor:pointer; padding:4px 10px; transition:all 0.18s; }
+.del-btn:hover { background:rgba(196,113,79,0.15); color:var(--terra); }
+
+.empty-state { text-align:center; padding:36px 20px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:16px; color:var(--brown-muted); line-height:1.6; }
+
+.sparkle { position:fixed; pointer-events:none; z-index:9999; animation:sparkle-fly 1.2s ease-out forwards; }
+@keyframes sparkle-fly { 0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg);}100%{opacity:0;transform:translateY(-80px) scale(0.3) rotate(180deg);} }
+.toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px); background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); padding:10px 22px; border-radius:24px; font-size:12px; font-weight:600; letter-spacing:0.08em; box-shadow:0 6px 20px rgba(196,113,79,0.4); opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap; z-index:999; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.nav-bar { position:fixed; bottom:0; left:0; right:0; background:var(--cream); border-top:1px solid rgba(196,113,79,0.15); padding:10px 20px 18px; display:flex; justify-content:space-around; align-items:center; z-index:50; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--brown-soft); transition:color 0.18s; }
+.nav-item.active { color:var(--terra); }
+.nav-icon { font-size:20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <svg class="header-marble" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <filter id="mf"><feGaussianBlur stdDeviation="2.5"/></filter>
+    <g filter="url(#mf)">
+      <path d="M -10 70 Q 80 35 170 85 Q 270 145 360 70 Q 430 15 520 65" stroke="rgba(184,137,110,0.28)" stroke-width="2.5" fill="none"/>
+      <path d="M 40 160 Q 130 120 200 158 Q 295 205 385 145" stroke="rgba(196,113,79,0.16)" stroke-width="1.5" fill="none"/>
+    </g>
+  </svg>
+  <div class="header-glow"></div>
+  <div class="bracket btl"></div><div class="bracket btr"></div>
+  <div class="header-content">
+    <div class="header-eyebrow">Growth & Self · J Empire</div>
+    <div class="header-title">🌿 <em>Goals</em></div>
+    <div class="header-divider"><div class="hdl"></div><div class="hdg"></div><div class="hdl"></div></div>
+    <div class="header-quote">"Write the goal. Make it real. Watch it happen." ✦</div>
+  </div>
+</div>
+
+<!-- SYNC -->
+<div class="sync-bar">
+  <span id="syncStatus" class="sync-badge sync-loading">syncing...</span>
+  <button class="add-btn" onclick="openForm('goalForm')">+ New Goal</button>
+</div>
+
+<!-- CAT TABS -->
+<div class="cat-tabs" id="catTabs"></div>
+
+<div class="main">
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" id="totalGoals">0</div><div class="stat-label">Goals</div></div>
+    <div class="stat-card"><div class="stat-num" id="doneGoals">0</div><div class="stat-label">Crushed ✦</div></div>
+    <div class="stat-card"><div class="stat-num" id="totalSteps">0</div><div class="stat-label">Steps Done</div></div>
+  </div>
+
+  <!-- ADD FORM -->
+  <div class="add-form" id="goalForm">
+    <input class="form-input" id="gName" placeholder="Goal name" />
+    <input class="form-input" id="gNote" placeholder="Notes or why this matters to you..." />
+    <div class="form-row">
+      <select class="form-select" id="gCat">
+        <option value="career">💼 Career & Certs</option>
+        <option value="financial">💰 Financial</option>
+        <option value="personal">🌿 Personal</option>
+      </select>
+      <input class="form-input" id="gDeadline" type="date" style="flex:1" />
+    </div>
+    <div class="form-row">
+      <button class="form-btn form-btn-cancel" onclick="closeForm('goalForm')">Cancel</button>
+      <button class="form-btn form-btn-save" onclick="addGoal()">Add Goal ✦</button>
+    </div>
+  </div>
+
+  <div class="section-hdr">
+    <div class="section-title">My Goals</div>
+  </div>
+
+  <div class="goals-list" id="goalsList"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="nav-bar">
+  <a class="nav-item" href="https://jolly-squirrel-4b0ee5.netlify.app"><span class="nav-icon">🏠</span><span>Home</span></a>
+  <a class="nav-item active" href="#"><span class="nav-icon">🌿</span><span>Goals</span></a>
+  <a class="nav-item" href="https://inspiring-sawine-ce2040.netlify.app"><span class="nav-icon">📜</span><span>Study</span></a>
+</div>
+
+<script>
+const SUPABASE_URL='https://ejseathlglvvnmkpchib.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqc2VhdGhsZ2x2dm5ta3BjaGliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODc4NTUsImV4cCI6MjA5NzU2Mzg1NX0.o4crd1W5-NbVNXSOWNT-WPHS7R6orRe9CRYFZfZ41L8';
+
+const CATS=[
+  {id:'all',    label:'All Goals',     color:'#C4714F'},
+  {id:'career', label:'Career & Certs',color:'#6B8EC4'},
+  {id:'financial',label:'Financial',  color:'#5A8A5E'},
+  {id:'personal', label:'Personal',   color:'#B8896E'}
+];
+
+const PRELOADED=[
+  { id:'g1', name:'Notary Certification', cat:'career', deadline:'2025-12-31',
+    note:'Complete application and exam — certificate must be within 1-year validity',
+    done:false, created_at:new Date().toISOString(),
+    milestones:[
+      {id:'g1m1',text:'Verify notary education certificate is still valid',done:false},
+      {id:'g1m2',text:'Submit Florida state notary application',done:false},
+      {id:'g1m3',text:'Purchase notary bond and E&O insurance',done:false},
+      {id:'g1m4',text:'Purchase notary stamp and journal',done:false},
+      {id:'g1m5',text:'Take oath of office at county clerk',done:false}
+    ]},
+  { id:'g2', name:'Certified Process Server — 9th Circuit', cat:'career', deadline:'2026-06-30',
+    note:'Contact Helene Welch: hwelch@ninthcircuit.org · 407-836-0471',
+    done:false, created_at:new Date().toISOString(),
+    milestones:[
+      {id:'g2m1',text:'Complete FAPPS course ($180 — 80% pass required)',done:false},
+      {id:'g2m2',text:'Pass FAPPS certification exam',done:false},
+      {id:'g2m3',text:'Gather required documents for 9th Circuit application',done:false},
+      {id:'g2m4',text:'Submit 9th Circuit application and pay fees (~$555)',done:false},
+      {id:'g2m5',text:'Receive certification and register with clerk',done:false}
+    ]},
+  { id:'g3', name:'BCBA Certification', cat:'career', deadline:'2029-12-31',
+    note:'Enrolled at Valencia CC — starting Fall 2025! J Empire ABA Clinic is the dream!',
+    done:false, created_at:new Date().toISOString(),
+    milestones:[
+      {id:'g3m1',text:'Complete AA degree at Valencia Community College',done:false},
+      {id:'g3m2',text:'Transfer to UCF via DirectConnect program',done:false},
+      {id:'g3m3',text:"Complete Bachelor's degree in Psychology at UCF",done:false},
+      {id:'g3m4',text:'Enroll in BCBA-verified Master\'s program (FIT or UCF)',done:false},
+      {id:'g3m5',text:'Complete supervised fieldwork hours',done:false},
+      {id:'g3m6',text:'Pass BCBA board certification exam',done:false},
+      {id:'g3m7',text:'Open J Empire ABA Therapy Clinic',done:false}
+    ]},
+  { id:'g4', name:'Build Emergency Fund', cat:'financial', deadline:'2026-12-31',
+    note:'Goal: 3 months of expenses saved — even $5 at a time counts!',
+    done:false, created_at:new Date().toISOString(),
+    milestones:[
+      {id:'g4m1',text:'Save first $500',done:false},
+      {id:'g4m2',text:'Save $1,000',done:false},
+      {id:'g4m3',text:'Save $2,500',done:false},
+      {id:'g4m4',text:'Save 1 full month of expenses',done:false},
+      {id:'g4m5',text:'Save 3 full months of expenses',done:false}
+    ]}
+];
+
+let goals=[], activecat='all';
+
+function setStatus(msg,type){
+  const el=document.getElementById('syncStatus');
+  el.textContent=msg; el.className='sync-badge sync-'+type;
+}
+
+function catColor(cat){ const c=CATS.find(x=>x.id===cat); return c?c.color:'#C4714F'; }
+function catLabel(cat){ const c=CATS.find(x=>x.id===cat); return c?c.label:cat; }
+
+function fmtDate(d){
+  if(!d) return '';
+  const dt=new Date(d+'T12:00:00');
+  return dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
+
+function daysLeft(d){
+  if(!d) return null;
+  return Math.ceil((new Date(d+'T12:00:00')-new Date())/(1000*60*60*24));
+}
+
+async function sbFetch(path,options={}){
+  try{
+    const res=await fetch(SUPABASE_URL+'/rest/v1/'+path,{
+      method:options.method||'GET',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+      body:options.body||undefined
+    });
+    if(!res.ok) return null;
+    const t=await res.text(); return t?JSON.parse(t):[];
+  }catch{ return null; }
+}
+
+async function loadGoals(){
+  setStatus('syncing...','loading');
+  const data=await sbFetch('goals_tracker?order=created_at.asc');
+  if(data===null){
+    goals=JSON.parse(localStorage.getItem('je_goals_tracker')||'null')||PRELOADED;
+    setStatus('offline mode','error');
+  } else if(data.length===0){
+    goals=PRELOADED;
+    goals.forEach(g=>sbFetch('goals_tracker',{method:'POST',body:JSON.stringify(g)}));
+    setStatus('synced ✦','ok');
+  } else {
+    goals=data.map(g=>{ if(typeof g.milestones==='string') g.milestones=JSON.parse(g.milestones); if(!g.milestones) g.milestones=[]; return g; });
+    setStatus('synced across all devices ✦','ok');
+  }
+  localStorage.setItem('je_goals_tracker',JSON.stringify(goals));
+  render();
+}
+
+function saveGoal(g){
+  sbFetch('goals_tracker?id=eq.'+g.id,{method:'PATCH',body:JSON.stringify({milestones:g.milestones,done:g.done})});
+  localStorage.setItem('je_goals_tracker',JSON.stringify(goals));
+}
+
+function addGoal(){
+  const name=document.getElementById('gName').value.trim();
+  const cat=document.getElementById('gCat').value;
+  const deadline=document.getElementById('gDeadline').value;
+  const note=document.getElementById('gNote').value.trim();
+  if(!name) return;
+  const g={id:Date.now().toString(),name,cat,deadline,note,done:false,milestones:[],created_at:new Date().toISOString()};
+  goals.push(g);
+  document.getElementById('gName').value=''; document.getElementById('gNote').value='';
+  sbFetch('goals_tracker',{method:'POST',body:JSON.stringify(g)}).then(()=>setStatus('saved ✦','ok'));
+  localStorage.setItem('je_goals_tracker',JSON.stringify(goals));
+  closeForm('goalForm'); render();
+  showToast('Goal added ✦ Now go get it!'); spawnSparkles();
+}
+
+function addMilestone(gid){
+  const inp=document.getElementById('ms-'+gid);
+  const text=inp?.value?.trim(); if(!text) return;
+  const g=goals.find(x=>x.id===gid); if(!g) return;
+  if(!g.milestones) g.milestones=[];
+  g.milestones.push({id:Date.now().toString(),text,done:false});
+  inp.value=''; saveGoal(g); render();
+  showToast('Step added ✦');
+}
+
+function toggleMilestone(gid,mid){
+  const g=goals.find(x=>x.id===gid); if(!g) return;
+  const m=g.milestones.find(x=>x.id===mid); if(!m) return;
+  m.done=!m.done;
+  if(g.milestones.length&&g.milestones.every(m=>m.done)) g.done=true;
+  else g.done=false;
+  saveGoal(g); render();
+  if(m.done){ showToast('Step complete ✦ Keep going!'); spawnSparkles(); }
+}
+
+function delMilestone(gid,mid){
+  const g=goals.find(x=>x.id===gid); if(!g) return;
+  g.milestones=g.milestones.filter(x=>x.id!==mid);
+  saveGoal(g); render();
+}
+
+function toggleDone(id){
+  const g=goals.find(x=>x.id===id); if(!g) return;
+  g.done=!g.done;
+  if(g.done&&g.milestones) g.milestones.forEach(m=>m.done=true);
+  else if(!g.done&&g.milestones) g.milestones.forEach(m=>m.done=false);
+  saveGoal(g); render();
+  if(g.done){ showToast('Goal crushed! You are unstoppable ✦'); spawnSparkles(); }
+}
+
+function delGoal(id){
+  goals=goals.filter(x=>x.id!==id);
+  sbFetch('goals_tracker?id=eq.'+id,{method:'DELETE'});
+  localStorage.setItem('je_goals_tracker',JSON.stringify(goals));
+  render(); showToast('Removed ✦');
+}
+
+function setcat(id){ activecat=id; render(); }
+
+function render(){
+  // Cat tabs
+  document.getElementById('catTabs').innerHTML=CATS.map(c=>{
+    const count=c.id==='all'?goals.length:goals.filter(g=>g.cat===c.id).length;
+    const isActive=c.id===activecat;
+    return `<button class="cat-tab ${isActive?'active':''}" onclick="setcat('${c.id}')" style="${isActive?'background:'+c.color+';color:white;border-color:'+c.color:'color:'+c.color}">${c.label}${count>0?' ('+count+')':''}</button>`;
+  }).join('');
+
+  // Stats
+  const done=goals.filter(g=>g.done).length;
+  const stepsDone=goals.reduce((s,g)=>s+(g.milestones?g.milestones.filter(m=>m.done).length:0),0);
+  document.getElementById('totalGoals').textContent=goals.length;
+  document.getElementById('doneGoals').textContent=done;
+  document.getElementById('totalSteps').textContent=stepsDone;
+
+  // Goals list
+  const filtered=(activecat==='all'?goals:goals.filter(g=>g.cat===activecat))
+    .sort((a,b)=>a.done===b.done?0:a.done?1:-1);
+
+  const list=document.getElementById('goalsList');
+  if(!filtered.length){
+    list.innerHTML='<div class="empty-state">"No goals here yet — add one above. You\'ve got this queen." ✦</div>';
+    return;
+  }
+
+  list.innerHTML=filtered.map(g=>{
+    const color=catColor(g.cat);
+    const ms=g.milestones||[];
+    const msDone=ms.filter(m=>m.done).length;
+    const pct=ms.length?Math.round((msDone/ms.length)*100):g.done?100:0;
+    const dl=daysLeft(g.deadline);
+    const urgent=dl!==null&&dl<=30&&!g.done;
+
+    const msHTML=ms.length?ms.map((m,i)=>`
+      <div class="milestone-item">
+        <input class="milestone-check" type="checkbox" ${m.done?'checked':''} onchange="toggleMilestone('${g.id}','${m.id}')" style="accent-color:${color}">
+        <div class="milestone-num" style="background:${color}">${i+1}</div>
+        <span class="milestone-text ${m.done?'done-step':''}">${m.text}</span>
+        <button class="milestone-del" onclick="delMilestone('${g.id}','${m.id}')">🗑️</button>
+      </div>`).join('')
+      :'<div style="color:var(--brown-soft);font-size:12px;padding:6px 0;font-style:italic;">No steps yet — add your first step below!</div>';
+
+    return `<div class="goal-card ${g.done?'done-card':''}">
+      <div class="goal-top-row">
+        <div class="goal-name ${g.done?'done-text':''}">${g.name}</div>
+        <span class="goal-cat-badge" style="background:${color}">${catLabel(g.cat)}</span>
+      </div>
+      ${g.deadline?`<div class="goal-deadline ${urgent?'urgent':''}">
+        ${urgent?'🔥':'📅'} Target: ${fmtDate(g.deadline)}${dl!==null?(' · '+(dl<0?Math.abs(dl)+' days overdue':dl===0?'Due today':dl+' days left')):''}
+      </div>`:''}
+      ${g.note?`<div class="goal-note">${g.note}</div>`:''}
+      ${ms.length?`<div class="progress-strip">
+        <div class="strip-label"><span>${msDone} of ${ms.length} steps done</span><span style="color:${color}">${pct}%</span></div>
+        <div class="strip-bg"><div class="strip-fill" style="width:${pct}%;background:${color}"></div></div>
+      </div>`:''}
+      <div class="milestones-section">
+        <div class="milestones-title"><span>Steps to get there</span><span style="color:${color}">${msDone}/${ms.length}</span></div>
+        ${msHTML}
+        <div class="add-milestone-row">
+          <input class="mini-inp" id="ms-${g.id}" placeholder="Add a step..." onkeydown="if(event.key==='Enter')addMilestone('${g.id}')">
+          <button class="small-btn" onclick="addMilestone('${g.id}')" style="background:${color}">+ Step</button>
+        </div>
+      </div>
+      <div class="goal-footer">
+        <label class="done-check-label"><input type="checkbox" ${g.done?'checked':''} onchange="toggleDone('${g.id}')"> Mark Complete</label>
+        <button class="del-btn" onclick="delGoal('${g.id}')">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openForm(id){document.getElementById(id).classList.add('visible');}
+function closeForm(id){document.getElementById(id).classList.remove('visible');}
+
+function spawnSparkles(){
+  const s=['✦','✧','⋆','🌿','⭑'],c=['#C4714F','#D4A574','#B8896E','#5A8A5E'];
+  for(let i=0;i<8;i++){
+    const el=document.createElement('div'); el.className='sparkle';
+    el.textContent=s[Math.floor(Math.random()*s.length)];
+    el.style.cssText=`left:${20+Math.random()*60}vw;top:${15+Math.random()*55}vh;color:${c[Math.floor(Math.random()*c.length)]};font-size:${12+Math.random()*14}px;animation-delay:${Math.random()*0.4}s`;
+    document.body.appendChild(el); setTimeout(()=>el.remove(),1600);
+  }
+}
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
+
+// Auto-refresh every 30 seconds
+setInterval(loadGoals, 30000);
+loadGoals();
+</script>
+</body>
+</html>
