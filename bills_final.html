@@ -217,6 +217,8 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--brown);m
 .sticky-save-btn{background:var(--terra);color:#fff;border:none;border-radius:9px;padding:8px 18px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
 .s-overlay{position:fixed;inset:0;background:rgba(44,26,14,0.4);z-index:250;display:none;}
 .s-overlay.open{display:block;}
+/* Hide the sticky note FAB whenever any edit/add sheet or picker is open, so it never floats over form fields */
+.overlay.open ~ .sticky-fab,.cal-overlay.open ~ .sticky-fab,.numpad-overlay.open ~ .sticky-fab,body:has(.add-form.open) .sticky-fab{display:none;}
 
 /* TOAST */
 .toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--terra);color:#fff;padding:9px 20px;border-radius:20px;font-size:11px;font-weight:700;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;z-index:999;}
@@ -267,7 +269,10 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--brown);m
 
   <div class="sec-hdr">
     <div class="sec-title">Active Bills</div>
-    <button class="sec-btn" onclick="toggleForm()">+ Add Bill</button>
+    <div style="display:flex;gap:6px;">
+      <button class="sec-btn" style="background:var(--brown-soft);" onclick="openManageRec()">🔄 Manage</button>
+      <button class="sec-btn" onclick="toggleForm()">+ Add Bill</button>
+    </div>
   </div>
 
   <!-- ADD FORM -->
@@ -317,6 +322,15 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--brown);m
       <div class="rec-lbl">🔄 Recurring — resets every month automatically</div>
       <div class="rec-check on" id="recCheck">✓</div>
     </div>
+    <div id="recDurWrap">
+      <div class="form-lbl">Repeat For</div>
+      <select class="form-select" id="fRecDur">
+        <option value="0">Forever (until I stop it)</option>
+        <option value="3">Next 3 months</option>
+        <option value="6">Next 6 months</option>
+        <option value="12">Next 12 months</option>
+      </select>
+    </div>
     <div class="form-btns">
       <button class="btn-cancel" onclick="toggleForm()">Cancel</button>
       <button class="btn-save" onclick="saveBill()">Save Bill ✦</button>
@@ -356,9 +370,12 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--brown);m
         </div>
       </div>
     </div>
-    <div class="rec-row" style="margin-top:10px;" onclick="toggleEditRec()">
-      <div class="rec-lbl">🔄 Recurring monthly</div>
-      <div class="rec-check" id="eRecCheck">✓</div>
+    <div style="margin-top:10px;">
+      <div class="form-lbl">Recurrence</div>
+      <select class="form-select" id="eRecDur"></select>
+    </div>
+    <div id="eRecClearWrap" style="margin-top:10px;">
+      <button class="bca-btn" style="width:100%;color:var(--red);border-color:var(--red);" onclick="clearFutureRecurring()">🧹 Stop Recurring &amp; Clear Future Months</button>
     </div>
     <div class="form-btns" style="margin-top:12px;">
       <button class="btn-cancel" onclick="closeOv('editBillOv')">Cancel</button>
@@ -367,6 +384,17 @@ body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--brown);m
   </div>
 </div>
 
+<!-- MANAGE RECURRING OVERLAY -->
+<div class="overlay" id="manageRecOv" onclick="closeOv('manageRecOv',event)">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-title">🔄 Manage Recurring Bills</div>
+    <div id="manageRecList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+    <button class="bca-btn" style="width:100%;color:var(--red);border-color:var(--red);" onclick="clearAllRecurring()">🧹 Stop &amp; Clear ALL Recurring Bills</button>
+    <div class="form-btns" style="margin-top:12px;">
+      <button class="btn-cancel" style="flex:1;" onclick="closeOv('manageRecOv')">Close</button>
+    </div>
+  </div>
+</div>
 <!-- EDIT PAYMENT OVERLAY -->
 <div class="overlay" id="editPayOv" onclick="closeOv('editPayOv',event)">
   <div class="sheet" onclick="event.stopPropagation()">
@@ -497,7 +525,7 @@ const TIPS=[
 ];
 
 let cy=new Date().getFullYear(), cm=new Date().getMonth();
-let bills=[], formOpen=false, isRec=true, isEditRec=true;
+let bills=[], formOpen=false, isRec=true;
 
 // CALENDAR STATE
 let calTarget='', calYear=new Date().getFullYear(), calMonth=new Date().getMonth(), calSelected=null;
@@ -506,6 +534,8 @@ let calTarget='', calYear=new Date().getFullYear(), calMonth=new Date().getMonth
 let npTarget='', npValue='0';
 
 function mk(y,m){return `${y}-${String(m+1).padStart(2,'0')}`;}
+function addMonthsKey(y,m,n){let nm=m+n,ny=y;while(nm>11){nm-=12;ny++;}return mk(ny,nm);}
+function keyAfter(y,m,n){return addMonthsKey(y,m,n);}
 
 function loadQuoteTip(){
   const d=new Date().getDate();
@@ -543,6 +573,7 @@ async function load(){
   let data=lg('je_bills_'+key)||[];
   const templates=lg('je_bill_templates')||[];
   templates.forEach(t=>{
+    if(t.end_key&&key>t.end_key)return; // recurrence has expired — stop generating
     if(!data.find(b=>b.template_id===t.id)){
       data.push({id:'rec_'+t.id+'_'+key,template_id:t.id,emoji:t.emoji,name:t.name,amount:t.amount,due_day:t.due_day,month_key:key,payments:[],recurring:true});
     }
@@ -661,7 +692,7 @@ function applyPreset(){
   const[e,n]=v.split('|');
   document.getElementById('fName').value=n==='Custom'?'':n;
 }
-function toggleRec(){isRec=!isRec;document.getElementById('recCheck').classList.toggle('on',isRec);}
+function toggleRec(){isRec=!isRec;document.getElementById('recCheck').classList.toggle('on',isRec);document.getElementById('recDurWrap').style.display=isRec?'block':'none';}
 
 function saveBill(){
   const name=document.getElementById('fName').value.trim();
@@ -673,11 +704,16 @@ function saveBill(){
   if(!name||!amount||!day){showToast('Please fill all fields');return;}
   const key=mk(cy,cm),id='bill_'+Date.now();
   const bill={id,emoji,name,amount,due_day:day,month_key:key,payments:[],recurring:isRec};
-  if(isRec){const T=lg('je_bill_templates')||[];T.push({id,emoji,name,amount,due_day:day});ls('je_bill_templates',T);bill.template_id=id;}
+  if(isRec){
+    const months=parseInt(document.getElementById('fRecDur').value)||0;
+    const end_key=months>0?addMonthsKey(cy,cm,months):null;
+    const T=lg('je_bill_templates')||[];T.push({id,emoji,name,amount,due_day:day,end_key});ls('je_bill_templates',T);bill.template_id=id;
+  }
   bills.push(bill);
   saveLocal();toggleForm();
   document.getElementById('fPreset').value='';document.getElementById('fName').value='';
   document.getElementById('fAmt').value='';document.getElementById('fDay').value='';
+  document.getElementById('fRecDur').value='0';
   renderAll();showToast('Bill added ✦');
 }
 
@@ -687,20 +723,104 @@ function openEditBill(id){
   document.getElementById('eBillName').value=b.name;
   document.getElementById('eBillAmt').value=b.amount;
   document.getElementById('eBillDay').value=b.due_day;
-  isEditRec=!!b.recurring;
-  document.getElementById('eRecCheck').classList.toggle('on',isEditRec);
+  const T=lg('je_bill_templates')||[];
+  const t=b.template_id?T.find(x=>x.id===b.template_id):null;
+  let durVal='off';
+  if(b.recurring){durVal=t&&t.end_key?'custom':'forever';}
+  document.getElementById('eRecDur').innerHTML=`
+    <option value="off">Not recurring — one-time bill</option>
+    <option value="3">Repeat for next 3 months</option>
+    <option value="6">Repeat for next 6 months</option>
+    <option value="12">Repeat for next 12 months</option>
+    <option value="forever">Repeat every month (until I turn it off)</option>`;
+  document.getElementById('eRecDur').value=durVal==='custom'?'12':durVal;
+  document.getElementById('eRecClearWrap').style.display=b.recurring?'block':'none';
   document.getElementById('editBillOv').classList.add('open');
 }
-function toggleEditRec(){isEditRec=!isEditRec;document.getElementById('eRecCheck').classList.toggle('on',isEditRec);}
 function saveEditBill(){
   const id=document.getElementById('eBillId').value;
   const b=bills.find(x=>x.id===id);if(!b)return;
+  const dur=document.getElementById('eRecDur').value;
   b.name=document.getElementById('eBillName').value.trim();
   b.amount=parseFloat(document.getElementById('eBillAmt').value);
   b.due_day=parseInt(document.getElementById('eBillDay').value);
-  b.recurring=isEditRec;
-  if(isEditRec&&b.template_id){const T=lg('je_bill_templates')||[];const t=T.find(x=>x.id===b.template_id);if(t){t.name=b.name;t.amount=b.amount;t.due_day=b.due_day;ls('je_bill_templates',T);}}
+  let T=lg('je_bill_templates')||[];
+  if(dur==='off'){
+    // Turn recurrence OFF: actually remove the template so it stops regenerating forever
+    if(b.template_id){T=T.filter(x=>x.id!==b.template_id);ls('je_bill_templates',T);}
+    b.recurring=false;delete b.template_id;
+  }else{
+    b.recurring=true;
+    const end_key=dur==='forever'?null:keyAfter(cy,cm,parseInt(dur)-1);
+    if(b.template_id){
+      const t=T.find(x=>x.id===b.template_id);
+      if(t){t.name=b.name;t.amount=b.amount;t.due_day=b.due_day;t.end_key=end_key;}
+    }else{
+      const tid='tpl_'+Date.now();
+      T.push({id:tid,emoji:b.emoji,name:b.name,amount:b.amount,due_day:b.due_day,end_key});
+      b.template_id=tid;
+    }
+    ls('je_bill_templates',T);
+  }
   saveLocal();closeOv('editBillOv');renderAll();showToast('Updated ✦');
+}
+function clearFutureRecurring(){
+  const id=document.getElementById('eBillId').value;
+  const b=bills.find(x=>x.id===id);if(!b)return;
+  if(!confirm('Stop this bill from recurring and remove it from this month forward? Past months are left untouched.'))return;
+  const tid=b.template_id;
+  if(tid){let T=lg('je_bill_templates')||[];T=T.filter(x=>x.id!==tid);ls('je_bill_templates',T);}
+  wipeTemplateFromKeyOnward(tid,mk(cy,cm));
+  b.recurring=false;delete b.template_id;
+  saveLocal();closeOv('editBillOv');renderAll();showToast('Recurrence stopped & future copies cleared ✦');
+}
+
+// Remove every already-generated instance of a template from the given month key onward (current localStorage keys only)
+function wipeTemplateFromKeyOnward(templateId,fromKey){
+  if(!templateId)return;
+  Object.keys(localStorage).filter(k=>k.startsWith('je_bills_20')).forEach(k=>{
+    const monthKey=k.replace('je_bills_','');
+    if(monthKey<fromKey)return; // leave history alone
+    const arr=lg(k)||[];
+    const filtered=arr.filter(b=>b.template_id!==templateId);
+    if(filtered.length!==arr.length)ls(k,filtered);
+  });
+  if(mk(cy,cm)===fromKey){bills=bills.filter(b=>b.template_id!==templateId);}
+}
+
+// MANAGE RECURRING PANEL
+function openManageRec(){
+  renderManageRec();
+  document.getElementById('manageRecOv').classList.add('open');
+}
+function renderManageRec(){
+  const T=lg('je_bill_templates')||[];
+  const list=document.getElementById('manageRecList');
+  if(!T.length){list.innerHTML='<div style="text-align:center;padding:14px;color:var(--brown-soft);font-size:12px;font-style:italic;">No recurring bills set up</div>';return;}
+  list.innerHTML=T.map(t=>{
+    const endTxt=t.end_key?`Ends ${t.end_key}`:'Repeats forever';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--cream);border-radius:10px;border:1px solid var(--border);">
+      <div style="font-size:20px;">${t.emoji||'📩'}</div>
+      <div style="flex:1;"><div style="font-weight:700;font-size:13px;">${t.name}</div><div style="font-size:10px;color:var(--brown-soft);font-weight:600;">$${Number(t.amount).toFixed(0)} · ${endTxt}</div></div>
+      <button class="bca-btn" style="color:var(--red);" onclick="clearOneTemplate('${t.id}')">🧹 Stop</button>
+    </div>`;
+  }).join('');
+}
+function clearOneTemplate(tid){
+  if(!confirm('Stop this bill from recurring and remove it from this month forward? Past months are left untouched.'))return;
+  let T=lg('je_bill_templates')||[];
+  T=T.filter(x=>x.id!==tid);
+  ls('je_bill_templates',T);
+  wipeTemplateFromKeyOnward(tid,mk(cy,cm));
+  saveLocal();renderAll();renderManageRec();showToast('Recurrence stopped ✦');
+}
+function clearAllRecurring(){
+  if(!confirm("This stops EVERY recurring bill and removes them from this month forward (past months stay untouched). This can't be undone — continue?"))return;
+  const T=lg('je_bill_templates')||[];
+  const fromKey=mk(cy,cm);
+  T.forEach(t=>wipeTemplateFromKeyOnward(t.id,fromKey));
+  ls('je_bill_templates',[]);
+  saveLocal();renderAll();renderManageRec();showToast('All recurring bills cleared ✦');
 }
 
 function openEditPay(billId,idx){
@@ -811,6 +931,20 @@ function saveSticky(){
   if(v){preview.classList.add('visible');previewText.textContent=v;}
   else{preview.classList.remove('visible');}
   closeSticky();showToast('Note saved ✦');
+}
+
+function openReset(){document.getElementById('resetOv').classList.add('open');}
+function resetAllBills(){
+  Object.keys(localStorage).forEach(k=>{
+    if(k.startsWith('je_bills_')||k==='je_bill_templates') localStorage.removeItem(k);
+    else if(k.startsWith('je_paycheck_sync_')){
+      const v=lg(k)||{};ls(k,{total_income:v.total_income||0,bills_snap:'[]'});
+    }
+  });
+  closeOv('resetOv');
+  bills=[];
+  load();
+  showToast('All bill data cleared ✦');
 }
 
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
