@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J Empire · Back to School</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --cream:#F4EFE8; --cream-deep:#EDE6DC;
+  --terra:#C4714F; --terra-light:#D4906E;
+  --rose-gold:#B8896E; --rose-light:#D4A574;
+  --brown-dark:#2C1A0E; --brown-mid:#6B4232;
+  --brown-muted:#9A6E58; --brown-soft:#C4A090;
+  --white-warm:rgba(255,252,248,0.95);
+  --green:#5A8A5E;
+}
+body { min-height:100vh; font-family:'Inter',sans-serif; background:var(--cream-deep); color:var(--brown-dark); }
+
+.header { position:relative; overflow:hidden; padding:48px 24px 28px; text-align:center; background:var(--cream); background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(180,140,105,0.07) 3px,rgba(180,140,105,0.07) 4px),repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(180,140,105,0.05) 3px,rgba(180,140,105,0.05) 4px); }
+.header::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,transparent,var(--terra) 20%,var(--rose-light) 50%,var(--rose-gold) 80%,transparent); }
+.header-marble { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.header-glow { position:absolute; inset:0; background:radial-gradient(ellipse 70% 50% at 85% 10%,rgba(196,113,79,0.15) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 10% 85%,rgba(184,137,110,0.11) 0%,transparent 50%); }
+.bracket { position:absolute; width:24px; height:24px; opacity:0.3; }
+.btl { top:14px; left:16px; border-top:1.5px solid var(--terra); border-left:1.5px solid var(--terra); }
+.btr { top:14px; right:16px; border-top:1.5px solid var(--terra); border-right:1.5px solid var(--terra); }
+.header-content { position:relative; z-index:2; }
+.header-eyebrow { font-size:9px; font-weight:600; letter-spacing:0.3em; text-transform:uppercase; color:var(--rose-gold); margin-bottom:6px; }
+.header-title { font-family:'Cormorant Garamond',serif; font-size:44px; font-weight:300; color:var(--brown-dark); line-height:0.95; letter-spacing:0.06em; margin-bottom:10px; }
+.header-title em { font-style:italic; color:var(--terra); }
+.header-divider { display:flex; align-items:center; gap:8px; width:160px; margin:0 auto 10px; }
+.hdl { flex:1; height:1px; background:rgba(196,113,79,0.3); }
+.hdg { width:4px; height:4px; background:var(--terra); transform:rotate(45deg); opacity:0.7; }
+.header-quote { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13px; color:var(--brown-muted); }
+
+/* TAX FREE BANNER */
+.tax-banner { margin:0; background:linear-gradient(135deg,var(--green),#7AAE7E); padding:11px 20px; text-align:center; display:flex; align-items:center; justify-content:center; gap:8px; }
+.tax-banner-text { font-size:11px; font-weight:700; color:#FFF8F0; letter-spacing:0.08em; }
+.tax-banner-sub { font-size:9.5px; color:rgba(255,252,248,0.8); }
+
+/* STATS PILLS */
+.stats-row { display:flex; gap:8px; padding:14px 16px; overflow-x:auto; scrollbar-width:none; }
+.stats-row::-webkit-scrollbar { display:none; }
+.stat-pill { flex-shrink:0; background:var(--white-warm); border:1px solid rgba(196,113,79,0.18); border-radius:14px; padding:10px 14px; text-align:center; min-width:80px; box-shadow:0 2px 8px rgba(196,113,79,0.07); }
+.stat-pill-label { font-size:8.5px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--brown-muted); }
+.stat-pill-value { font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--terra); margin-top:2px; font-weight:400; }
+
+/* VIEW TABS */
+.view-tabs { display:flex; gap:8px; padding:0 16px 12px; }
+.view-tab { flex:1; padding:9px; border-radius:14px; border:1.5px solid rgba(196,113,79,0.22); background:transparent; color:var(--brown-muted); font-size:11px; font-weight:600; cursor:pointer; text-align:center; transition:all 0.18s; font-family:'Inter',sans-serif; }
+.view-tab.active { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border-color:transparent; box-shadow:0 3px 10px rgba(196,113,79,0.28); }
+
+/* KID TABS */
+.kid-tabs { display:flex; gap:8px; padding:0 16px 14px; overflow-x:auto; scrollbar-width:none; }
+.kid-tabs::-webkit-scrollbar { display:none; }
+.kid-tab { flex-shrink:0; padding:10px 14px; border-radius:18px; border:2px solid transparent; cursor:pointer; text-align:center; transition:all 0.2s; background:var(--white-warm); box-shadow:0 2px 8px rgba(196,113,79,0.07); min-width:72px; }
+.kid-heart { font-size:20px; display:block; margin-bottom:3px; }
+.kid-name-lbl { font-size:12px; font-weight:700; color:var(--brown-dark); }
+.kid-grade-lbl { font-size:9px; color:var(--brown-muted); margin-top:2px; }
+.kid-progress-lbl { font-size:10px; font-weight:600; margin-top:3px; }
+
+/* MAIN */
+.main { padding:0 16px 100px; max-width:500px; margin:0 auto; }
+
+/* KID HEADER */
+.kid-list-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.kid-list-name { font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--brown-dark); }
+.edit-btn { padding:6px 14px; border-radius:12px; border:1.5px solid rgba(196,113,79,0.25); background:transparent; color:var(--brown-muted); font-size:11px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.18s; }
+.edit-btn.active { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border-color:transparent; }
+
+/* PROGRESS */
+.prog-wrap { margin-bottom:14px; }
+.prog-label { display:flex; justify-content:space-between; font-size:10px; color:var(--brown-muted); font-weight:600; margin-bottom:5px; }
+.prog-bg { background:rgba(196,113,79,0.12); border-radius:20px; height:7px; overflow:hidden; }
+.prog-fill { height:100%; border-radius:20px; transition:width 0.4s; }
+
+/* SECTION CARD */
+.section-card { background:var(--white-warm); border:1px solid rgba(196,113,79,0.15); border-radius:16px; padding:14px; margin-bottom:10px; box-shadow:0 2px 8px rgba(196,113,79,0.06); }
+.section-title-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.section-title-text { font-size:12px; font-weight:700; color:var(--brown-dark); }
+.section-count-badge { font-size:10px; color:var(--brown-soft); font-weight:600; }
+
+/* ITEM ROW */
+.item-row { display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid rgba(196,113,79,0.08); }
+.item-row:last-child { border-bottom:none; }
+.item-check-box { width:20px; height:20px; cursor:pointer; flex-shrink:0; margin-top:1px; accent-color:var(--terra); }
+.item-info { flex:1; }
+.item-name-text { font-size:13px; color:var(--brown-dark); font-weight:500; line-height:1.4; }
+.item-name-text.checked { text-decoration:line-through; color:var(--brown-soft); }
+.item-meta-row { display:flex; gap:6px; flex-wrap:wrap; margin-top:4px; align-items:center; }
+.store-badge { font-size:9px; padding:2px 7px; border-radius:6px; font-weight:700; color:white; letter-spacing:0.04em; }
+.store-walmart { background:#0ea5e9; }
+.store-target { background:#ef4444; }
+.store-dollartree { background:var(--green); }
+.store-school { background:#8B5CF6; }
+.item-price-text { font-size:10px; color:var(--brown-muted); font-weight:600; }
+
+/* SECTION TOTAL */
+.section-total-row { display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:rgba(196,113,79,0.06); border-radius:10px; margin-top:8px; }
+.section-total-lbl { font-size:11px; font-weight:600; color:var(--brown-muted); }
+.section-total-amt { font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--terra); }
+
+/* KID TOTAL */
+.kid-total-card { background:linear-gradient(135deg,rgba(196,113,79,0.08),rgba(184,137,110,0.06)); border:1px solid rgba(196,113,79,0.2); border-radius:16px; padding:14px 16px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
+.kid-total-lbl { font-size:13px; font-weight:700; color:var(--brown-dark); }
+.kid-total-amt { font-family:'Cormorant Garamond',serif; font-size:28px; color:var(--terra); }
+
+/* EDIT MODE */
+.edit-row { display:flex; align-items:center; gap:6px; padding:8px 0; border-bottom:1px solid rgba(196,113,79,0.08); flex-wrap:wrap; }
+.edit-name-inp { flex:1; min-width:100px; padding:6px 8px; border-radius:8px; border:1.5px solid rgba(196,113,79,0.25); background:var(--cream); color:var(--brown-dark); font-size:12px; outline:none; font-family:'Inter',sans-serif; }
+.edit-price-inp { width:65px; padding:6px 8px; border-radius:8px; border:1.5px solid rgba(196,113,79,0.25); background:var(--cream); color:var(--brown-dark); font-size:12px; outline:none; text-align:center; }
+.edit-store-sel { padding:6px; border-radius:8px; border:1.5px solid rgba(196,113,79,0.25); background:var(--cream); color:var(--brown-dark); font-size:11px; outline:none; }
+.del-item-btn { background:rgba(196,113,79,0.1); border:1px solid rgba(196,113,79,0.2); border-radius:8px; color:var(--terra); font-size:13px; cursor:pointer; padding:4px 8px; flex-shrink:0; }
+.add-item-row { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+.add-item-inp { flex:1; min-width:100px; padding:8px 10px; border-radius:10px; border:1.5px solid rgba(196,113,79,0.22); background:var(--cream); color:var(--brown-dark); font-size:13px; outline:none; font-family:'Inter',sans-serif; }
+.add-item-btn { padding:8px 14px; border-radius:10px; background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border:none; font-weight:700; cursor:pointer; font-size:13px; font-family:'Inter',sans-serif; }
+
+/* SHOPPING ROUTE */
+.route-wrap { display:flex; flex-direction:column; gap:12px; }
+.route-card { border-radius:16px; padding:14px; }
+.route-card.walmart { background:linear-gradient(135deg,#0ea5e9,#0284c7); }
+.route-card.target { background:linear-gradient(135deg,#ef4444,#dc2626); }
+.route-card.dollartree { background:linear-gradient(135deg,var(--green),#4a7c4e); }
+.route-store-name { font-size:13px; font-weight:800; color:white; margin-bottom:8px; }
+.route-item-row { font-size:12px; color:rgba(255,252,248,0.9); padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.15); }
+.route-item-row:last-of-type { border-bottom:none; }
+.route-tip-text { font-size:11px; color:rgba(255,252,248,0.8); font-style:italic; margin-top:8px; }
+
+.sparkle { position:fixed; pointer-events:none; z-index:9999; animation:sparkle-fly 1.2s ease-out forwards; }
+@keyframes sparkle-fly { 0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg);}100%{opacity:0;transform:translateY(-80px) scale(0.3) rotate(180deg);} }
+.toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px); background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); padding:10px 22px; border-radius:24px; font-size:12px; font-weight:600; letter-spacing:0.08em; box-shadow:0 6px 20px rgba(196,113,79,0.4); opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap; z-index:999; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.nav-bar { position:fixed; bottom:0; left:0; right:0; background:var(--cream); border-top:1px solid rgba(196,113,79,0.15); padding:10px 20px 18px; display:flex; justify-content:space-around; align-items:center; z-index:50; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--brown-soft); transition:color 0.18s; }
+.nav-item.active { color:var(--terra); }
+.nav-icon { font-size:20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <svg class="header-marble" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <filter id="mf"><feGaussianBlur stdDeviation="2.5"/></filter>
+    <g filter="url(#mf)">
+      <path d="M -10 70 Q 80 35 170 85 Q 270 145 360 70 Q 430 15 520 65" stroke="rgba(184,137,110,0.28)" stroke-width="2.5" fill="none"/>
+      <path d="M 40 160 Q 130 120 200 158 Q 295 205 385 145" stroke="rgba(196,113,79,0.16)" stroke-width="1.5" fill="none"/>
+    </g>
+  </svg>
+  <div class="header-glow"></div>
+  <div class="bracket btl"></div><div class="bracket btr"></div>
+  <div class="header-content">
+    <div class="header-eyebrow">Life · J Empire</div>
+    <div class="header-title">🎒 <em>Back to School</em></div>
+    <div class="header-divider"><div class="hdl"></div><div class="hdg"></div><div class="hdl"></div></div>
+    <div class="header-quote">"Five kids, one queen, fully prepared." ✦</div>
+  </div>
+</div>
+
+<!-- TAX FREE BANNER -->
+<div class="tax-banner">
+  <div>
+    <div class="tax-banner-text">🏷️ Florida Tax-Free Weekend — August 2026</div>
+    <div class="tax-banner-sub">Wait on clothing, shoes & backpacks — save more!</div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-pill"><div class="stat-pill-label">Total Items</div><div class="stat-pill-value" id="totalItems">0</div></div>
+  <div class="stat-pill"><div class="stat-pill-label">Checked Off</div><div class="stat-pill-value" id="totalChecked">0</div></div>
+  <div class="stat-pill"><div class="stat-pill-label">Est. Total</div><div class="stat-pill-value" id="totalCost">$0</div></div>
+  <div class="stat-pill"><div class="stat-pill-label">Spent</div><div class="stat-pill-value" id="totalSpent">$0</div></div>
+</div>
+
+<!-- VIEW TABS -->
+<div class="view-tabs">
+  <button class="view-tab active" onclick="setView('byKid',this)">🎒 By Child</button>
+  <button class="view-tab" onclick="setView('route',this)">🗺️ Shopping Route</button>
+</div>
+
+<!-- KID TABS -->
+<div class="kid-tabs" id="kidTabs"></div>
+
+<div class="main">
+  <div id="viewByKid">
+    <div id="kidListContent"></div>
+  </div>
+  <div id="viewRoute" style="display:none">
+    <div class="route-wrap" id="routeContent"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="nav-bar">
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/index.html"><span class="nav-icon">🏠</span><span>Home</span></a>
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/family.html"><span class="nav-icon">🏡</span><span>Family</span></a>
+  <a class="nav-item active" href="#"><span class="nav-icon">🎒</span><span>BTS</span></a>
+</div>
+
+<script>
+var KIDS = [
+  { id:"jeovane", name:"Jeovane", grade:"VPK", heart:"💛", color:"#C4714F",
+    sections:[
+      { title:"📚 Supplies (purchased at school)", items:[
+        {name:"Uniform shirt (purchased AT school)", store:"school", price:0, qty:1, total:0}
+      ]},
+      { title:"👕 Uniform Bottoms", items:[
+        {name:"Navy/Black/Khaki pants or shorts (2-3 pairs)", store:"walmart", price:4.98, qty:3, total:14.94}
+      ]},
+      { title:"👟 Shoes & Accessories", items:[
+        {name:"Sneakers", store:"walmart", price:14.97, qty:1, total:14.97},
+        {name:"Water bottle", store:"dollartree", price:1.00, qty:1, total:1.00}
+      ]},
+      { title:"🎒 Backpack", items:[
+        {name:"Backpack (no wheels)", store:"walmart", price:4.98, qty:1, total:4.98}
+      ]},
+      { title:"💡 VPK Wish List (donate if possible)", items:[
+        {name:"Box of tissues", store:"dollartree", price:1.00, qty:1, total:1.00},
+        {name:"Gallon Ziploc bags (box)", store:"walmart", price:3.97, qty:1, total:3.97},
+        {name:"Disinfectant wipes (container)", store:"walmart", price:2.97, qty:1, total:2.97}
+      ]}
+    ]
+  },
+  { id:"jazelli", name:"Jazelli", grade:"1st Grade", heart:"💚", color:"#5A8A5E",
+    sections:[
+      { title:"📚 Supplies (K-2 List)", items:[
+        {name:"Backpack", store:"walmart", price:4.98, qty:1, total:4.98},
+        {name:"Primary composition books (blue,yellow,red,green,black)", store:"walmart", price:0.50, qty:5, total:2.50},
+        {name:"Plastic folders hole-punched no prongs (5 colors)", store:"walmart", price:0.50, qty:5, total:2.50},
+        {name:"1.5\" binder w/ clear plastic sleeves & pockets", store:"walmart", price:2.47, qty:1, total:2.47},
+        {name:"Pencil zipper pouch w/ holes (fabric, not plastic)", store:"walmart", price:2.97, qty:1, total:2.97},
+        {name:"Glue sticks 4-pack", store:"walmart", price:1.00, qty:1, total:1.00},
+        {name:"#2 pencils 12-count x2 boxes (not mechanical)", store:"target", price:0.39, qty:2, total:0.78},
+        {name:"Highlighters (pink, yellow, blue) 3-pack", store:"dollartree", price:1.00, qty:1, total:1.00},
+        {name:"Large pink erasers (2)", store:"walmart", price:0.47, qty:1, total:0.47},
+        {name:"Black dry erase markers (4)", store:"dollartree", price:1.00, qty:1, total:1.00},
+        {name:"Scissors (blunt)", store:"dollartree", price:1.00, qty:1, total:1.00},
+        {name:"Crayons 24-count (1 box)", store:"walmart", price:0.50, qty:1, total:0.50},
+        {name:"Post-it notes 3x3 (3 packs)", store:"walmart", price:2.47, qty:3, total:7.41},
+        {name:"Plastic sheet protectors (5)", store:"walmart", price:1.97, qty:1, total:1.97},
+        {name:"Colored pencils 12-count", store:"walmart", price:0.97, qty:1, total:0.97},
+        {name:"Water bottle", store:"dollartree", price:1.00, qty:1, total:1.00}
+      ]},
+      { title:"👕 Uniforms", items:[
+        {name:"Uniform shirt white/navy polo x3", store:"walmart", price:4.98, qty:3, total:14.94},
+        {name:"Navy/Black/Khaki pants or shorts x3", store:"walmart", price:4.98, qty:3, total:14.94}
+      ]},
+      { title:"👟 Shoes", items:[
+        {name:"Sneakers", store:"walmart", price:14.97, qty:1, total:14.97}
+      ]}
+    ]
+  },
+  { id:"jaliyah", name:"Jaliyah", grade:"2nd Grade", heart:"❤️", color:"#B8896E",
+    sections:[
+      { title:"📚 Supplies (K-2 List)", items:[
+        {name:"Backpack", store:"walmart", price:4.98, qty:1, total:4.98},
+        {name:"Primary composition books (blue,yellow,red,green,black)", store:"walmart", price:0.50, qty:5, total:2.50},
+        {name:"Plastic folders hole-punched no prongs (5 colors)", store:"walmart", price:0.50, qty:5, total:2.50},
+        {name:"1.5\" binder w/ clear plastic sleeves & pockets", store:"walmart", price:2.47, qty:1, total:2.47},
+        {name:"Pencil zipper pouch w/ holes (fabric, not plastic)", store:"walmart", price:2.97, qty:1, total:2.97},
+        {name:"Glue sticks 4-pack", store:"walmart", price:1.00, qty:1, total:1.00},
+        {name:"#2 pencils 12-count x2 boxes (not mechanical)", store:"target", price:0.39, qty:2, total:0.78},
+        {name:"Highlighters (pink, yellow, blue) 3-pack", store:"dollartree", price:1.00, qty:1, total:1.00},
+        {name:"Large pink erasers (2)", store:"walmart", price:0.47, qty:1, total:0.47},
+        {name:"Black dry erase markers (4)", store:"dollartree", price:1.00, qty:1, total:1.00},
+        {name:"Scissors (blunt)", store:"dollartree", price:1.00, qty:1, total:1.00},
+        {name:"Crayons 24-count (1 box)", store:"walmart", price:0.50, qty:1, total:0.50},
+        {name:"Post-it notes 3x3 (3 packs)", store:"walmart", price:2.47, qty:3, total:7.41},
+        {name:"Plastic sheet protectors (5)", store:"walmart", price:1.97, qty:1, total:1.97},
+        {name:"Colored pencils 12-count", store:"walmart", price:0.97, qty:1, total:0.97},
+        {name:"Water bottle", store:"dollartree", price:1.00, qty:1, total:1.00}
+      ]},
+      { title:"👕 Uniforms", items:[
+        {name:"Uniform shirt white/navy polo x3", store:"walmart", price:4.98, qty:3, total:14.94},
+        {name:"Navy/Black/Khaki pants or shorts x3", store:"walmart", price:4.98, qty:3, total:14.94}
+      ]},
+      { title:"👟 Shoes", items:[
+        {name:"Sneakers", store:"walmart", price:14.97, qty:1, total:14.97}
+      ]}
+    ]
+  },
+  { id:"juliusz", name:"Juliusz", grade:"5th Grade", heart:"💙", color:"#6B8EC4",
+    sections:[
+      { title:"📚 Supplies (3rd-5th List)", items:[
+        {name:"Backpack", store:"walmart", price:4.98, qty:1, total:4.98},
+        {name:"Composition books (5 colors)", store:"walmart", price:0.50, qty:5, total:2.50},
+        {name:"Plastic folders hole-punched no prongs (5 colors)", store:"walmart", price:0.50, qty:5, total:2.50},
+        {name:"Plastic sheet protectors (5)", store:"walmart", price:1.97, qty:1, total:1.97},
+        {name:"1.5\" or 2\" 3-ring binder", store:"walmart", price:2.47, qty:1, total:2.47},
+        {name:"Pencil zipper pouch w/ holes (fabric, not plastic)", store:"walmart", price:2.97, qty:1, total:2.97},
+        {name:"Glue sticks 4-pack", store:"walmart", price:1.00, qty:1, total:1.00},
+        {name:"#2 pencils 24-count x2 boxes", store:"target", price:0.79, qty:2, total:1.58},
+        {name:"Highlighters (pink, yellow, blue) 3-pack", store:"dollartree", price:1.00, qty:1, total:1.00},
+        {name:"Large erasers (2)", store:"walmart", price:0.47, qty:1, total:0.47},
+        {name:"Black dry erase markers (4)", store:"dollartree", price:1.00, qty:1, total:1.00},
+        {name:"Scissors (1 pair)", store:"dollartree", price:1.00, qty:1, total:1.00},
+        {name:"Colored pencils 12-count", store:"walmart", price:0.97, qty:1, total:0.97},
+        {name:"Index cards 100-count 3x5", store:"walmart", price:0.48, qty:1, total:0.48},
+        {name:"Post-it notes 3x3 (4 packs)", store:"walmart", price:2.47, qty:4, total:9.88},
+        {name:"Colored pens (red,blue,purple,green,black) 5-pack", store:"walmart", price:1.97, qty:1, total:1.97},
+        {name:"Water bottle", store:"dollartree", price:1.00, qty:1, total:1.00}
+      ]},
+      { title:"👕 Uniforms", items:[
+        {name:"Uniform shirt white/navy polo x3", store:"walmart", price:4.98, qty:3, total:14.94},
+        {name:"Navy/Black/Khaki pants or shorts x3", store:"walmart", price:4.98, qty:3, total:14.94}
+      ]},
+      { title:"👟 Shoes", items:[
+        {name:"Sneakers", store:"walmart", price:14.97, qty:1, total:14.97}
+      ]}
+    ]
+  },
+  { id:"jaylani", name:"Jaylani", grade:"High School", heart:"💜", color:"#8B5CF6",
+    sections:[
+      { title:"📚 Supplies (Grades 9-12)", items:[
+        {name:"2\" or 3\" 3-ring binder", store:"walmart", price:3.97, qty:1, total:3.97},
+        {name:"8 tabbed dividers with pockets", store:"walmart", price:2.47, qty:1, total:2.47},
+        {name:"Pen/pencil pouch for binder", store:"walmart", price:2.97, qty:1, total:2.97},
+        {name:"Loose leaf college-ruled notebook paper (2 packs)", store:"walmart", price:0.97, qty:2, total:1.94},
+        {name:"Graph paper (1 pack)", store:"walmart", price:1.47, qty:1, total:1.47},
+        {name:"Pens — 2 red, 2 blue, 2 black", store:"walmart", price:0.97, qty:1, total:0.97},
+        {name:"#2 pencils 12-count (1 box)", store:"target", price:0.79, qty:1, total:0.79},
+        {name:"Highlighters (small pack)", store:"dollartree", price:1.00, qty:1, total:1.00},
+        {name:"Composition notebooks NOT spiral (4)", store:"walmart", price:0.50, qty:4, total:2.00},
+        {name:"Index cards (1 pack)", store:"walmart", price:0.48, qty:1, total:0.48},
+        {name:"Sticky notes (1 pack)", store:"walmart", price:2.47, qty:1, total:2.47},
+        {name:"Glue sticks (3)", store:"walmart", price:0.25, qty:3, total:0.75},
+        {name:"Wired earbuds — MUST BE WIRED (no Bluetooth!)", store:"walmart", price:5.97, qty:1, total:5.97},
+        {name:"Water bottle", store:"dollartree", price:1.00, qty:1, total:1.00}
+      ]},
+      { title:"👕 Uniforms", items:[
+        {name:"Uniform shirt white/navy polo x3", store:"walmart", price:4.98, qty:3, total:14.94},
+        {name:"Navy/Black/Khaki pants/shorts/skirt x3", store:"walmart", price:7.98, qty:3, total:23.94}
+      ]},
+      { title:"👟 Shoes", items:[
+        {name:"Sneakers", store:"walmart", price:14.97, qty:1, total:14.97}
+      ]}
+    ]
+  }
+];
+
+var KEY = "jempire-bts-2026";
+var DATA_KEY = "jempire-bts-2026-data";
+var checked = JSON.parse(localStorage.getItem(KEY)||"{}");
+var _SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqc2VhdGhsZ2x2dm5ta3BjaGliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODc4NTUsImV4cCI6MjA5NzU2Mzg1NX0.o4crd1W5-NbVNXSOWNT-WPHS7R6orRe9CRYFZfZ41L8';
+var _SBH={'apikey':_SK,'Authorization':'Bearer '+_SK,'Content-Type':'application/json'};
+var _SBU='https://ejseathlglvvnmkpchib.supabase.co/rest/v1/lists';
+
+function _sbPatch(key,data){
+  fetch(_SBU+'?app_key=eq.'+encodeURIComponent(key),{method:'PATCH',headers:_SBH,body:JSON.stringify({data:JSON.stringify(data)})}).catch(function(){});
+}
+function _sbLoadKey(key,cb){
+  fetch(_SBU+'?app_key=eq.'+encodeURIComponent(key)+'&select=data',{headers:_SBH})
+  .then(function(r){return r.json();})
+  .then(function(d){if(d&&d.length>0&&d[0].data)cb(JSON.parse(d[0].data));})
+  .catch(function(){});
+}
+var activeKid = "jeovane";
+var activeView = "byKid";
+var editMode = false;
+
+// Load saved data
+var savedData = localStorage.getItem(DATA_KEY);
+_sbLoadKey(KEY, function(d){ if(d){ checked=d; localStorage.setItem(KEY,JSON.stringify(checked)); render(); } });
+_sbLoadKey(DATA_KEY, function(d){ if(d&&Array.isArray(d)){ d.forEach(function(s){ var k=KIDS.find(function(k){return k.id===s.id;}); if(k&&s.sections) k.sections=s.sections; }); localStorage.setItem(DATA_KEY,JSON.stringify(d)); render(); } });
+if(savedData){ try{ var parsed=JSON.parse(savedData); KIDS.forEach(function(k){ var s=parsed.find(function(x){return x.id===k.id;}); if(s) k.sections=s.sections; }); }catch(e){} }
+
+function saveData(){ 
+  var data=KIDS.map(function(k){return {id:k.id,sections:k.sections};});
+  localStorage.setItem(DATA_KEY, JSON.stringify(data));
+  _sbPatch(DATA_KEY, data);
+}
+function save(){ 
+  localStorage.setItem(KEY, JSON.stringify(checked));
+  _sbPatch(KEY, checked);
+}
+function fmt(n){ return "$"+parseFloat(n||0).toFixed(2); }
+function itemKey(kidId,si,ii){ return kidId+"-"+si+"-"+ii; }
+
+function totalItems(){ return KIDS.reduce(function(s,k){ return s+k.sections.reduce(function(s2,sec){return s2+sec.items.length;},0); },0); }
+function totalChecked(){ return Object.values(checked).filter(Boolean).length; }
+function totalCost(){ return KIDS.reduce(function(s,k){ return s+k.sections.reduce(function(s2,sec){ return s2+sec.items.reduce(function(s3,i){return s3+parseFloat(i.total||0);},0);},0);},0); }
+function totalSpent(){
+  var spent=0;
+  KIDS.forEach(function(k){ k.sections.forEach(function(sec,si){ sec.items.forEach(function(item,ii){ if(checked[itemKey(k.id,si,ii)]) spent+=parseFloat(item.total||0); }); }); });
+  return spent;
+}
+function kidTotal(kid){ return kid.sections.reduce(function(s,sec){return s+sec.items.reduce(function(s2,i){return s2+parseFloat(i.total||0);},0);},0); }
+function kidChecked(kid){ var c=0; kid.sections.forEach(function(sec,si){sec.items.forEach(function(item,ii){if(checked[itemKey(kid.id,si,ii)])c++;});}); return c; }
+function kidItems(kid){ return kid.sections.reduce(function(s,sec){return s+sec.items.length;},0); }
+
+function storeBadge(store){
+  var labels={walmart:"Walmart",target:"Target",dollartree:"Dollar Tree",school:"At School"};
+  return '<span class="store-badge store-'+store+'">'+(labels[store]||store)+'</span>';
+}
+
+function toggleItem(key){ checked[key]=!checked[key]; save(); render(); spawnSparkles(); showToast(checked[key]?'Checked off ✦':'Unchecked'); }
+
+function setView(v,btn){
+  activeView=v;
+  document.getElementById("viewByKid").style.display=v==="byKid"?"block":"none";
+  document.getElementById("viewRoute").style.display=v==="route"?"block":"none";
+  document.querySelectorAll(".view-tab").forEach(function(el){el.classList.remove("active");});
+  btn.classList.add("active");
+}
+
+function setKid(id){ activeKid=id; render(); }
+function toggleEditMode(){ editMode=!editMode; render(); }
+
+function updateItem(kidId,si,ii,field,val){
+  var kid=KIDS.find(function(k){return k.id===kidId;});
+  var item=kid.sections[si].items[ii];
+  item[field]=val;
+  if(field==="price"||field==="qty") item.total=parseFloat(item.price||0)*parseFloat(item.qty||1);
+  saveData(); render();
+}
+
+function deleteItem(kidId,si,ii){
+  var kid=KIDS.find(function(k){return k.id===kidId;});
+  kid.sections[si].items.splice(ii,1);
+  saveData(); render();
+}
+
+function addItem(kidId,si){
+  var nameEl=document.getElementById("new-name-"+kidId+"-"+si);
+  var priceEl=document.getElementById("new-price-"+kidId+"-"+si);
+  var storeEl=document.getElementById("new-store-"+kidId+"-"+si);
+  var name=nameEl.value.trim(); if(!name) return;
+  var price=parseFloat(priceEl.value)||0;
+  var store=storeEl.value;
+  var kid=KIDS.find(function(k){return k.id===kidId;});
+  kid.sections[si].items.push({name:name,store:store,price:price,qty:1,total:price});
+  nameEl.value=""; priceEl.value="";
+  saveData(); render();
+}
+
+function render(){
+  // Stats
+  document.getElementById("totalItems").textContent=totalItems();
+  document.getElementById("totalChecked").textContent=totalChecked();
+  document.getElementById("totalCost").textContent=fmt(totalCost());
+  document.getElementById("totalSpent").textContent=fmt(totalSpent());
+
+  // Kid tabs
+  document.getElementById("kidTabs").innerHTML=KIDS.map(function(k){
+    var isActive=k.id===activeKid;
+    var c=kidChecked(k), t=kidItems(k);
+    return '<div class="kid-tab" onclick="setKid(\''+k.id+'\')" style="border-color:'+k.color+';background:'+(isActive?k.color:"var(--white-warm)")+';color:'+(isActive?"white":k.color)+'">'+
+      '<span class="kid-heart">'+k.heart+'</span>'+
+      '<div class="kid-name-lbl" style="color:'+(isActive?"white":"var(--brown-dark)")+'">'+k.name+'</div>'+
+      '<div class="kid-grade-lbl" style="color:'+(isActive?"rgba(255,255,255,0.8)":"var(--brown-muted)")+'">'+k.grade+'</div>'+
+      '<div class="kid-progress-lbl" style="color:'+(isActive?"rgba(255,255,255,0.9)":k.color)+'">'+c+'/'+t+'</div>'+
+    '</div>';
+  }).join('');
+
+  // Kid list
+  var kid=KIDS.find(function(k){return k.id===activeKid;});
+  var c=kidChecked(kid), t=kidItems(kid), pct=t>0?Math.round((c/t)*100):0;
+
+  var html='<div class="kid-list-header">'+
+    '<div class="kid-list-name" style="color:'+kid.color+'">'+kid.heart+' '+kid.name+'\'s List</div>'+
+    '<button class="edit-btn '+(editMode?"active":"")+'" onclick="toggleEditMode()">'+(editMode?"✓ Done":"Edit")+' </button>'+
+  '</div>'+
+  '<div class="prog-wrap">'+
+    '<div class="prog-label"><span>'+c+' of '+t+' items</span><span style="color:'+kid.color+'">'+pct+'% done</span></div>'+
+    '<div class="prog-bg"><div class="prog-fill" style="width:'+pct+'%;background:'+kid.color+'"></div></div>'+
+  '</div>';
+
+  kid.sections.forEach(function(sec,si){
+    var secChecked=sec.items.filter(function(item,ii){return checked[itemKey(kid.id,si,ii)];}).length;
+    var secTotal=sec.items.reduce(function(s,i){return s+parseFloat(i.total||0);},0);
+    html+='<div class="section-card">'+
+      '<div class="section-title-row"><div class="section-title-text">'+sec.title+'</div><span class="section-count-badge">'+secChecked+'/'+sec.items.length+'</span></div>';
+
+    if(!editMode){
+      html+=sec.items.map(function(item,ii){
+        var key=itemKey(kid.id,si,ii);
+        var isChecked=checked[key];
+        return '<div class="item-row">'+
+          '<input class="item-check-box" type="checkbox" '+(isChecked?"checked":"")+'  onchange="toggleItem(\''+key+'\')" style="accent-color:'+kid.color+'">'+
+          '<div class="item-info">'+
+            '<div class="item-name-text '+(isChecked?"checked":"")+'">'+item.name+(item.qty>1?' (×'+item.qty+')':'')+'</div>'+
+            '<div class="item-meta-row">'+storeBadge(item.store)+(item.price>0?'<span class="item-price-text">'+fmt(item.price)+' ea · '+fmt(item.total)+'</span>':'')+'</div>'+
+          '</div>'+
+        '</div>';
+      }).join('');
+    } else {
+      html+=sec.items.map(function(item,ii){
+        return '<div class="edit-row">'+
+          '<input class="edit-name-inp" value="'+item.name.replace(/"/g,'&quot;')+'" onchange="updateItem(\''+kid.id+'\','+si+','+ii+',\'name\',this.value)">'+
+          '<input class="edit-price-inp" type="number" value="'+item.price+'" onchange="updateItem(\''+kid.id+'\','+si+','+ii+',\'price\',this.value)" placeholder="$">'+
+          '<select class="edit-store-sel" onchange="updateItem(\''+kid.id+'\','+si+','+ii+',\'store\',this.value)">'+
+            ['walmart','target','dollartree','school'].map(function(s){return '<option value="'+s+'"'+(item.store===s?' selected':'')+'>'+s+'</option>';}).join('')+
+          '</select>'+
+          '<button class="del-item-btn" onclick="deleteItem(\''+kid.id+'\','+si+','+ii+')">🗑️</button>'+
+        '</div>';
+      }).join('');
+      html+='<div class="add-item-row">'+
+        '<input class="add-item-inp" id="new-name-'+kid.id+'-'+si+'" placeholder="Add item...">'+
+        '<input class="add-item-inp" id="new-price-'+kid.id+'-'+si+'" type="number" placeholder="$" style="width:55px;flex:none">'+
+        '<select class="edit-store-sel" id="new-store-'+kid.id+'-'+si+'"><option value="walmart">Walmart</option><option value="target">Target</option><option value="dollartree">Dollar Tree</option><option value="school">School</option></select>'+
+        '<button class="add-item-btn" onclick="addItem(\''+kid.id+'\','+si+')">+ Add</button>'+
+      '</div>';
+    }
+
+    if(secTotal>0) html+='<div class="section-total-row"><span class="section-total-lbl">Section Total</span><span class="section-total-amt">'+fmt(secTotal)+'</span></div>';
+    html+='</div>';
+  });
+
+  html+='<div class="kid-total-card"><span class="kid-total-lbl">'+kid.name+'\'s Total</span><span class="kid-total-amt" style="color:'+kid.color+'">'+fmt(kidTotal(kid))+'</span></div>';
+  document.getElementById("kidListContent").innerHTML=html;
+
+  // Shopping route
+  document.getElementById("routeContent").innerHTML=
+    '<div class="route-card walmart">'+
+      '<div class="route-store-name">⭐ STOP 1 — WALMART (Go here first — most items!)</div>'+
+      '<div class="route-item-row">Composition books $0.50 ea — 5 per K-5 child</div>'+
+      '<div class="route-item-row">Plastic folders $0.50 ea — 5 per K-5 child</div>'+
+      '<div class="route-item-row">1.5" binders $2.47 — Jazelli, Jaliyah, Juliusz</div>'+
+      '<div class="route-item-row">2" or 3" binder $3.97 — Jaylani (HS)</div>'+
+      '<div class="route-item-row">8 tabbed dividers $2.47 — Jaylani only</div>'+
+      '<div class="route-item-row">Pencil zipper pouches (FABRIC) $2.97 — 1 per child</div>'+
+      '<div class="route-item-row">Glue sticks $0.25 ea — buy ~15 loose</div>'+
+      '<div class="route-item-row">Post-it notes $2.47/pack — K-2: 3 packs; 5th: 4 packs; HS: 1 pack</div>'+
+      '<div class="route-item-row">Sheet protectors $1.97 — 1 pack per K-5 child</div>'+
+      '<div class="route-item-row">Pink erasers $0.47 — 1 per child</div>'+
+      '<div class="route-item-row">Crayons $0.50 — K-2 kids only</div>'+
+      '<div class="route-item-row">Colored pencils $0.97 — all kids</div>'+
+      '<div class="route-item-row">Colored pens $1.97 — Juliusz (5th) only</div>'+
+      '<div class="route-item-row">Index cards $0.48 — Juliusz + Jaylani</div>'+
+      '<div class="route-item-row">BIC Pens $0.97 — Jaylani (red/blue/black)</div>'+
+      '<div class="route-item-row">Wired earbuds $5.97 — Jaylani ONLY (NO Bluetooth!)</div>'+
+      '<div class="route-item-row">Uniform polo shirts $4.98 ea — wait for Aug tax-free!</div>'+
+      '<div class="route-item-row">Uniform pants/shorts $4.98-$7.98 ea — wait for Aug!</div>'+
+      '<div class="route-item-row">Backpacks $4.98 ea — wait for Aug tax-free!</div>'+
+      '<div class="route-item-row">Sneakers $14.97 — WAIT for August tax-free month!</div>'+
+      '<div class="route-tip-text">💡 Stack Ibotta + Fetch for extra cash back! Scan barcodes in Walmart app.</div>'+
+    '</div>'+
+    '<div class="route-card target">'+
+      '<div class="route-store-name">🎯 STOP 2 — TARGET (Pencils ONLY — cheapest here!)</div>'+
+      '<div class="route-item-row">#2 Pencils 12-ct $0.39 — K-5 kids (best price anywhere!)</div>'+
+      '<div class="route-item-row">#2 Pencils 24-ct $0.79 — Juliusz 5th grade</div>'+
+      '<div class="route-tip-text">💡 Target Circle app for extra deals. Everything else cheaper at Walmart!</div>'+
+    '</div>'+
+    '<div class="route-card dollartree">'+
+      '<div class="route-store-name">🌳 STOP 3 — DOLLAR TREE (Just 4 things!)</div>'+
+      '<div class="route-item-row">Black Dry Erase Markers $1.00 (saves $0.97 vs Walmart)</div>'+
+      '<div class="route-item-row">Highlighters $1.00 — all kids need these</div>'+
+      '<div class="route-item-row">Scissors blunt $1.00 — K-5 kids only</div>'+
+      '<div class="route-item-row">Water bottles $1.00 — basic is fine for school</div>'+
+      '<div class="route-tip-text">💡 Quick stop — just these 4 things!</div>'+
+    '</div>';
+}
+
+function spawnSparkles(){
+  var s=['✦','✧','⋆','🎒','⭑'],c=['#C4714F','#D4A574','#B8896E'];
+  for(var i=0;i<5;i++){
+    var el=document.createElement('div'); el.className='sparkle';
+    el.textContent=s[Math.floor(Math.random()*s.length)];
+    el.style.cssText='left:'+(20+Math.random()*60)+'vw;top:'+(15+Math.random()*55)+'vh;color:'+c[Math.floor(Math.random()*c.length)]+';font-size:'+(12+Math.random()*14)+'px;animation-delay:'+(Math.random()*0.4)+'s;position:fixed;pointer-events:none;z-index:9999;font-family:sans-serif;';
+    document.body.appendChild(el); setTimeout(function(){el.remove();},1600);
+  }
+}
+function showToast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},2000); }
+
+render();
+</script>
+</body>
+</html>
