@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J Empire · Family</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --cream:#F4EFE8; --cream-deep:#EDE6DC;
+  --terra:#C4714F; --terra-light:#D4906E;
+  --rose-gold:#B8896E; --rose-light:#D4A574;
+  --brown-dark:#2C1A0E; --brown-mid:#6B4232;
+  --brown-muted:#9A6E58; --brown-soft:#C4A090;
+  --white-warm:rgba(255,252,248,0.95);
+  --green:#5A8A5E;
+}
+body { min-height:100vh; font-family:'Inter',sans-serif; background:var(--cream-deep); color:var(--brown-dark); }
+
+.header { position:relative; overflow:hidden; padding:48px 24px 28px; text-align:center; background:var(--cream); background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(180,140,105,0.07) 3px,rgba(180,140,105,0.07) 4px),repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(180,140,105,0.05) 3px,rgba(180,140,105,0.05) 4px); }
+.header::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,transparent,var(--terra) 20%,var(--rose-light) 50%,var(--rose-gold) 80%,transparent); }
+.header-marble { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.header-glow { position:absolute; inset:0; background:radial-gradient(ellipse 70% 50% at 85% 10%,rgba(196,113,79,0.15) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 10% 85%,rgba(184,137,110,0.11) 0%,transparent 50%); }
+.bracket { position:absolute; width:24px; height:24px; opacity:0.3; }
+.btl { top:14px; left:16px; border-top:1.5px solid var(--terra); border-left:1.5px solid var(--terra); }
+.btr { top:14px; right:16px; border-top:1.5px solid var(--terra); border-right:1.5px solid var(--terra); }
+.header-content { position:relative; z-index:2; }
+.header-eyebrow { font-size:9px; font-weight:600; letter-spacing:0.3em; text-transform:uppercase; color:var(--rose-gold); margin-bottom:6px; }
+.header-title { font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:300; color:var(--brown-dark); line-height:0.95; letter-spacing:0.06em; margin-bottom:10px; }
+.header-title em { font-style:italic; color:var(--terra); }
+.header-divider { display:flex; align-items:center; gap:8px; width:160px; margin:0 auto 10px; }
+.hdl { flex:1; height:1px; background:rgba(196,113,79,0.3); }
+.hdg { width:4px; height:4px; background:var(--terra); transform:rotate(45deg); opacity:0.7; }
+.header-quote { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13px; color:var(--brown-muted); }
+
+/* OVERALL PROGRESS */
+.overall-card { background:linear-gradient(135deg,var(--terra),var(--terra-light)); margin:0; padding:16px 20px; display:flex; align-items:center; gap:16px; }
+.overall-left { flex:1; }
+.overall-label { font-size:9px; font-weight:600; letter-spacing:0.22em; text-transform:uppercase; color:rgba(255,252,248,0.75); margin-bottom:4px; }
+.overall-pct { font-family:'Cormorant Garamond',serif; font-size:42px; font-weight:300; color:#FFF8F0; line-height:1; }
+.overall-sub { font-size:10px; color:rgba(255,252,248,0.7); margin-top:3px; }
+.overall-right { text-align:right; }
+.overall-done { font-family:'Cormorant Garamond',serif; font-size:28px; color:#FFF8F0; }
+.overall-total { font-size:10px; color:rgba(255,252,248,0.65); letter-spacing:0.1em; text-transform:uppercase; }
+.overall-bar-wrap { background:rgba(255,252,248,0.2); border-radius:10px; height:5px; overflow:hidden; margin-top:10px; }
+.overall-bar-fill { height:100%; background:#FFF8F0; border-radius:10px; transition:width 0.5s ease; }
+
+/* RESET BAR */
+.reset-bar { background:var(--cream); border-bottom:1px solid rgba(196,113,79,0.12); padding:9px 16px; display:flex; align-items:center; justify-content:space-between; }
+.reset-info { font-size:10px; color:var(--brown-muted); display:flex; align-items:center; gap:6px; }
+.reset-clock { font-size:11px; font-weight:600; color:var(--terra); }
+.reset-btn { font-size:9.5px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--brown-muted); background:rgba(196,113,79,0.08); border:1px solid rgba(196,113,79,0.2); padding:5px 12px; border-radius:12px; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.18s; }
+.reset-btn:hover { background:rgba(196,113,79,0.15); color:var(--terra); }
+
+/* ROOM TABS */
+.room-tabs { background:var(--cream); padding:10px 16px; display:flex; gap:7px; overflow-x:auto; scrollbar-width:none; border-bottom:1px solid rgba(196,113,79,0.12); }
+.room-tabs::-webkit-scrollbar { display:none; }
+.room-tab { font-size:9.5px; font-weight:600; letter-spacing:0.08em; padding:8px 13px; border-radius:20px; border:1px solid rgba(196,113,79,0.2); background:transparent; color:var(--brown-muted); cursor:pointer; transition:all 0.18s; font-family:'Inter',sans-serif; white-space:nowrap; flex-shrink:0; display:flex; align-items:center; gap:5px; }
+.room-tab.active { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border-color:transparent; box-shadow:0 3px 10px rgba(196,113,79,0.28); }
+.room-tab-dot { width:6px; height:6px; border-radius:50%; background:var(--green); flex-shrink:0; display:none; }
+.room-tab.has-progress .room-tab-dot { display:block; }
+.room-tab.active .room-tab-dot { background:rgba(255,252,248,0.7); }
+
+.main { padding:18px 16px 100px; max-width:500px; margin:0 auto; }
+
+/* ROOM HEADER */
+.room-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.room-title-wrap { display:flex; align-items:center; gap:10px; }
+.room-emoji { font-size:24px; }
+.room-title { font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--brown-dark); }
+.room-actions { display:flex; gap:7px; align-items:center; }
+.edit-mode-btn { font-size:9px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:5px 12px; border-radius:12px; border:1.5px solid rgba(196,113,79,0.25); background:transparent; color:var(--brown-muted); cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.18s; }
+.edit-mode-btn.active { background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border-color:transparent; }
+
+/* ROOM PROGRESS */
+.room-prog-wrap { margin-bottom:16px; }
+.room-prog-label { display:flex; justify-content:space-between; font-size:10px; color:var(--brown-muted); font-weight:600; margin-bottom:5px; }
+.room-prog-bg { background:rgba(196,113,79,0.12); border-radius:10px; height:6px; overflow:hidden; }
+.room-prog-fill { height:100%; background:linear-gradient(90deg,var(--terra),var(--rose-light)); border-radius:10px; transition:width 0.4s ease; }
+
+/* TASK LIST */
+.task-list { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+.task-item { background:var(--white-warm); border:1px solid rgba(196,113,79,0.14); border-radius:13px; padding:11px 14px; display:flex; align-items:center; gap:11px; box-shadow:0 1px 6px rgba(196,113,79,0.05); transition:all 0.18s; }
+.task-item:hover { box-shadow:0 4px 14px rgba(196,113,79,0.1); }
+.task-item.done { opacity:0.5; }
+.task-item.done .task-text { text-decoration:line-through; }
+.task-check { width:22px; height:22px; border-radius:6px; border:1.5px solid rgba(196,113,79,0.35); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; color:transparent; transition:all 0.18s; cursor:pointer; background:transparent; user-select:none; }
+.task-check.checked { background:var(--terra); border-color:var(--terra); color:white; }
+.task-text { flex:1; font-size:13px; font-weight:500; color:var(--brown-dark); line-height:1.4; }
+.task-freq { font-size:8.5px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--brown-soft); background:rgba(196,113,79,0.07); padding:2px 8px; border-radius:8px; flex-shrink:0; }
+.task-del { background:none; border:none; font-size:13px; cursor:pointer; opacity:0.3; transition:opacity 0.18s; flex-shrink:0; }
+.task-del:hover { opacity:1; }
+
+/* ADD TASK */
+.add-task-wrap { background:var(--white-warm); border:1.5px dashed rgba(196,113,79,0.25); border-radius:14px; padding:12px 14px; display:none; flex-direction:column; gap:8px; }
+.add-task-wrap.visible { display:flex; }
+.task-input { width:100%; padding:9px 12px; border:1px solid rgba(196,113,79,0.22); border-radius:10px; background:var(--cream); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:13px; outline:none; }
+.task-input:focus { border-color:var(--terra); }
+.task-input::placeholder { color:var(--brown-soft); font-style:italic; }
+.add-task-row { display:flex; gap:8px; }
+.freq-select { padding:8px 10px; border:1px solid rgba(196,113,79,0.22); border-radius:10px; background:var(--cream); color:var(--brown-dark); font-family:'Inter',sans-serif; font-size:12px; outline:none; }
+.save-task-btn { flex:1; padding:9px; border-radius:10px; background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); border:none; font-family:'Inter',sans-serif; font-size:11px; font-weight:600; cursor:pointer; transition:all 0.18s; }
+.add-task-trigger { display:flex; align-items:center; gap:8px; padding:10px 14px; border:1.5px dashed rgba(196,113,79,0.2); border-radius:13px; color:rgba(196,113,79,0.5); font-size:12px; font-style:italic; cursor:pointer; transition:all 0.18s; }
+.add-task-trigger:hover { border-color:rgba(196,113,79,0.45); color:var(--terra); background:rgba(196,113,79,0.04); }
+
+/* ALL ROOMS OVERVIEW */
+.rooms-overview { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:20px; }
+.room-overview-card { background:var(--white-warm); border:1px solid rgba(196,113,79,0.15); border-radius:16px; padding:14px; box-shadow:0 2px 8px rgba(196,113,79,0.06); cursor:pointer; transition:all 0.2s; }
+.room-overview-card:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(196,113,79,0.13); border-color:rgba(196,113,79,0.3); }
+.roc-emoji { font-size:26px; margin-bottom:6px; }
+.roc-name { font-family:'Cormorant Garamond',serif; font-size:18px; color:var(--brown-dark); margin-bottom:4px; }
+.roc-progress { font-size:10px; color:var(--brown-muted); margin-bottom:6px; }
+.roc-bar-bg { height:4px; background:rgba(196,113,79,0.12); border-radius:6px; overflow:hidden; }
+.roc-bar-fill { height:100%; background:linear-gradient(90deg,var(--terra),var(--rose-light)); border-radius:6px; transition:width 0.4s; }
+
+.section-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.section-title { font-size:9px; font-weight:700; letter-spacing:0.26em; text-transform:uppercase; color:var(--rose-gold); display:flex; align-items:center; gap:8px; }
+.section-title::after { content:''; display:block; width:30px; height:1px; background:rgba(196,113,79,0.25); }
+
+.sparkle { position:fixed; pointer-events:none; z-index:9999; animation:sparkle-fly 1.2s ease-out forwards; }
+@keyframes sparkle-fly { 0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg);}100%{opacity:0;transform:translateY(-80px) scale(0.3) rotate(180deg);} }
+.toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px); background:linear-gradient(135deg,var(--terra),var(--terra-light)); color:var(--cream); padding:10px 22px; border-radius:24px; font-size:12px; font-weight:600; letter-spacing:0.08em; box-shadow:0 6px 20px rgba(196,113,79,0.4); opacity:0; transition:all 0.3s; pointer-events:none; white-space:nowrap; z-index:999; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.nav-bar { position:fixed; bottom:0; left:0; right:0; background:var(--cream); border-top:1px solid rgba(196,113,79,0.15); padding:10px 20px 18px; display:flex; justify-content:space-around; align-items:center; z-index:50; }
+.nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--brown-soft); transition:color 0.18s; }
+.nav-item.active { color:var(--terra); }
+.nav-icon { font-size:20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <svg class="header-marble" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <filter id="mf"><feGaussianBlur stdDeviation="2.5"/></filter>
+    <g filter="url(#mf)">
+      <path d="M -10 70 Q 80 35 170 85 Q 270 145 360 70 Q 430 15 520 65" stroke="rgba(184,137,110,0.28)" stroke-width="2.5" fill="none"/>
+      <path d="M 40 160 Q 130 120 200 158 Q 295 205 385 145" stroke="rgba(196,113,79,0.16)" stroke-width="1.5" fill="none"/>
+    </g>
+  </svg>
+  <div class="header-glow"></div>
+  <div class="bracket btl"></div><div class="bracket btr"></div>
+  <div class="header-content">
+    <div class="header-eyebrow">Life · J Empire</div>
+    <div class="header-title">🏡 <em>Family</em></div>
+    <div class="header-divider"><div class="hdl"></div><div class="hdg"></div><div class="hdl"></div></div>
+    <div class="header-quote">"A clean home is a clear mind. You've got this." ✦</div>
+  </div>
+</div>
+
+<!-- OVERALL PROGRESS -->
+<div class="overall-card">
+  <div class="overall-left">
+    <div class="overall-label">House Progress Today</div>
+    <div class="overall-pct" id="overallPct">0%</div>
+    <div class="overall-sub" id="overallSub">Start checking things off ✦</div>
+    <div class="overall-bar-wrap"><div class="overall-bar-fill" id="overallBar" style="width:0%"></div></div>
+  </div>
+  <div class="overall-right">
+    <div class="overall-done" id="overallDone">0</div>
+    <div class="overall-total" id="overallTotal">of 0 tasks</div>
+  </div>
+</div>
+
+<!-- RESET BAR -->
+<div class="reset-bar">
+  <div class="reset-info">🔄 Auto-resets nightly at midnight · Next reset: <span class="reset-clock" id="resetClock">--:--</span></div>
+  <button class="reset-btn" onclick="confirmReset()">Reset Now</button>
+</div>
+
+<!-- ROOM TABS -->
+<div class="room-tabs" id="roomTabs"></div>
+
+<div class="main" id="mainContent"></div>
+
+<div class="toast" id="toast"></div>
+
+<div class="nav-bar">
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/index.html"><span class="nav-icon">🏠</span><span>Home</span></a>
+  <a class="nav-item active" href="#"><span class="nav-icon">🏡</span><span>Family</span></a>
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/planner.html"><span class="nav-icon">🗓️</span><span>Planner</span></a>
+</div>
+
+<script>
+const ROOMS_KEY = 'je_family_rooms';
+const CHECKS_KEY = 'je_family_checks';
+const RESET_KEY = 'je_family_last_reset';
+
+const DEFAULT_ROOMS = [
+  { id:'overview', name:'Overview', emoji:'🏡', tasks:[] },
+  { id:'kitchen', name:'Kitchen', emoji:'🍳', tasks:[
+    {id:'k1',text:'Wash dishes / load dishwasher',freq:'Daily'},
+    {id:'k2',text:'Wipe down counters & stovetop',freq:'Daily'},
+    {id:'k3',text:'Empty trash',freq:'Daily'},
+    {id:'k4',text:'Sweep kitchen floor',freq:'Daily'},
+    {id:'k5',text:'Clean out fridge (toss old food)',freq:'Weekly'},
+    {id:'k6',text:'Mop kitchen floor',freq:'Weekly'},
+    {id:'k7',text:'Wipe down microwave inside & out',freq:'Weekly'},
+    {id:'k8',text:'Wipe cabinet fronts',freq:'Weekly'},
+    {id:'k9',text:'Clean sink & faucet',freq:'Weekly'},
+  ]},
+  { id:'livingroom', name:'Living Room', emoji:'🛋️', tasks:[
+    {id:'lr1',text:'Pick up & put away items',freq:'Daily'},
+    {id:'lr2',text:'Fluff & straighten couch cushions',freq:'Daily'},
+    {id:'lr3',text:'Vacuum carpet / sweep floors',freq:'Weekly'},
+    {id:'lr4',text:'Dust surfaces & shelves',freq:'Weekly'},
+    {id:'lr5',text:'Wipe down TV & remotes',freq:'Weekly'},
+    {id:'lr6',text:'Clean windows & mirrors',freq:'Weekly'},
+    {id:'lr7',text:'Organize toys & kids items',freq:'Daily'},
+  ]},
+  { id:'bathrooms', name:'Bathrooms', emoji:'🚿', tasks:[
+    {id:'b1',text:'Wipe down sink & counter',freq:'Daily'},
+    {id:'b2',text:'Clean toilet inside & out',freq:'Weekly'},
+    {id:'b3',text:'Scrub shower/tub',freq:'Weekly'},
+    {id:'b4',text:'Mop bathroom floor',freq:'Weekly'},
+    {id:'b5',text:'Replace/wash hand towels',freq:'Weekly'},
+    {id:'b6',text:'Restock toilet paper & soap',freq:'As needed'},
+    {id:'b7',text:'Clean mirror',freq:'Weekly'},
+    {id:'b8',text:'Empty trash',freq:'Weekly'},
+  ]},
+  { id:'bedrooms', name:'Bedrooms', emoji:'🛏️', tasks:[
+    {id:'bd1',text:'Make all beds',freq:'Daily'},
+    {id:'bd2',text:'Pick up floor clutter',freq:'Daily'},
+    {id:'bd3',text:'Put away clean laundry',freq:'Daily'},
+    {id:'bd4',text:'Vacuum / sweep floors',freq:'Weekly'},
+    {id:'bd5',text:'Dust dressers & nightstands',freq:'Weekly'},
+    {id:'bd6',text:'Change bed sheets',freq:'Weekly'},
+    {id:'bd7',text:'Organize closets & drawers',freq:'Weekly'},
+  ]},
+  { id:'laundry', name:'Laundry', emoji:'🧺', tasks:[
+    {id:'la1',text:'Start a load of laundry',freq:'Daily'},
+    {id:'la2',text:'Move laundry to dryer',freq:'Daily'},
+    {id:'la3',text:'Fold & put away clean clothes',freq:'Daily'},
+    {id:'la4',text:'Clean out dryer lint trap',freq:'Every load'},
+    {id:'la5',text:'Wipe down washer & dryer',freq:'Weekly'},
+    {id:'la6',text:'Wash kids\' school uniforms',freq:'Weekly'},
+    {id:'la7',text:'Wash bed sheets & towels',freq:'Weekly'},
+  ]},
+  { id:'entryway', name:'Entryway', emoji:'🚪', tasks:[
+    {id:'e1',text:'Pick up shoes & bags at door',freq:'Daily'},
+    {id:'e2',text:'Sweep entryway floor',freq:'Weekly'},
+    {id:'e3',text:'Wipe down front door',freq:'Weekly'},
+    {id:'e4',text:'Organize school bags & backpacks',freq:'Daily'},
+    {id:'e5',text:'Check mail',freq:'Daily'},
+  ]},
+  { id:'outdoor', name:'Outside', emoji:'🌿', tasks:[
+    {id:'o1',text:'Take out trash & recycling',freq:'Weekly'},
+    {id:'o2',text:'Sweep front porch / walkway',freq:'Weekly'},
+    {id:'o3',text:'Check mailbox',freq:'Daily'},
+    {id:'o4',text:'Tidy up yard / pick up toys outside',freq:'Weekly'},
+  ]},
+];
+
+let rooms = [], checks = {}, activeRoom = 'overview', editMode = false, addingTask = false;
+
+function lsGet(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch{ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch{} }
+
+const _SB='https://ejseathlglvvnmkpchib.supabase.co';
+const _SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqc2VhdGhsZ2x2dm5ta3BjaGliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODc4NTUsImV4cCI6MjA5NzU2Mzg1NX0.o4crd1W5-NbVNXSOWNT-WPHS7R6orRe9CRYFZfZ41L8';
+async function _sbSave(table,key,data){try{const h={'apikey':_SK,'Authorization':'Bearer '+_SK,'Content-Type':'application/json'};const r=await fetch(`${_SB}/rest/v1/${table}?app_key=eq.${encodeURIComponent(key)}`,{method:'GET',headers:h});const ex=await r.json();if(ex&&ex.length>0){await fetch(`${_SB}/rest/v1/${table}?app_key=eq.${encodeURIComponent(key)}`,{method:'PATCH',headers:h,body:JSON.stringify({app_key:key,data:JSON.stringify(data)})});}else{await fetch(`${_SB}/rest/v1/${table}`,{method:'POST',headers:{...h,'Prefer':'return=representation'},body:JSON.stringify({app_key:key,data:JSON.stringify(data)})});}}catch(e){console.warn('SB save:',e);}}
+async function _sbLoad(table,key){try{const r=await fetch(`${_SB}/rest/v1/${table}?app_key=eq.${encodeURIComponent(key)}`,{method:'GET',headers:{'apikey':_SK,'Authorization':'Bearer '+_SK}});const d=await r.json();return d&&d.length>0?JSON.parse(d[0].data):null;}catch(e){return null;}}
+
+async function init(){
+  const [sbRooms,sbChecks] = await Promise.all([
+    _sbLoad('family_events','je_family_rooms'),
+    _sbLoad('family_events','je_family_checks')
+  ]);
+  rooms = sbRooms || lsGet(ROOMS_KEY) || JSON.parse(JSON.stringify(DEFAULT_ROOMS));
+  checks = sbChecks || lsGet(CHECKS_KEY) || {};
+  checkAutoReset();
+  startClock();
+  render();
+}
+
+// ── AUTO RESET ──
+function checkAutoReset(){
+  const today = new Date().toDateString();
+  const lastReset = lsGet(RESET_KEY);
+  if(lastReset !== today){
+    checks = {};
+    lsSet(CHECKS_KEY, {});
+    lsSet(RESET_KEY, today);
+  }
+}
+
+function startClock(){
+  updateClock();
+  setInterval(()=>{
+    updateClock();
+    checkAutoReset();
+  }, 60000);
+}
+
+function updateClock(){
+  const now = new Date();
+  const midnight = new Date();
+  midnight.setHours(24,0,0,0);
+  const diff = midnight - now;
+  const hrs = Math.floor(diff/3600000);
+  const mins = Math.floor((diff%3600000)/60000);
+  document.getElementById('resetClock').textContent = hrs+'h '+mins+'m';
+}
+
+function confirmReset(){
+  if(confirm('Reset all checkboxes for today?')){
+    checks = {};
+    lsSet(CHECKS_KEY, {});
+    render();
+    showToast('Reset complete ✦ Fresh start!');
+  }
+}
+
+// ── STATS ──
+function getAllTasks(){
+  return rooms.filter(r=>r.id!=='overview').flatMap(r=>r.tasks);
+}
+
+function getRoomChecked(room){
+  return room.tasks.filter(t=>checks[room.id+'_'+t.id]).length;
+}
+
+function updateOverall(){
+  const all = getAllTasks();
+  const done = all.filter(t=>{
+    const room = rooms.find(r=>r.tasks.includes(t));
+    return room && checks[room.id+'_'+t.id];
+  }).length;
+  const pct = all.length > 0 ? Math.round((done/all.length)*100) : 0;
+  document.getElementById('overallPct').textContent = pct+'%';
+  document.getElementById('overallBar').style.width = pct+'%';
+  document.getElementById('overallDone').textContent = done;
+  document.getElementById('overallTotal').textContent = 'of '+all.length+' tasks';
+  const msgs = ['Start checking things off ✦','Great start — keep going! ✦','Halfway there, queen! ✦','Almost done — you\'re crushing it! ✦','House is on point. Unstoppable. ✦'];
+  const msgIdx = Math.min(4, Math.floor(pct/25));
+  document.getElementById('overallSub').textContent = msgs[msgIdx];
+}
+
+// ── RENDER ──
+function render(){
+  updateOverall();
+  renderTabs();
+  renderMain();
+}
+
+function renderTabs(){
+  const tabs = document.getElementById('roomTabs');
+  tabs.innerHTML = rooms.map(r=>{
+    const isActive = r.id === activeRoom;
+    const hasProg = r.id !== 'overview' && getRoomChecked(r) > 0;
+    return `<button class="room-tab ${isActive?'active':''} ${hasProg?'has-progress':''}" onclick="setRoom('${r.id}')">
+      <div class="room-tab-dot"></div>
+      ${r.emoji} ${r.name}
+    </button>`;
+  }).join('');
+}
+
+function setRoom(id){ activeRoom=id; editMode=false; addingTask=false; render(); }
+
+function renderMain(){
+  const main = document.getElementById('mainContent');
+
+  // OVERVIEW
+  if(activeRoom === 'overview'){
+    const roomCards = rooms.filter(r=>r.id!=='overview').map(r=>{
+      const done = getRoomChecked(r);
+      const total = r.tasks.length;
+      const pct = total>0?Math.round((done/total)*100):0;
+      return `<div class="room-overview-card" onclick="setRoom('${r.id}')">
+        <div class="roc-emoji">${r.emoji}</div>
+        <div class="roc-name">${r.name}</div>
+        <div class="roc-progress">${done} of ${total} tasks done</div>
+        <div class="roc-bar-bg"><div class="roc-bar-fill" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+
+    main.innerHTML = `
+      <div class="section-hdr"><div class="section-title">All Rooms</div></div>
+      <div class="rooms-overview">${roomCards}</div>`;
+    return;
+  }
+
+  // ROOM VIEW
+  const room = rooms.find(r=>r.id===activeRoom);
+  if(!room){ main.innerHTML=''; return; }
+  const done = getRoomChecked(room);
+  const total = room.tasks.length;
+  const pct = total>0?Math.round((done/total)*100):0;
+
+  let html = `
+    <div class="room-header">
+      <div class="room-title-wrap">
+        <span class="room-emoji">${room.emoji}</span>
+        <span class="room-title">${room.name}</span>
+      </div>
+      <div class="room-actions">
+        <button class="edit-mode-btn ${editMode?'active':''}" onclick="toggleEdit()">${editMode?'✓ Done':'Edit'}</button>
+      </div>
+    </div>
+    <div class="room-prog-wrap">
+      <div class="room-prog-label"><span>${done} of ${total} tasks</span><span>${pct}% done</span></div>
+      <div class="room-prog-bg"><div class="room-prog-fill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="task-list">`;
+
+  if(room.tasks.length === 0){
+    html += `<div style="text-align:center;padding:24px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--brown-muted);">"No tasks yet — add your first one below." ✦</div>`;
+  } else {
+    room.tasks.forEach(task=>{
+      const key = room.id+'_'+task.id;
+      const isChecked = !!checks[key];
+      html += `<div class="task-item ${isChecked?'done':''}">
+        <div class="task-check ${isChecked?'checked':''}" onclick="toggleTask('${room.id}','${task.id}')">✓</div>
+        <div class="task-text">${task.text}</div>
+        <span class="task-freq">${task.freq}</span>
+        ${editMode?`<button class="task-del" onclick="deleteTask('${room.id}','${task.id}')">🗑️</button>`:''}
+      </div>`;
+    });
+  }
+
+  html += `</div>`;
+
+  // Add task area
+  if(editMode){
+    html += `
+      <div class="add-task-wrap visible" id="addTaskWrap">
+        <input class="task-input" id="newTaskText" placeholder="Add a task for ${room.name}..." />
+        <div class="add-task-row">
+          <select class="freq-select" id="newTaskFreq">
+            <option>Daily</option>
+            <option>Weekly</option>
+            <option>Every load</option>
+            <option>As needed</option>
+            <option>Monthly</option>
+          </select>
+          <button class="save-task-btn" onclick="addTask('${room.id}')">+ Add Task ✦</button>
+        </div>
+      </div>`;
+  } else {
+    html += `<div class="add-task-trigger" onclick="toggleEdit()">✦ Add or edit tasks</div>`;
+  }
+
+  main.innerHTML = html;
+}
+
+function toggleTask(roomId, taskId){
+  const key = roomId+'_'+taskId;
+  checks[key] = !checks[key];
+  lsSet(CHECKS_KEY, checks);
+  _sbSave('family_events','je_family_checks',checks);
+  render();
+  if(checks[key]){ spawnSparkles(); showToast('Done ✦ One less thing!'); }
+}
+
+function toggleEdit(){ editMode=!editMode; render(); }
+
+function addTask(roomId){
+  const text = document.getElementById('newTaskText')?.value?.trim();
+  const freq = document.getElementById('newTaskFreq')?.value || 'Daily';
+  if(!text) return;
+  const room = rooms.find(r=>r.id===roomId);
+  room.tasks.push({ id:'t'+Date.now(), text, freq });
+  lsSet(ROOMS_KEY, rooms);
+  document.getElementById('newTaskText').value='';
+  render();
+  showToast('Task added ✦');
+}
+
+function deleteTask(roomId, taskId){
+  const room = rooms.find(r=>r.id===roomId);
+  room.tasks = room.tasks.filter(t=>t.id!==taskId);
+  const key = roomId+'_'+taskId;
+  delete checks[key];
+  lsSet(ROOMS_KEY, rooms);
+  lsSet(CHECKS_KEY, checks);
+  render();
+  showToast('Removed ✦');
+}
+
+function spawnSparkles(){
+  const s=['✦','✧','⋆','🏡','⭑'],c=['#C4714F','#D4A574','#B8896E'];
+  for(let i=0;i<6;i++){
+    const el=document.createElement('div'); el.className='sparkle';
+    el.textContent=s[Math.floor(Math.random()*s.length)];
+    el.style.cssText=`left:${20+Math.random()*60}vw;top:${15+Math.random()*55}vh;color:${c[Math.floor(Math.random()*c.length)]};font-size:${12+Math.random()*14}px;animation-delay:${Math.random()*0.4}s`;
+    document.body.appendChild(el); setTimeout(()=>el.remove(),1600);
+  }
+}
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
+
+init();
+</script>
+</body>
+</html>
