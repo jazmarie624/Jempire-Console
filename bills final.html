@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J Empire · Bills</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --cream:#F4EFE8;--cream2:#EDE6DC;--cream3:#E5DDD2;--white:#FDFAF6;
+  --terra:#C4714F;--terra-l:#D4876E;--terra-d:#A85A38;
+  --rose:#B8896E;--brown:#2C1A0E;--brown-mid:#6B4232;--brown-soft:#9A7060;
+  --green:#3A7D4F;--green-l:#4A9D62;--green-bg:#EBF5EE;--green-border:#B8DFC4;
+  --red:#C0392B;--red-bg:#FDECEA;--red-border:#F5C0BB;
+  --yellow:#B8860B;--yellow-bg:#FDF6E3;--yellow-border:#E8D5A0;
+  --border:#DDD4C8;--shadow:rgba(44,26,14,0.08);
+}
+body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--brown);min-height:100vh;padding-bottom:70px;font-size:14px;}
+
+/* HEADER */
+.hdr{background:var(--brown);padding:32px 18px 20px;position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(196,113,79,0.15),transparent 70%);}
+.hdr-eye{font-size:9px;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:var(--rose);margin-bottom:6px;position:relative;z-index:1;}
+.hdr-title{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:700;color:var(--cream);line-height:1;position:relative;z-index:1;}
+.hdr-title span{color:var(--terra-l);}
+.hdr-sub{font-size:11px;color:rgba(244,239,232,0.6);margin-top:5px;font-style:italic;font-family:'Cormorant Garamond',serif;position:relative;z-index:1;}
+
+/* QUOTE */
+.quote-strip{background:var(--cream2);border-left:3px solid var(--terra);padding:10px 16px;display:flex;gap:8px;align-items:flex-start;}
+.q-mark{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--terra);line-height:0.8;flex-shrink:0;margin-top:2px;}
+.q-text{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:var(--brown);line-height:1.5;font-weight:600;}
+.q-attr{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--terra);margin-top:3px;}
+
+/* TIP */
+.tip-strip{background:var(--green-bg);border-left:3px solid var(--green);padding:10px 16px;display:flex;gap:8px;}
+.tip-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+.tip-text{font-size:12px;font-weight:600;color:var(--brown-mid);line-height:1.5;}
+
+/* STICKY PREVIEW */
+.sticky-preview{margin:10px 14px 0;background:#FFFEF0;border:1.5px solid #E8D870;border-radius:10px;padding:10px 13px;position:relative;display:none;}
+.sticky-preview.visible{display:block;}
+.sticky-preview::before{content:'📌';position:absolute;top:-8px;right:12px;font-size:16px;}
+.sp-lbl{font-size:8px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#8B7520;margin-bottom:4px;}
+.sp-text{font-size:12px;font-weight:600;color:var(--brown);line-height:1.5;padding-right:24px;}
+.sp-edit{position:absolute;bottom:8px;right:10px;background:none;border:none;font-size:12px;cursor:pointer;color:var(--brown-soft);}
+
+/* MONTH NAV */
+.mnav{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:var(--white);border-bottom:1px solid var(--border);}
+.mnav-btn{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:var(--cream);color:var(--terra);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:700;}
+.mnav-lbl{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--brown);}
+
+/* TABS */
+.tabs{display:flex;background:var(--white);border-bottom:1px solid var(--border);}
+.tab{flex:1;padding:11px;text-align:center;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--brown-soft);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;}
+.tab.active{color:var(--terra);border-bottom-color:var(--terra);}
+
+/* DASHBOARD GRID */
+.dash-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:12px 14px 0;}
+.dash-card{background:var(--white);border-radius:12px;padding:12px;border:1px solid var(--border);box-shadow:0 1px 4px var(--shadow);}
+.dash-label{font-size:8px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--brown-soft);margin-bottom:4px;}
+.dash-value{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;line-height:1;}
+.dv-g{color:var(--green);}
+.dv-r{color:var(--red);}
+.dv-t{color:var(--terra);}
+.dv-b{color:var(--brown);}
+.dash-sub{font-size:9px;font-weight:600;color:var(--brown-soft);margin-top:3px;}
+.dash-cmp{font-size:9px;font-weight:700;margin-top:4px;padding:2px 7px;border-radius:10px;display:inline-block;}
+.cmp-up{background:var(--green-bg);color:var(--green);}
+.cmp-down{background:var(--red-bg);color:var(--red);}
+
+/* PROGRESS */
+.prog-wrap{margin:10px 14px 0;}
+.prog-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.prog-title{font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--brown-soft);}
+.prog-pct{font-size:10px;font-weight:700;color:var(--green);}
+.prog-bar{height:7px;background:var(--cream3);border-radius:7px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:7px;background:linear-gradient(90deg,var(--green),var(--green-l));transition:width 0.5s;}
+.prog-lbls{display:flex;justify-content:space-between;margin-top:4px;font-size:10px;font-weight:600;color:var(--brown-soft);}
+
+/* SECTION HDR */
+.sec-hdr{margin:12px 14px 8px;display:flex;align-items:center;justify-content:space-between;}
+.sec-title{font-size:9px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--brown-soft);}
+.sec-btn{background:var(--terra);color:#fff;border:none;border-radius:18px;padding:6px 14px;font-size:10px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
+
+/* ADD FORM */
+.add-form{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:16px;margin:0 14px 12px;display:none;flex-direction:column;gap:10px;box-shadow:0 2px 8px var(--shadow);}
+.add-form.open{display:flex;}
+.form-lbl{font-size:9px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--brown-soft);margin-bottom:3px;}
+.form-select{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;background:var(--cream);color:var(--brown);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;outline:none;-webkit-appearance:none;}
+.form-select:focus{border-color:var(--terra);}
+.form-input{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;background:var(--cream);color:var(--brown);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;outline:none;}
+.form-input:focus{border-color:var(--terra);}
+.form-input::placeholder{color:var(--brown-soft);}
+.form-row{display:flex;gap:8px;}
+.form-row>div{flex:1;}
+.amount-wrap{position:relative;}
+.amount-calc-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--terra);}
+.date-wrap{position:relative;}
+.date-cal-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--terra);}
+.rec-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--green-bg);border-radius:10px;border:1px solid var(--green-border);cursor:pointer;}
+.rec-lbl{font-size:12px;font-weight:600;color:var(--brown-mid);flex:1;}
+.rec-check{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent;transition:all 0.18s;flex-shrink:0;}
+.rec-check.on{background:var(--green);border-color:var(--green);color:#fff;}
+.form-btns{display:flex;gap:8px;}
+.btn-save{flex:2;padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--terra-d),var(--terra));color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;}
+.btn-cancel{flex:1;padding:11px;border-radius:10px;border:none;background:var(--cream2);color:var(--brown-soft);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;}
+
+/* BILL CARDS 2-COL */
+.bills-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 14px;}
+.bill-card{background:var(--white);border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 1px 4px var(--shadow);}
+.bill-card.fire{border:1.5px solid var(--red);}
+.bill-card.urg3{border:1.5px solid var(--terra);}
+.bill-card.urg7{border:1.5px solid var(--yellow);}
+.bill-card.paid{border:1.5px solid var(--green);}
+.bill-card.span2{grid-column:span 2;}
+
+.bc-body{padding:10px 10px 8px;}
+.bc-top{display:flex;justify-content:space-between;margin-bottom:6px;}
+.bc-emoji{font-size:20px;margin-bottom:3px;}
+.bc-name{font-size:12px;font-weight:700;color:var(--brown);line-height:1.2;}
+.bc-due{font-size:9px;font-weight:600;color:var(--brown-soft);margin-top:2px;}
+.urg-pill{font-size:8px;font-weight:700;padding:2px 7px;border-radius:10px;display:inline-block;margin-top:3px;}
+.up-fire{background:var(--red-bg);color:var(--red);}
+.up-3{background:#FEF0EB;color:var(--terra);}
+.up-7{background:var(--yellow-bg);color:var(--yellow);}
+.bc-right{text-align:right;}
+.bc-amt{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--brown);}
+.bc-tag{font-size:8px;font-weight:700;padding:2px 7px;border-radius:10px;display:inline-block;margin-top:3px;}
+.bt-none{background:var(--red-bg);color:var(--red);}
+.bt-partial{background:var(--yellow-bg);color:var(--yellow);}
+.bt-paid{background:var(--green-bg);color:var(--green);}
+
+.bc-prog{padding:0 10px 7px;}
+.bcp-bar{height:5px;background:var(--cream3);border-radius:5px;overflow:hidden;margin-bottom:4px;}
+.bcp-fill{height:100%;border-radius:5px;}
+.bcf-none{width:0%;}
+.bcf-partial{background:linear-gradient(90deg,#C8A020,#D4B840);}
+.bcf-full{background:linear-gradient(90deg,var(--green),var(--green-l));}
+.bcp-row{display:flex;justify-content:space-between;font-size:9px;font-weight:600;color:var(--brown-soft);}
+.bcp-row strong{color:var(--brown);font-weight:700;}
+
+.bc-acts{display:flex;gap:6px;padding:0 10px 8px;}
+.bca-btn{flex:1;padding:6px;border-radius:8px;border:1px solid var(--border);background:var(--cream);color:var(--brown-mid);font-size:10px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
+
+.bc-hist{background:var(--cream2);border-top:1px solid var(--border);padding:8px 10px;}
+.bch-lbl{font-size:8px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--brown-soft);margin-bottom:5px;}
+.bch-row{display:flex;align-items:center;gap:5px;padding:3px 0;border-bottom:1px solid var(--border);}
+.bch-row:last-child{border-bottom:none;}
+.bch-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.bch-src{font-size:10px;font-weight:600;color:var(--brown);flex:1;}
+.bch-date{font-size:9px;color:var(--brown-soft);}
+.bch-amt{font-size:10px;font-weight:700;color:var(--green);}
+.bch-edit{background:none;border:none;font-size:10px;cursor:pointer;color:var(--brown-soft);}
+.bch-empty{font-size:10px;font-weight:500;color:var(--brown-soft);font-style:italic;padding:3px 0;}
+
+.paid-stamp{background:var(--green-bg);border-top:1px solid var(--green-border);padding:7px 10px;display:flex;align-items:center;justify-content:space-between;}
+.ps-text{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--green);font-weight:600;}
+.ps-icon{font-size:14px;}
+
+/* HISTORY */
+.hist-item{background:var(--white);border-radius:10px;padding:12px 14px;margin-bottom:7px;border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+.hi-name{font-size:13px;font-weight:700;color:var(--brown);}
+.hi-stats{font-size:11px;font-weight:600;color:var(--brown-soft);margin-top:2px;}
+.hi-arrow{color:var(--terra);font-size:16px;font-weight:700;}
+
+/* OVERLAYS */
+.overlay{position:fixed;inset:0;background:rgba(44,26,14,0.5);z-index:100;display:none;align-items:flex-end;}
+.overlay.open{display:flex;}
+.sheet{background:var(--white);border-radius:20px 20px 0 0;padding:22px 18px 40px;width:100%;border-top:2px solid var(--border);max-height:85vh;overflow-y:auto;}
+.sheet-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--brown);margin-bottom:16px;font-weight:700;}
+
+/* CALENDAR PICKER */
+.cal-overlay{position:fixed;inset:0;background:rgba(44,26,14,0.5);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.cal-overlay.open{display:flex;}
+.cal-sheet{background:var(--white);border-radius:16px;padding:18px;width:100%;max-width:340px;box-shadow:0 8px 32px var(--shadow);}
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.cal-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--brown);}
+.cal-nav{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border);background:var(--cream);color:var(--terra);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:700;}
+.cal-days-hdr{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:6px;}
+.cal-day-lbl{text-align:center;font-size:10px;font-weight:700;color:var(--brown-soft);padding:4px 0;}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cal-day{text-align:center;padding:8px 4px;border-radius:8px;font-size:13px;font-weight:600;color:var(--brown);cursor:pointer;transition:all 0.15s;}
+.cal-day:hover{background:var(--cream2);}
+.cal-day.selected{background:var(--terra);color:#fff;}
+.cal-day.today{font-weight:800;color:var(--terra);}
+.cal-day.empty{cursor:default;}
+.cal-btns{display:flex;gap:8px;margin-top:14px;}
+
+/* NUMBER PAD */
+.numpad-overlay{position:fixed;inset:0;background:rgba(44,26,14,0.5);z-index:200;display:none;align-items:flex-end;}
+.numpad-overlay.open{display:flex;}
+.numpad-sheet{background:var(--white);border-radius:20px 20px 0 0;padding:18px 18px 36px;width:100%;}
+.numpad-display{background:var(--cream);border-radius:12px;padding:14px 18px;margin-bottom:14px;text-align:right;}
+.numpad-value{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;color:var(--brown);}
+.numpad-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.np-btn{padding:16px;border-radius:12px;border:none;font-family:'Inter',sans-serif;font-size:18px;font-weight:700;cursor:pointer;text-align:center;transition:all 0.15s;}
+.np-btn:active{transform:scale(0.95);}
+.np-num{background:var(--cream2);color:var(--brown);}
+.np-del{background:#FEF0EB;color:var(--terra);}
+.np-done{background:var(--terra);color:#fff;grid-column:span 2;}
+.np-zero{background:var(--cream2);color:var(--brown);}
+.np-dot{background:var(--cream2);color:var(--brown);}
+
+/* STICKY */
+.sticky-fab{position:fixed;bottom:78px;right:16px;width:44px;height:44px;border-radius:50%;background:var(--terra);border:none;font-size:18px;cursor:pointer;box-shadow:0 3px 12px rgba(196,113,79,0.4);z-index:200;display:flex;align-items:center;justify-content:center;}
+.sticky-modal{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-radius:20px 20px 0 0;border-top:2px solid var(--border);padding:18px 18px 40px;z-index:300;transform:translateY(100%);transition:transform 0.3s ease;max-height:75vh;}
+.sticky-modal.open{transform:translateY(0);}
+.sticky-modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sticky-modal-title{font-size:16px;font-weight:700;color:var(--brown);}
+.sticky-close{background:var(--cream2);border:none;border-radius:50%;width:30px;height:30px;color:var(--brown);font-size:14px;cursor:pointer;font-weight:700;}
+.sticky-note-card{background:#FFFEF0;border:1.5px solid #E8D870;border-radius:12px;padding:14px;}
+.sticky-ta{width:100%;background:transparent;border:none;outline:none;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;color:var(--brown);line-height:1.7;resize:none;min-height:90px;}
+.sticky-ta::placeholder{color:var(--brown-soft);}
+.sticky-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
+.sticky-chars{font-size:10px;color:var(--brown-soft);}
+.sticky-save-btn{background:var(--terra);color:#fff;border:none;border-radius:9px;padding:8px 18px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
+.s-overlay{position:fixed;inset:0;background:rgba(44,26,14,0.4);z-index:250;display:none;}
+.s-overlay.open{display:block;}
+/* Hide the sticky note FAB whenever any edit/add sheet or picker is open, so it never floats over form fields */
+.overlay.open ~ .sticky-fab,.cal-overlay.open ~ .sticky-fab,.numpad-overlay.open ~ .sticky-fab,body:has(.add-form.open) .sticky-fab{display:none;}
+
+/* TOAST */
+.toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--terra);color:#fff;padding:9px 20px;border-radius:20px;font-size:11px;font-weight:700;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--brown);border-top:2px solid rgba(196,113,79,0.3);padding:9px 20px 16px;display:flex;justify-content:space-around;z-index:50;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(244,239,232,0.4);}
+.nav-item.active{color:var(--terra-l);}
+.nav-icon{font-size:18px;}
+
+.empty-state{text-align:center;padding:30px 20px;}
+.empty-icon{font-size:36px;margin-bottom:10px;}
+.empty-text{font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--brown-soft);}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-eye">Money · J Empire</div>
+  <div class="hdr-title">📩 <span>Bills</span></div>
+  <div class="hdr-sub">"Stay ahead of every bill. One payment at a time." ✦</div>
+</div>
+
+<div class="quote-strip" id="quoteCard"></div>
+<div class="tip-strip" id="tipCard"></div>
+<div class="sticky-preview" id="stickyPreview">
+  <div class="sp-lbl">📝 My Note</div>
+  <div class="sp-text" id="stickyPreviewText"></div>
+  <button class="sp-edit" onclick="openSticky()">✏️</button>
+</div>
+
+<div class="mnav">
+  <button class="mnav-btn" onclick="changeMonth(-1)">‹</button>
+  <div class="mnav-lbl" id="monthLbl"></div>
+  <button class="mnav-btn" onclick="changeMonth(1)">›</button>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('bills',this)">📩 Bills</div>
+  <div class="tab" onclick="switchTab('history',this)">📅 History</div>
+</div>
+
+<!-- BILLS TAB -->
+<div id="tab-bills">
+  <div class="dash-grid" id="dashGrid"></div>
+  <div class="prog-wrap" id="progWrap"></div>
+
+  <div class="sec-hdr">
+    <div class="sec-title">Active Bills</div>
+    <div style="display:flex;gap:6px;">
+      <button class="sec-btn" style="background:var(--brown-soft);" onclick="openManageRec()">🔄 Manage</button>
+      <button class="sec-btn" onclick="toggleForm()">+ Add Bill</button>
+    </div>
+  </div>
+
+  <!-- ADD FORM -->
+  <div class="add-form" id="addForm">
+    <div>
+      <div class="form-lbl">Select Bill Type</div>
+      <select class="form-select" id="fPreset" onchange="applyPreset()">
+        <option value="">— Choose a bill —</option>
+        <option value="🏠|Rent / Mortgage">🏠 Rent / Mortgage</option>
+        <option value="⚡|Light Bill (FPL)">⚡ Light Bill (FPL)</option>
+        <option value="💧|Water Bill">💧 Water Bill</option>
+        <option value="📶|Internet">📶 Internet</option>
+        <option value="📱|Phone Bill">📱 Phone Bill</option>
+        <option value="🚗|Car Payment">🚗 Car Payment</option>
+        <option value="🚗|Car Insurance">🚗 Car Insurance</option>
+        <option value="⛽|Gas">⛽ Gas</option>
+        <option value="🏥|Health Insurance">🏥 Health Insurance</option>
+        <option value="🧒|Daycare / VPK">🧒 Daycare / VPK</option>
+        <option value="💳|Credit Card">💳 Credit Card</option>
+        <option value="🚗|Car Storage">🚗 Car Storage</option>
+        <option value="💳|LoanMart">💳 LoanMart</option>
+        <option value="💳|AmSCOT">💳 AmSCOT</option>
+        <option value="📦|Custom">📦 Custom</option>
+      </select>
+    </div>
+    <div>
+      <div class="form-lbl">Bill Name</div>
+      <input class="form-input" id="fName" placeholder="e.g. Rent"/>
+    </div>
+    <div class="form-row">
+      <div>
+        <div class="form-lbl">Amount Due ($)</div>
+        <div class="amount-wrap">
+          <input class="form-input" id="fAmt" type="text" placeholder="0.00" readonly onclick="openNumpad('fAmt')"/>
+          <button class="amount-calc-btn" onclick="openNumpad('fAmt')">🔢</button>
+        </div>
+      </div>
+      <div>
+        <div class="form-lbl">Due Day</div>
+        <div class="date-wrap">
+          <input class="form-input" id="fDay" type="text" placeholder="Select day" readonly onclick="openCal('fDay')"/>
+          <button class="date-cal-btn" onclick="openCal('fDay')">📅</button>
+        </div>
+      </div>
+    </div>
+    <div class="rec-row" onclick="toggleRec()">
+      <div class="rec-lbl">🔄 Recurring — resets every month automatically</div>
+      <div class="rec-check on" id="recCheck">✓</div>
+    </div>
+    <div id="recDurWrap">
+      <div class="form-lbl">Repeat For</div>
+      <select class="form-select" id="fRecDur">
+        <option value="0">Forever (until I stop it)</option>
+        <option value="3">Next 3 months</option>
+        <option value="6">Next 6 months</option>
+        <option value="12">Next 12 months</option>
+      </select>
+    </div>
+    <div class="form-btns">
+      <button class="btn-cancel" onclick="toggleForm()">Cancel</button>
+      <button class="btn-save" onclick="saveBill()">Save Bill ✦</button>
+    </div>
+  </div>
+
+  <div class="bills-grid" id="activeBills"></div>
+  <div class="sec-hdr" style="margin-top:14px;"><div class="sec-title">Paid in Full ✦</div></div>
+  <div class="bills-grid" id="paidBills" style="margin-bottom:16px;"></div>
+</div>
+
+<!-- HISTORY TAB -->
+<div id="tab-history" style="display:none;padding:12px 14px;">
+  <div id="histList"></div>
+</div>
+
+<!-- EDIT BILL OVERLAY -->
+<div class="overlay" id="editBillOv" onclick="closeOv('editBillOv',event)">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-title">✏️ Edit Bill</div>
+    <input type="hidden" id="eBillId"/>
+    <div class="form-lbl" style="margin-bottom:4px;">Bill Name</div>
+    <input class="form-input" id="eBillName" style="margin-bottom:10px;"/>
+    <div class="form-row">
+      <div>
+        <div class="form-lbl">Amount ($)</div>
+        <div class="amount-wrap">
+          <input class="form-input" id="eBillAmt" type="text" readonly onclick="openNumpad('eBillAmt')"/>
+          <button class="amount-calc-btn" onclick="openNumpad('eBillAmt')">🔢</button>
+        </div>
+      </div>
+      <div>
+        <div class="form-lbl">Due Day</div>
+        <div class="date-wrap">
+          <input class="form-input" id="eBillDay" type="text" readonly onclick="openCal('eBillDay')"/>
+          <button class="date-cal-btn" onclick="openCal('eBillDay')">📅</button>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:10px;">
+      <div class="form-lbl">Recurrence</div>
+      <select class="form-select" id="eRecDur"></select>
+    </div>
+    <div id="eRecClearWrap" style="margin-top:10px;">
+      <button class="bca-btn" style="width:100%;color:var(--red);border-color:var(--red);" onclick="clearFutureRecurring()">🧹 Stop Recurring &amp; Clear Future Months</button>
+    </div>
+    <div class="form-btns" style="margin-top:12px;">
+      <button class="btn-cancel" onclick="closeOv('editBillOv')">Cancel</button>
+      <button class="btn-save" onclick="saveEditBill()">Save ✦</button>
+    </div>
+  </div>
+</div>
+
+<!-- MANAGE RECURRING OVERLAY -->
+<div class="overlay" id="manageRecOv" onclick="closeOv('manageRecOv',event)">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-title">🔄 Manage Recurring Bills</div>
+    <div id="manageRecList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+    <button class="bca-btn" style="width:100%;color:var(--red);border-color:var(--red);" onclick="clearAllRecurring()">🧹 Stop &amp; Clear ALL Recurring Bills</button>
+    <div class="form-btns" style="margin-top:12px;">
+      <button class="btn-cancel" style="flex:1;" onclick="closeOv('manageRecOv')">Close</button>
+    </div>
+  </div>
+</div>
+<!-- EDIT PAYMENT OVERLAY -->
+<div class="overlay" id="editPayOv" onclick="closeOv('editPayOv',event)">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-title">✏️ Edit Payment</div>
+    <input type="hidden" id="ePayBillId"/>
+    <input type="hidden" id="ePayIdx"/>
+    <div class="form-lbl" style="margin-bottom:4px;">Amount ($)</div>
+    <div class="amount-wrap" style="margin-bottom:10px;">
+      <input class="form-input" id="ePayAmt" type="text" readonly onclick="openNumpad('ePayAmt')"/>
+      <button class="amount-calc-btn" onclick="openNumpad('ePayAmt')">🔢</button>
+    </div>
+    <div class="form-lbl" style="margin-bottom:4px;">Source</div>
+    <input class="form-input" id="ePaySrc" style="margin-bottom:12px;"/>
+    <div class="form-btns">
+      <button class="btn-cancel" onclick="closeOv('editPayOv')">Cancel</button>
+      <button class="btn-save" onclick="saveEditPay()">Save ✦</button>
+    </div>
+  </div>
+</div>
+
+<!-- CALENDAR -->
+<div class="cal-overlay" id="calOverlay" onclick="closeCal(event)">
+  <div class="cal-sheet" onclick="event.stopPropagation()">
+    <div class="cal-hdr">
+      <button class="cal-nav" onclick="calPrev()">‹</button>
+      <div class="cal-title" id="calTitle"></div>
+      <button class="cal-nav" onclick="calNext()">›</button>
+    </div>
+    <div class="cal-days-hdr">
+      <div class="cal-day-lbl">Su</div><div class="cal-day-lbl">Mo</div><div class="cal-day-lbl">Tu</div>
+      <div class="cal-day-lbl">We</div><div class="cal-day-lbl">Th</div><div class="cal-day-lbl">Fr</div><div class="cal-day-lbl">Sa</div>
+    </div>
+    <div class="cal-days" id="calDays"></div>
+    <div class="cal-btns">
+      <button class="btn-cancel" onclick="closeCal()">Cancel</button>
+      <button class="btn-save" onclick="confirmCal()">Confirm ✦</button>
+    </div>
+  </div>
+</div>
+
+<!-- NUMBER PAD -->
+<div class="numpad-overlay" id="numpadOverlay" onclick="closeNumpad(event)">
+  <div class="numpad-sheet" onclick="event.stopPropagation()">
+    <div class="numpad-display">
+      <div class="numpad-value" id="numpadDisplay">0</div>
+    </div>
+    <div class="numpad-grid">
+      <button class="np-btn np-num" onclick="npPress('1')">1</button>
+      <button class="np-btn np-num" onclick="npPress('2')">2</button>
+      <button class="np-btn np-num" onclick="npPress('3')">3</button>
+      <button class="np-btn np-num" onclick="npPress('4')">4</button>
+      <button class="np-btn np-num" onclick="npPress('5')">5</button>
+      <button class="np-btn np-num" onclick="npPress('6')">6</button>
+      <button class="np-btn np-num" onclick="npPress('7')">7</button>
+      <button class="np-btn np-num" onclick="npPress('8')">8</button>
+      <button class="np-btn np-num" onclick="npPress('9')">9</button>
+      <button class="np-btn np-dot" onclick="npPress('.')">.</button>
+      <button class="np-btn np-zero" onclick="npPress('0')">0</button>
+      <button class="np-btn np-del" onclick="npDel()">⌫</button>
+      <button class="np-btn np-done" onclick="npDone()">Done ✦</button>
+    </div>
+  </div>
+</div>
+
+<!-- STICKY NOTE -->
+<button class="sticky-fab" onclick="openSticky()">📝</button>
+<div class="s-overlay" id="sOv" onclick="closeSticky()"></div>
+<div class="sticky-modal" id="sModal">
+  <div class="sticky-modal-hdr">
+    <div class="sticky-modal-title">📝 My Note</div>
+    <button class="sticky-close" onclick="closeSticky()">✕</button>
+  </div>
+  <div class="sticky-note-card">
+    <textarea class="sticky-ta" id="sTxt" placeholder="Jot something down... a reminder, a thought, anything ✦" maxlength="300" oninput="sChars()"></textarea>
+    <div class="sticky-footer">
+      <div class="sticky-chars" id="sCh">0 / 300</div>
+      <button class="sticky-save-btn" onclick="saveSticky()">Save Note ✦</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="nav">
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/index.html"><span class="nav-icon">🏠</span>Home</a>
+  <a class="nav-item" href="https://jazmarie624.github.io/Jempire-Console/paycheck_final.html"><span class="nav-icon">💰</span>Paycheck</a>
+  <a class="nav-item active" href="#"><span class="nav-icon">📩</span>Bills</a>
+</div>
+
+<script>
+const SB='https://ejseathlglvvnmkpchib.supabase.co';
+const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqc2VhdGhsZ2x2dm5ta3BjaGliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODc4NTUsImV4cCI6MjA5NzU2Mzg1NX0.o4crd1W5-NbVNXSOWNT-WPHS7R6orRe9CRYFZfZ41L8';
+async function sbf(t,m='GET',b=null,f=''){
+  try{
+    const r=await fetch(`${SB}/rest/v1/${t}${f}`,{
+      method:m,
+      headers:{
+        'apikey':SK,
+        'Authorization':'Bearer '+SK,
+        'Content-Type':'application/json',
+        'Prefer':m==='POST'?'return=representation':m==='PATCH'?'return=representation':''
+      },
+      body:b?JSON.stringify(b):null
+    });
+    if(!r.ok){
+      const err=await r.text();
+      console.error('Supabase error',m,t,r.status,err);
+      return null;
+    }
+    if(m==='DELETE')return null;
+    const txt=await r.text();
+    return txt?JSON.parse(txt):null;
+  }catch(e){
+    console.error('Supabase fetch error:',e);
+    return null;
+  }
+}
+function lg(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch{return null;}}
+function ls(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+
+const MO=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const SH=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOTS=['#3A7D4F','#4A9D62','#C4714F','#B8860B','#7B68EE','#4682B4'];
+
+const QUOTES=[
+  {q:"Every bill you pay on time is a brick in your empire.",a:"J Empire Mindset"},
+  {q:"She who controls her money controls her destiny.",a:"J Empire Mindset"},
+  {q:"Financial freedom is not a dream — it's a decision.",a:"J Empire Mindset"},
+  {q:"A budget is telling your money where to go.",a:"Dave Ramsey"},
+  {q:"It's not how much you make, but how much you keep.",a:"Robert Kiyosaki"},
+  {q:"Boss mothers don't just survive. They build legacies.",a:"J Empire Mindset"},
+  {q:"Every dollar you save is a dollar working for your future.",a:"J Empire Mindset"},
+  {q:"You are not poor. You are pre-wealthy and in progress.",a:"J Empire Mindset"},
+  {q:"She believed she could afford it, so she planned for it.",a:"J Empire Mindset"},
+  {q:"Do not save what is left after spending — spend what is left after saving.",a:"Warren Buffett"},
+  {q:"Wealth is not about having a lot of money — it's about having a lot of options.",a:"Chris Rock"},
+  {q:"The secret to getting ahead is getting started.",a:"Mark Twain"},
+];
+const TIPS=[
+  "Set up autopay for recurring bills so you never miss a due date or pay a late fee again.",
+  "Pay the minimum on all bills first, then put any extra toward the highest-interest debt.",
+  "The 50/30/20 rule: 50% needs, 30% wants, 20% savings. Even $20/week adds up.",
+  "Build a $500 emergency fund before paying extra on debt — it stops the cycle.",
+  "Call your service providers once a year and ask for a loyalty discount. It works.",
+  "Round up every purchase mentally — it trains your brain to spend more intentionally.",
+  "Pay yourself first — move even $10 to savings the moment money hits your account.",
+  "Track your subscriptions monthly — most people pay for 2–3 they forgot about.",
+  "Meal prepping 2 days a week can save $200–$400 a month on food alone.",
+  "If a bill feels too high, call and negotiate. Companies would rather keep you.",
+  "Use cash for groceries — it's harder to overspend than with a card.",
+  "Every time you get a raise, increase your savings rate before spending more.",
+];
+
+let cy=new Date().getFullYear(), cm=new Date().getMonth();
+let bills=[], formOpen=false, isRec=true;
+
+// CALENDAR STATE
+let calTarget='', calYear=new Date().getFullYear(), calMonth=new Date().getMonth(), calSelected=null;
+
+// NUMPAD STATE
+let npTarget='', npValue='0';
+
+function mk(y,m){return `${y}-${String(m+1).padStart(2,'0')}`;}
+function addMonthsKey(y,m,n){let nm=m+n,ny=y;while(nm>11){nm-=12;ny++;}return mk(ny,nm);}
+function keyAfter(y,m,n){return addMonthsKey(y,m,n);}
+
+function loadQuoteTip(){
+  const d=new Date().getDate();
+  const q=QUOTES[d%QUOTES.length], tip=TIPS[d%TIPS.length];
+  document.getElementById('quoteCard').innerHTML=`<div class="q-mark">"</div><div><div class="q-text">${q.q}</div><div class="q-attr">— ${q.a}</div></div>`;
+  document.getElementById('tipCard').innerHTML=`<div class="tip-icon">💡</div><div class="tip-text">${tip}</div>`;
+}
+
+function loadSticky(){
+  const v=lg('je_bills_sticky')||'';
+  document.getElementById('sTxt').value=v;
+  sChars();
+  const preview=document.getElementById('stickyPreview');
+  const previewText=document.getElementById('stickyPreviewText');
+  if(v){preview.classList.add('visible');previewText.textContent=v;}
+  else{preview.classList.remove('visible');}
+}
+
+function changeMonth(d){
+  cm+=d;if(cm>11){cm=0;cy++;}if(cm<0){cm=11;cy--;}
+  document.getElementById('monthLbl').textContent=MO[cm]+' '+cy;
+  load();
+}
+
+function switchTab(t,el){
+  document.getElementById('tab-bills').style.display=t==='bills'?'block':'none';
+  document.getElementById('tab-history').style.display=t==='history'?'block':'none';
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  if(t==='history') renderHistory();
+}
+
+async function load(){
+  const key=mk(cy,cm);
+  // Try Supabase first
+  const sbBills=await sbf('bills','GET',null,`?month_key=eq.${key}&order=due_day.asc`);
+  const sbTemplates=await sbf('bills','GET',null,`?is_template=eq.true`);
+  let data=sbBills&&sbBills.length?sbBills:(lg('je_bills_'+key)||[]);
+  const templates=sbTemplates&&sbTemplates.length?sbTemplates:(lg('je_bill_templates')||[]);
+  templates.forEach(t=>{
+    if(t.end_key&&key>t.end_key)return;
+    if(!data.find(b=>b.template_id===t.id)){
+      data.push({id:'rec_'+t.id+'_'+key,template_id:t.id,emoji:t.emoji,name:t.name,amount:t.amount,due_day:t.due_day,month_key:key,payments:[],recurring:true});
+    }
+  });
+  bills=data;
+  saveLocal();
+  renderAll();
+}
+
+function saveLocal(){
+  const key=mk(cy,cm);
+  ls('je_bills_'+key,bills);
+  const ti=(lg('je_paycheck_sync_'+key)||{}).total_income||0;
+  ls('je_paycheck_sync_'+key,{total_income:ti,bills_snap:JSON.stringify(bills)});
+}
+
+async function saveBillToSB(bill){
+  const key=mk(cy,cm);
+  // Ensure UUID format for Supabase
+  const obj={
+    id:bill.id,
+    name:bill.name,
+    amount:bill.amount,
+    due_day:bill.due_day,
+    month_key:key,
+    emoji:bill.emoji||'📩',
+    recurring:bill.recurring||false,
+    template_id:bill.template_id||null,
+    payments:JSON.stringify(bill.payments||[]),
+    is_template:false,
+    end_key:bill.end_key||null
+  };
+  try{
+    await sbf('bills','POST',obj);
+  }catch(e){
+    console.warn('Bill save failed:',e);
+  }
+}
+
+function tp(b){return (b.payments||[]).reduce((s,p)=>s+Number(p.amount||0),0);}
+function du(day){return Math.ceil((new Date(cy,cm,day)-new Date())/86400000);}
+
+function urgHtml(day,paid){
+  if(paid)return '';
+  const d=du(day);
+  if(d<=0)return '<div class="urg-pill up-fire">🔥 Due TODAY</div>';
+  if(d<=3)return `<div class="urg-pill up-3">🚨 ${d} days</div>`;
+  if(d<=7)return `<div class="urg-pill up-7">⚠️ ${d} days</div>`;
+  return '';
+}
+
+function renderAll(){renderDash();renderProg();renderBills();}
+
+function renderDash(){
+  const total=bills.reduce((s,b)=>s+Number(b.amount||0),0);
+  const paid=bills.reduce((s,b)=>s+tp(b),0);
+  const fp=bills.filter(b=>tp(b)>=Number(b.amount||0)).length;
+  const key=mk(cy,cm),pmk=mk(cm===0?cy-1:cy,cm===0?11:cm-1);
+  const sync=lg('je_paycheck_sync_'+key)||{};
+  const prev=lg('je_paycheck_sync_'+pmk)||{};
+  const ti=Number(sync.total_income||0);
+  const lo=ti-total;
+  const prevBills=JSON.parse(prev.bills_snap||'[]');
+  const ptb=prevBills.reduce((s,b)=>s+Number(b.amount||0),0);
+  const pti=Number(prev.total_income||0);
+  const diff=lo-(pti-ptb);
+  const cmp=ti>0&&pti>0?`<div class="dash-cmp ${diff>=0?'cmp-up':'cmp-down'}">${diff>=0?'↑':'↓'} $${Math.abs(diff).toFixed(0)}</div>`:'';
+  document.getElementById('dashGrid').innerHTML=`
+    <div class="dash-card"><div class="dash-label">Still Owed</div><div class="dash-value dv-r">$${(total-paid).toFixed(0)}</div><div class="dash-sub">${bills.length} bills total</div></div>
+    <div class="dash-card"><div class="dash-label">Leftover</div><div class="dash-value dv-g">${ti>0?'$'+lo.toFixed(0):'—'}</div>${cmp}</div>
+    <div class="dash-card"><div class="dash-label">Paid ✓</div><div class="dash-value dv-g">${fp}</div><div class="dash-sub">of ${bills.length} bills</div></div>`;
+}
+
+function renderProg(){
+  const total=bills.reduce((s,b)=>s+Number(b.amount||0),0);
+  const paid=bills.reduce((s,b)=>s+tp(b),0);
+  const pct=total>0?Math.round((paid/total)*100):0;
+  document.getElementById('progWrap').innerHTML=`
+    <div class="prog-hdr"><div class="prog-title">${MO[cm]} ${cy} Progress</div><div class="prog-pct">${pct}% covered</div></div>
+    <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+    <div class="prog-lbls"><span>$${paid.toFixed(0)} allocated</span><span>$${total.toFixed(0)} total</span></div>`;
+}
+
+function renderBills(){
+  const active=bills.filter(b=>tp(b)<Number(b.amount||0)).sort((a,b)=>du(a.due_day)-du(b.due_day));
+  const paid=bills.filter(b=>tp(b)>=Number(b.amount||0));
+  document.getElementById('activeBills').innerHTML=active.length?active.map(b=>billCard(b,false)).join(''):`<div class="empty-state" style="grid-column:span 2;"><div class="empty-icon">✨</div><div class="empty-text">All bills covered this month!</div></div>`;
+  document.getElementById('paidBills').innerHTML=paid.length?paid.map(b=>billCard(b,true)).join(''):`<div style="grid-column:span 2;text-align:center;padding:12px;color:var(--brown-soft);font-size:11px;font-style:italic;">No fully paid bills yet</div>`;
+}
+
+function billCard(b,isPaid){
+  const paid=tp(b),total=Number(b.amount||0),pct=total>0?Math.min(100,(paid/total)*100):0;
+  const days=du(b.due_day);
+  let cc='bill-card';
+  if(isPaid) cc+=' paid';
+  else if(days<=0) cc+=' fire';
+  else if(days<=3) cc+=' urg3';
+  else if(days<=7) cc+=' urg7';
+  // span 2 for paid full bills only
+  if(isPaid) cc+=' span2';
+  let tag=isPaid?'<div class="bc-tag bt-paid">✓ Paid</div>':paid>0?`<div class="bc-tag bt-partial">⚡ $${(total-paid).toFixed(0)} left</div>`:'<div class="bc-tag bt-none">🔴 None</div>';
+  let fc=isPaid?'bcf-full':paid>0?'bcf-partial':'bcf-none';
+  const pbs=(b.payments||[]).map((p,i)=>`<div class="bch-row"><div class="bch-dot" style="background:${DOTS[i%DOTS.length]}"></div><div class="bch-src">${p.source||'Payment'}</div><div class="bch-date">${p.date||''}</div><div class="bch-amt">+$${Number(p.amount).toFixed(2)}</div><button class="bch-edit" onclick="openEditPay('${b.id}',${i})">✏️</button></div>`).join('')||'<div class="bch-empty">No payments yet</div>';
+  const stamp=isPaid?`<div class="paid-stamp"><div class="ps-text">✦ Paid in Full · ${(b.payments||[]).length} payments</div><div class="ps-icon">✅</div></div>`:'';
+  return `<div class="${cc}">
+    <div class="bc-body">
+      <div class="bc-top">
+        <div><div class="bc-emoji">${b.emoji||'📩'}</div><div class="bc-name">${b.name}</div><div class="bc-due">${SH[cm]} ${b.due_day}${b.recurring?' 🔄':''}</div>${urgHtml(b.due_day,isPaid)}</div>
+        <div class="bc-right"><div class="bc-amt">$${Number(b.amount).toFixed(0)}</div>${tag}</div>
+      </div>
+      <div class="bc-prog" style="margin-top:4px;"><div class="bcp-bar"><div class="bcp-fill ${fc}" style="width:${pct}%"></div></div><div class="bcp-row"><span>$${paid.toFixed(0)}</span><span>${isPaid?'✓ Done':'Need <strong>$'+(total-paid).toFixed(0)+'</strong>'}</span></div></div>
+      <div class="bc-acts"><button class="bca-btn" onclick="openEditBill('${b.id}')">✏️ Edit</button><button class="bca-btn" onclick="delBill('${b.id}')">🗑️</button></div>
+    </div>
+    <div class="bc-hist"><div class="bch-lbl">Payment Breakdown</div>${pbs}</div>
+    ${stamp}
+  </div>`;
+}
+
+function renderHistory(){
+  let html='';
+  for(let i=5;i>=0;i--){
+    let m=cm-i,y=cy;while(m<0){m+=12;y--;}
+    const key=mk(y,m),mb=lg('je_bills_'+key)||[];
+    const total=mb.reduce((s,b)=>s+Number(b.amount||0),0);
+    const paid=mb.reduce((s,b)=>s+tp(b),0);
+    const pct=total>0?Math.round((paid/total)*100):0;
+    const sync=lg('je_paycheck_sync_'+key)||{};
+    html+=`<div class="hist-item" onclick="jumpTo(${y},${m})"><div><div class="hi-name">${MO[m]} ${y}</div><div class="hi-stats">${pct}% paid · $${paid.toFixed(0)} / $${total.toFixed(0)} · Income: $${Number(sync.total_income||0).toFixed(0)}</div></div><div class="hi-arrow">›</div></div>`;
+  }
+  document.getElementById('histList').innerHTML=html||'<div style="text-align:center;padding:20px;color:var(--brown-soft);font-size:12px;">No history yet</div>';
+}
+
+function jumpTo(y,m){cy=y;cm=m;document.getElementById('monthLbl').textContent=MO[m]+' '+y;switchTab('bills',document.querySelectorAll('.tab')[0]);load();}
+
+// FORM
+function toggleForm(){formOpen=!formOpen;document.getElementById('addForm').classList.toggle('open',formOpen);}
+function applyPreset(){
+  const v=document.getElementById('fPreset').value;if(!v)return;
+  const[e,n]=v.split('|');
+  document.getElementById('fName').value=n==='Custom'?'':n;
+}
+function toggleRec(){isRec=!isRec;document.getElementById('recCheck').classList.toggle('on',isRec);document.getElementById('recDurWrap').style.display=isRec?'block':'none';}
+
+function saveBill(){
+  const name=document.getElementById('fName').value.trim();
+  const preset=document.getElementById('fPreset').value;
+  const emoji=preset?preset.split('|')[0]:'📩';
+  const amount=parseFloat(document.getElementById('fAmt').value);
+  const dayVal=document.getElementById('fDay').value;
+  const day=parseInt(dayVal);
+  if(!name||!amount||!day){showToast('Please fill all fields');return;}
+  const key=mk(cy,cm),id='bill_'+Date.now();
+  const bill={id,emoji,name,amount,due_day:day,month_key:key,payments:[],recurring:isRec};
+  if(isRec){
+    const months=parseInt(document.getElementById('fRecDur').value)||0;
+    const end_key=months>0?addMonthsKey(cy,cm,months):null;
+    const T=lg('je_bill_templates')||[];T.push({id,emoji,name,amount,due_day:day,end_key});ls('je_bill_templates',T);bill.template_id=id;
+  }
+  bills.push(bill);
+  saveLocal();
+  // Save to Supabase then reload
+  saveBillToSB(bill).then(()=>load());
+  toggleForm();
+  document.getElementById('fPreset').value='';document.getElementById('fName').value='';
+  document.getElementById('fAmt').value='';document.getElementById('fDay').value='';
+  document.getElementById('fRecDur').value='0';
+  showToast('Bill added ✦');
+}
+
+function openEditBill(id){
+  const b=bills.find(x=>x.id===id);if(!b)return;
+  document.getElementById('eBillId').value=id;
+  document.getElementById('eBillName').value=b.name;
+  document.getElementById('eBillAmt').value=b.amount;
+  document.getElementById('eBillDay').value=b.due_day;
+  const T=lg('je_bill_templates')||[];
+  const t=b.template_id?T.find(x=>x.id===b.template_id):null;
+  let durVal='off';
+  if(b.recurring){durVal=t&&t.end_key?'custom':'forever';}
+  document.getElementById('eRecDur').innerHTML=`
+    <option value="off">Not recurring — one-time bill</option>
+    <option value="3">Repeat for next 3 months</option>
+    <option value="6">Repeat for next 6 months</option>
+    <option value="12">Repeat for next 12 months</option>
+    <option value="forever">Repeat every month (until I turn it off)</option>`;
+  document.getElementById('eRecDur').value=durVal==='custom'?'12':durVal;
+  document.getElementById('eRecClearWrap').style.display=b.recurring?'block':'none';
+  document.getElementById('editBillOv').classList.add('open');
+}
+function saveEditBill(){
+  const id=document.getElementById('eBillId').value;
+  const b=bills.find(x=>x.id===id);if(!b)return;
+  const dur=document.getElementById('eRecDur').value;
+  b.name=document.getElementById('eBillName').value.trim();
+  b.amount=parseFloat(document.getElementById('eBillAmt').value);
+  b.due_day=parseInt(document.getElementById('eBillDay').value);
+  let T=lg('je_bill_templates')||[];
+  if(dur==='off'){
+    // Turn recurrence OFF: actually remove the template so it stops regenerating forever
+    if(b.template_id){T=T.filter(x=>x.id!==b.template_id);ls('je_bill_templates',T);}
+    b.recurring=false;delete b.template_id;
+  }else{
+    b.recurring=true;
+    const end_key=dur==='forever'?null:keyAfter(cy,cm,parseInt(dur)-1);
+    if(b.template_id){
+      const t=T.find(x=>x.id===b.template_id);
+      if(t){t.name=b.name;t.amount=b.amount;t.due_day=b.due_day;t.end_key=end_key;}
+    }else{
+      const tid='tpl_'+Date.now();
+      T.push({id:tid,emoji:b.emoji,name:b.name,amount:b.amount,due_day:b.due_day,end_key});
+      b.template_id=tid;
+    }
+    ls('je_bill_templates',T);
+  }
+  saveLocal();closeOv('editBillOv');renderAll();showToast('Updated ✦');
+}
+function clearFutureRecurring(){
+  const id=document.getElementById('eBillId').value;
+  const b=bills.find(x=>x.id===id);if(!b)return;
+  if(!confirm('Stop this bill from recurring and remove it from this month forward? Past months are left untouched.'))return;
+  const tid=b.template_id;
+  if(tid){let T=lg('je_bill_templates')||[];T=T.filter(x=>x.id!==tid);ls('je_bill_templates',T);}
+  wipeTemplateFromKeyOnward(tid,mk(cy,cm));
+  b.recurring=false;delete b.template_id;
+  saveLocal();closeOv('editBillOv');renderAll();showToast('Recurrence stopped & future copies cleared ✦');
+}
+
+// Remove every already-generated instance of a template from the given month key onward (current localStorage keys only)
+function wipeTemplateFromKeyOnward(templateId,fromKey){
+  if(!templateId)return;
+  Object.keys(localStorage).filter(k=>k.startsWith('je_bills_20')).forEach(k=>{
+    const monthKey=k.replace('je_bills_','');
+    if(monthKey<fromKey)return; // leave history alone
+    const arr=lg(k)||[];
+    const filtered=arr.filter(b=>b.template_id!==templateId);
+    if(filtered.length!==arr.length)ls(k,filtered);
+  });
+  if(mk(cy,cm)===fromKey){bills=bills.filter(b=>b.template_id!==templateId);}
+}
+
+// MANAGE RECURRING PANEL
+function openManageRec(){
+  renderManageRec();
+  document.getElementById('manageRecOv').classList.add('open');
+}
+function renderManageRec(){
+  const T=lg('je_bill_templates')||[];
+  const list=document.getElementById('manageRecList');
+  if(!T.length){list.innerHTML='<div style="text-align:center;padding:14px;color:var(--brown-soft);font-size:12px;font-style:italic;">No recurring bills set up</div>';return;}
+  list.innerHTML=T.map(t=>{
+    const endTxt=t.end_key?`Ends ${t.end_key}`:'Repeats forever';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--cream);border-radius:10px;border:1px solid var(--border);">
+      <div style="font-size:20px;">${t.emoji||'📩'}</div>
+      <div style="flex:1;"><div style="font-weight:700;font-size:13px;">${t.name}</div><div style="font-size:10px;color:var(--brown-soft);font-weight:600;">$${Number(t.amount).toFixed(0)} · ${endTxt}</div></div>
+      <button class="bca-btn" style="color:var(--red);" onclick="clearOneTemplate('${t.id}')">🧹 Stop</button>
+    </div>`;
+  }).join('');
+}
+function clearOneTemplate(tid){
+  if(!confirm('Stop this bill from recurring and remove it from this month forward? Past months are left untouched.'))return;
+  let T=lg('je_bill_templates')||[];
+  T=T.filter(x=>x.id!==tid);
+  ls('je_bill_templates',T);
+  wipeTemplateFromKeyOnward(tid,mk(cy,cm));
+  saveLocal();renderAll();renderManageRec();showToast('Recurrence stopped ✦');
+}
+function clearAllRecurring(){
+  if(!confirm("This stops EVERY recurring bill and removes them from this month forward (past months stay untouched). This can't be undone — continue?"))return;
+  const T=lg('je_bill_templates')||[];
+  const fromKey=mk(cy,cm);
+  T.forEach(t=>wipeTemplateFromKeyOnward(t.id,fromKey));
+  ls('je_bill_templates',[]);
+  saveLocal();renderAll();renderManageRec();showToast('All recurring bills cleared ✦');
+}
+
+function openEditPay(billId,idx){
+  const b=bills.find(x=>x.id===billId);if(!b)return;
+  const p=b.payments[idx];if(!p)return;
+  document.getElementById('ePayBillId').value=billId;
+  document.getElementById('ePayIdx').value=idx;
+  document.getElementById('ePayAmt').value=p.amount;
+  document.getElementById('ePaySrc').value=p.source||'';
+  document.getElementById('editPayOv').classList.add('open');
+}
+function saveEditPay(){
+  const billId=document.getElementById('ePayBillId').value;
+  const idx=parseInt(document.getElementById('ePayIdx').value);
+  const b=bills.find(x=>x.id===billId);if(!b)return;
+  b.payments[idx].amount=parseFloat(document.getElementById('ePayAmt').value)||b.payments[idx].amount;
+  b.payments[idx].source=document.getElementById('ePaySrc').value||b.payments[idx].source;
+  saveLocal();closeOv('editPayOv');renderAll();showToast('Updated ✦');
+}
+
+function delBill(id){if(!confirm('Delete this bill?'))return;bills=bills.filter(b=>b.id!==id);saveLocal();renderAll();showToast('Removed');}
+function closeOv(id,e){if(e&&e.target!==document.getElementById(id))return;document.getElementById(id).classList.remove('open');}
+
+// CALENDAR
+function openCal(targetId){
+  calTarget=targetId;
+  calYear=cy;calMonth=cm;calSelected=null;
+  const v=document.getElementById(targetId).value;
+  if(v&&!isNaN(parseInt(v))){calSelected=parseInt(v);}
+  renderCal();
+  document.getElementById('calOverlay').classList.add('open');
+}
+function closeCal(e){if(e&&e.target!==document.getElementById('calOverlay'))return;document.getElementById('calOverlay').classList.remove('open');}
+function calPrev(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCal();}
+function calNext(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCal();}
+function renderCal(){
+  document.getElementById('calTitle').textContent=MO[calMonth]+' '+calYear;
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const today=new Date();
+  let html='';
+  for(let i=0;i<firstDay;i++) html+='<div class="cal-day empty"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const isToday=today.getDate()===d&&today.getMonth()===calMonth&&today.getFullYear()===calYear;
+    const isSel=calSelected===d&&calMonth===cm&&calYear===cy;
+    html+=`<div class="cal-day${isToday?' today':''}${isSel?' selected':''}" onclick="calSelect(${d})">${d}</div>`;
+  }
+  document.getElementById('calDays').innerHTML=html;
+}
+function calSelect(d){
+  calSelected=d;
+  // Update selected visual
+  document.querySelectorAll('.cal-day').forEach(el=>{
+    el.classList.remove('selected');
+    if(parseInt(el.textContent)===d&&!el.classList.contains('empty')) el.classList.add('selected');
+  });
+}
+function confirmCal(){
+  if(!calSelected){showToast('Please select a day');return;}
+  document.getElementById(calTarget).value=calSelected;
+  document.getElementById('calOverlay').classList.remove('open');
+}
+
+// NUMBER PAD
+function openNumpad(targetId){
+  npTarget=targetId;
+  npValue=document.getElementById(targetId).value||'0';
+  document.getElementById('numpadDisplay').textContent=npValue;
+  document.getElementById('numpadOverlay').classList.add('open');
+}
+function closeNumpad(e){if(e&&e.target!==document.getElementById('numpadOverlay'))return;document.getElementById('numpadOverlay').classList.remove('open');}
+function npPress(v){
+  if(npValue==='0'&&v!=='.') npValue=v;
+  else if(v==='.'&&npValue.includes('.')) return;
+  else npValue+=v;
+  // Max 8 chars
+  if(npValue.length>8) npValue=npValue.slice(0,-1);
+  document.getElementById('numpadDisplay').textContent=npValue;
+}
+function npDel(){
+  if(npValue.length<=1) npValue='0';
+  else npValue=npValue.slice(0,-1);
+  document.getElementById('numpadDisplay').textContent=npValue;
+}
+function npDone(){
+  document.getElementById(npTarget).value=npValue;
+  document.getElementById('numpadOverlay').classList.remove('open');
+}
+
+// STICKY
+function openSticky(){
+  document.getElementById('sModal').classList.add('open');
+  document.getElementById('sOv').classList.add('open');
+}
+function closeSticky(){
+  document.getElementById('sModal').classList.remove('open');
+  document.getElementById('sOv').classList.remove('open');
+}
+function sChars(){
+  const t=document.getElementById('sTxt');
+  document.getElementById('sCh').textContent=t.value.length+' / 300';
+}
+function saveSticky(){
+  const v=document.getElementById('sTxt').value;
+  ls('je_bills_sticky',v);
+  const preview=document.getElementById('stickyPreview');
+  const previewText=document.getElementById('stickyPreviewText');
+  if(v){preview.classList.add('visible');previewText.textContent=v;}
+  else{preview.classList.remove('visible');}
+  closeSticky();showToast('Note saved ✦');
+}
+
+function openReset(){document.getElementById('resetOv').classList.add('open');}
+function resetAllBills(){
+  Object.keys(localStorage).forEach(k=>{
+    if(k.startsWith('je_bills_')||k==='je_bill_templates') localStorage.removeItem(k);
+    else if(k.startsWith('je_paycheck_sync_')){
+      const v=lg(k)||{};ls(k,{total_income:v.total_income||0,bills_snap:'[]'});
+    }
+  });
+  closeOv('resetOv');
+  bills=[];
+  load();
+  showToast('All bill data cleared ✦');
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// INIT — force correct current month
+const _now=new Date();
+cy=_now.getFullYear();
+cm=_now.getMonth();
+document.getElementById('monthLbl').textContent=MO[cm]+' '+cy;
+loadQuoteTip();loadSticky();load();
+</script>
+</body>
+</html>
