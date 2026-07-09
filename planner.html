@@ -6,6 +6,12 @@
 const JE_URL='https://ejseathlglvvnmkpchib.supabase.co';
 const JE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqc2VhdGhsZ2x2dm5ta3BjaGliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODc4NTUsImV4cCI6MjA5NzU2Mzg1NX0.o4crd1W5-NbVNXSOWNT-WPHS7R6orRe9CRYFZfZ41L8';
 window.JE_TOKEN=null;
+    const _jeFetch=window.fetch;
+window.fetch=function(u,o){
+  if(window.JE_TOKEN&&typeof u==='string'&&u.indexOf('/rest/v1/')>-1&&o&&o.headers){o.headers['Authorization']='Bearer '+window.JE_TOKEN;}
+  return _jeFetch(u,o);
+};
+
 
 function jeSave(d){localStorage.setItem('je_session',JSON.stringify({access_token:d.access_token,refresh_token:d.refresh_token,expires_at:d.expires_at}));}
 
