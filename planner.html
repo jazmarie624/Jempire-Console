@@ -3297,6 +3297,118 @@ window.renderBanner = function(){
 /* Repaint now that the fix is in place */
 if(typeof updateAll === 'function') updateAll();
 </script>
+  <!-- ══════════════════════════════════════════
+     J EMPIRE · MORNING BRIEFING CARD
+     Paste at the bottom of planner.html,
+     just above </body>
+     ══════════════════════════════════════════ -->
+
+<style>
+#jeBrief{
+  margin:12px 13px 0;
+  background:linear-gradient(160deg,#4A2233 0%,#5C2B3D 60%,#4A2233 100%);
+  border-radius:16px;
+  padding:16px 17px 15px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 4px 18px rgba(74,34,51,.28);
+}
+#jeBrief::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,#D4A94E 25%,#F2DFA8 50%,#D4A94E 75%,transparent);
+}
+#jeBrief .je-eyebrow{
+  font-size:9px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;
+  color:#E8CDA8;margin-bottom:4px;
+}
+#jeBrief .je-date{
+  font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:600;
+  color:#FFFFFF;line-height:1.1;margin-bottom:11px;
+}
+#jeBrief .je-line{
+  display:flex;gap:9px;align-items:flex-start;
+  padding:8px 0;border-bottom:1px solid rgba(232,205,168,.16);
+}
+#jeBrief .je-line:last-child{border-bottom:none;padding-bottom:0;}
+#jeBrief .je-dot{
+  width:5px;height:5px;border-radius:50%;background:#D4A94E;
+  flex-shrink:0;margin-top:7px;
+}
+#jeBrief .je-text{
+  font-size:13.5px;font-weight:500;color:#F6EDE4;line-height:1.5;
+}
+#jeBrief .je-src{color:#C9A98C;font-weight:600;}
+#jeBrief .je-foot{
+  margin-top:12px;padding-top:9px;border-top:1px solid rgba(232,205,168,.16);
+  font-size:10px;color:#B99C86;
+}
+#jeBrief .je-quiet{font-size:13px;color:#D8C4B4;font-style:italic;}
+</style>
+
+<script>
+(async function jeBriefingCard(){
+
+  function esc(s){
+    return String(s).replace(/[&<>"]/g, c =>
+      ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  }
+
+  // Turn "- Text here. (Planner)" into a styled row
+  function renderLine(raw){
+    let t = raw.replace(/^[-*•]\s*/, '').trim();
+    if(!t) return '';
+    t = esc(t).replace(/\(([^)]+)\)\s*$/, '<span class="je-src">($1)</span>');
+    return '<div class="je-line"><div class="je-dot"></div><div class="je-text">'+t+'</div></div>';
+  }
+
+  function draw(briefing, dateKey){
+    const anchor = document.getElementById('weekView');
+    if(!anchor || document.getElementById('jeBrief')) return;
+
+    const lines = briefing.split('\n')
+      .map(l => l.trim())
+      .filter(l => l && !l.startsWith('#') && !/^\*\*/.test(l));
+
+    const body = lines.length
+      ? lines.map(renderLine).join('')
+      : '<div class="je-quiet">Nothing to report today.</div>';
+
+    const d = new Date(dateKey + 'T12:00:00');
+    const nice = DAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + ' ' + d.getDate();
+
+    const card = document.createElement('div');
+    card.id = 'jeBrief';
+    card.innerHTML =
+      '<div class="je-eyebrow">Your Briefing</div>' +
+      '<div class="je-date">' + nice + '</div>' +
+      body +
+      '<div class="je-foot">Written from your planner. Nothing here was invented.</div>';
+
+    anchor.insertBefore(card, anchor.firstChild);
+  }
+
+  async function load(){
+    if(!window.JE_TOKEN) return;           // not signed in yet
+    const today = dk(new Date());
+    try{
+      const r = await fetch(
+        SUPABASE_URL + '/rest/v1/briefings?date_key=eq.' + today + '&select=briefing,date_key',
+        { headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY } }
+      );
+      if(!r.ok) return;
+      const rows = await r.json();
+      if(rows && rows.length) draw(rows[0].briefing, rows[0].date_key);
+    }catch(e){ /* silent — the planner still works without it */ }
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', load);
+  } else {
+    load();
+  }
+})();
+</script>
+
 
 </body>
 </html>
