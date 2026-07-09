@@ -3060,5 +3060,243 @@ window.buildEventSheet=function(){
   },150);
 };
 </script>
+  <!-- ══════════════════════════════════════════════
+     J EMPIRE · WINE & CHAMPAGNE
+     Paste this whole block at the bottom of
+     planner.html, just above </body>
+     Delete it any time to go back to terracotta.
+     ══════════════════════════════════════════════ -->
+
+<style>
+/* ── PALETTE ── */
+:root{
+  --cream:#FAF6F1;--cream-deep:#F2E9E0;
+  --terra:#7B2D4A;--terra-light:#A8536E;
+  --rose-gold:#9A7009;--rose-light:#C9915F;
+  --gold:#9A7009;--gold-light:#D4A94E;
+  --brown-dark:#2A1620;--brown-mid:#5C2B3D;
+  --brown-muted:#5F4A52;--brown-soft:#8A757D;
+  --white-warm:rgba(255,252,250,0.97);
+  --lane-finance:#2E6B52;--lane-finance-bg:rgba(46,107,82,0.12);
+  --lane-kids:#9A7009;--lane-kids-bg:rgba(154,112,9,0.12);
+  --lane-gig:#A84A2F;--lane-gig-bg:rgba(168,74,47,0.12);
+  --lane-personal:#8A3B6B;--lane-personal-bg:rgba(138,59,107,0.12);
+  --lane-legal:#4A3A75;--lane-legal-bg:rgba(74,58,117,0.12);
+  --lane-appt:#1F6B6B;--lane-appt-bg:rgba(31,107,107,0.12);
+  --school-hg:#3F7A5C;--school-hg-bg:rgba(63,122,92,0.12);
+  --school-sc:#35528C;--school-sc-bg:rgba(53,82,140,0.12);
+  --school-lv:#A8436E;--school-lv-bg:rgba(168,67,110,0.12);
+}
+body{background:#F0E9E3;}
+
+/* ── HEADER: deep wine, champagne italic ── */
+.header{background:linear-gradient(160deg,#4A2233 0%,#5C2B3D 55%,#4A2233 100%);padding:32px 20px 22px;}
+.header::before{background:linear-gradient(90deg,transparent,#D4A94E 20%,#F2DFA8 50%,#D4A94E 80%,transparent);
+  box-shadow:0 1px 14px rgba(212,169,78,.55);}
+.header::after{background:linear-gradient(90deg,transparent,rgba(212,169,78,.4) 30%,rgba(212,169,78,.6) 50%,rgba(212,169,78,.4) 70%,transparent);}
+.hglow{background:radial-gradient(ellipse 60% 40% at 20% 30%,rgba(232,205,168,.10) 0%,transparent 60%),
+  radial-gradient(ellipse 50% 60% at 80% 70%,rgba(168,83,110,.20) 0%,transparent 55%);}
+.header-shimmer{background:linear-gradient(90deg,transparent,rgba(255,235,190,.18),transparent);}
+.h-spark{color:#D4A94E;}
+.btl,.btr{border-color:#D4A94E;opacity:.6;}
+.h-eyebrow{color:#E8CDA8;font-size:10px;text-shadow:none;}
+.h-title{color:#FFFFFF;font-weight:400;}
+.h-title em{background:none;-webkit-text-fill-color:#E8CDA8;color:#E8CDA8;font-weight:600;}
+.hdl{background:linear-gradient(90deg,transparent,#D4A94E,transparent);}
+.hdg{background:#D4A94E;box-shadow:0 0 9px rgba(212,169,78,.8);}
+.h-quote{color:#F3E6DC;font-size:14px;font-weight:600;}
+
+/* ── TABS ── */
+.tab-btn{font-size:13.5px;font-weight:600;color:#5F4A52;border-color:rgba(122,45,74,.22);}
+.tab-btn.active{background:linear-gradient(145deg,#7B2D4A 0%,#8E3B58 50%,#A8536E 100%);
+  box-shadow:0 3px 14px rgba(74,34,51,.4),inset 0 1px 0 rgba(255,255,255,.18);}
+.tab-btn:hover{color:#7B2D4A;border-color:rgba(122,45,74,.4);background:rgba(123,45,74,.06);}
+
+/* ── DATE NAV ── */
+.nav-day-lbl{font-size:22px;font-weight:600;}
+.nav-date-lbl{font-size:10px;font-weight:600;}
+.today-btn{font-size:10px;}
+
+/* ── WEEK STRIP ── */
+.week-num-label{font-size:9.5px;}
+.wdl{font-size:9px;font-weight:700;}
+.wdn{font-size:20px;font-weight:600;}
+.wd.active{background:linear-gradient(135deg,#7B2D4A,#A8536E);}
+.wd-badge{background:#7B2D4A;font-size:8px;}
+
+/* ── LEGEND ── */
+.legend-item{font-size:9.5px;color:#4A3A40;}
+
+/* ── TODAY AT A GLANCE ── */
+.banner-lbl{font-size:9.5px;}
+.bstat-num{font-size:26px;font-weight:700;}
+.bstat-lbl{font-size:8.5px;font-weight:700;color:#5F4A52;}
+.bnext-title{font-size:13px;font-weight:700;}
+.bnext-sub{font-size:10.5px;font-weight:500;}
+.banner-empty{font-size:13px;color:#8A757D;background:rgba(123,45,74,.05);}
+
+/* ── SECTION LABELS ── */
+.section-label,.mini-label,.section-title,.allday-lbl,.sticker-tray-lbl,.prep-title{font-size:9.5px;}
+.section-label::after{background:linear-gradient(90deg,rgba(212,169,78,.5),transparent);}
+
+/* ── TIME COLUMN + EVENTS ── */
+.ts-lbl{font-size:10px;color:#8A757D;}
+.ts.major .ts-lbl{font-size:10.5px;color:#5F4A52;font-weight:700;}
+.eb-title{font-size:14px;font-weight:700;color:#2A1620;}
+.eb-note{font-size:11.5px;color:#5F4A52;}
+.eb-time{font-size:10.5px;font-weight:600;color:#5F4A52;}
+.eb-tag{font-size:8.5px;}
+.eb-status{font-size:8.5px;font-weight:700;}
+.empty-slot{font-size:13px;color:#B09A8E;}
+.eb-check{border-color:rgba(122,45,74,.35);}
+.eb-check.done{background:#7B2D4A;border-color:#7B2D4A;}
+
+/* ── ALL DAY ── */
+.allday-chip{font-size:11px;font-weight:700;}
+
+/* ── STICKERS ── */
+.sticker-toggle{font-size:10px;color:#5F4A52;}
+.sticker-hint{font-size:10px;color:#8A757D;}
+.stk{font-size:9px;}
+
+/* ── DAY NOTE ── */
+.day-note-input{font-size:14px;color:#2A1620;}
+.day-note-input::placeholder{color:#B09A8E;}
+
+/* ── TODOS ── */
+.todo-text{font-size:13.5px;font-weight:600;}
+.todo-chk{border-color:rgba(122,45,74,.35);}
+.todo-chk.done{background:#7B2D4A;border-color:#7B2D4A;}
+.add-btn{font-size:10px;color:#7B2D4A;background:rgba(123,45,74,.10);}
+.comp-lbl{font-size:9px;}
+.comp-text{font-size:12px;}
+
+/* ── MONTH ── */
+.month-title-big{font-size:32px;font-weight:600;color:#2A1620;}
+.m-dow-lbl{font-size:10px;color:#7B2D4A;}
+.mc-num{font-size:19px;font-weight:600;color:#2A1620;}
+.mc-lbl{font-size:8.5px;}
+.mc.today-mc{background:rgba(123,45,74,.06);border-color:#7B2D4A;box-shadow:0 0 0 3px rgba(123,45,74,.10);}
+.mc.today-mc .mc-num,.mc.active-mc .mc-num{color:#7B2D4A;font-weight:700;}
+
+/* ── AGENDA ── */
+.ag-num{font-size:32px;font-weight:600;color:#7B2D4A;}
+.ag-dow{font-size:11px;}
+.ag-date{font-size:10px;}
+.ae-title{font-size:13.5px;font-weight:700;}
+.ae-note{font-size:11.5px;}
+.ae-chip{font-size:8px;}
+.agenda-empty{font-size:13px;color:#B09A8E;}
+
+/* ── SHEETS + FORMS ── */
+.sheet-title{font-size:24px;font-weight:600;}
+.sheet-sub{font-size:10px;}
+.field-label{font-size:9.5px;color:#5F4A52;}
+.field-input{font-size:15px;color:#2A1620;}
+.field-input::placeholder{color:#B09A8E;}
+.field-input:focus{border-color:#7B2D4A;}
+.tmpl-name{font-size:11.5px;}
+.tmpl-desc{font-size:9.5px;color:#5F4A52;}
+.tmpl-card:hover,.tmpl-card.active-tmpl{border-color:#7B2D4A;background:rgba(123,45,74,.07);}
+.cat-btn,.status-btn,.recur-btn{font-size:9.5px;}
+.recur-btn.active-recur{background:#7B2D4A;border-color:#7B2D4A;}
+.allday-toggle-lbl{font-size:13px;}
+.toggle-switch.on{background:#7B2D4A;}
+.sheet-save{font-size:12px;background:linear-gradient(135deg,#7B2D4A,#A8536E);
+  box-shadow:0 3px 12px rgba(74,34,51,.35);}
+.sheet-cancel{font-size:12px;}
+.export-btn{background:linear-gradient(135deg,#7B2D4A,#A8536E);font-size:12px;}
+.confirm-yes{background:#7B2D4A;font-size:12px;}
+.confirm-title{font-size:21px;}
+.confirm-msg{font-size:13px;}
+
+/* ── SCHOOLS ── */
+.school-name{font-size:12px;}
+.school-kids{font-size:10px;}
+.school-evt{font-size:11px;}
+.school-add{font-size:9.5px;}
+.child-btn{font-size:11px;}
+
+/* ── PREP / ALERTS ── */
+.prep-text{font-size:13px;}
+.ra-title{font-size:13px;}
+.ra-sub{font-size:10.5px;}
+.ra-time{font-size:11px;}
+.bill-alert-title{font-size:12px;}
+.bill-alert-sub{font-size:10.5px;}
+.pcd-text{font-size:12px;}
+.nudge-title{font-size:12px;}
+.nudge-sub{font-size:11px;}
+.nudge-btn{background:linear-gradient(135deg,#7B2D4A,#A8536E);}
+.ra-view{background:linear-gradient(135deg,#7B2D4A,#A8536E);}
+
+/* ── WEEKLY SUMMARY ── */
+.ws-title{font-size:22px;font-weight:600;}
+.ws-num{font-size:26px;font-weight:700;color:#7B2D4A;}
+.ws-lbl{font-size:8.5px;font-weight:700;color:#5F4A52;}
+.ws-quote{font-size:13px;color:#5F4A52;}
+
+/* ── NOTIFICATIONS ── */
+.notif-panel-header{background:linear-gradient(135deg,#4A2233,#7B2D4A);}
+.notif-panel-title{color:#F3E6DC;font-size:23px;}
+.notif-section-lbl{font-size:9.5px;}
+.ni-title{font-size:13px;}
+.ni-sub{font-size:11px;color:#5F4A52;}
+.ni-time{font-size:10px;}
+.ni-btn{font-size:9.5px;}
+.ni-btn.view{background:linear-gradient(135deg,#7B2D4A,#A8536E);}
+.notif-empty{font-size:15px;color:#A8907F;}
+#notifBellBtn{border-color:rgba(122,45,74,.35)!important;
+  box-shadow:0 3px 12px rgba(74,34,51,.22)!important;}
+
+/* ── NAV BAR + TOAST ── */
+.nav-bar{background:#FAF6F1;border-top-color:rgba(122,45,74,.16);}
+.nav-item{font-size:9.5px;color:#8A757D;}
+.nav-item.active{color:#7B2D4A;}
+.toast{background:#4A2233;color:#F3E6DC;font-size:13px;}
+</style>
+
+<script>
+/* ── FIX: "Today at a Glance" counter always showed 0 ──
+   The old code set window.renderBanner to a function that
+   called renderBanner() — itself. It looped, crashed, and
+   the crash was swallowed. This replaces it with a working
+   version. renderBannerWithNudge() will now call this. */
+window.renderBanner = function(){
+  const key = dk(currentDate);
+  const isPay = isPayday(key);
+  document.getElementById('bs-events').textContent = events.filter(e=>!e.done).length;
+  document.getElementById('bs-todos').textContent  = todos.filter(t=>!t.done).length;
+  document.getElementById('bs-done').textContent   = [...events,...todos].filter(x=>x.done).length;
+  document.getElementById('bs-payday').style.display = isPay ? 'block' : 'none';
+
+  const upcoming = events.filter(e=>!e.done && !e.all_day).sort((a,b)=>(a.hour||0)-(b.hour||0));
+  const nn = document.getElementById('bannerNext');
+  if(upcoming.length){
+    const nxt = upcoming[0];
+    const h = nxt.hour||0;
+    const h12 = h%12||12;
+    const ampm = h<12 ? 'AM' : 'PM';
+    const cat = CAT_CONFIG[nxt.category||'personal'] || CAT_CONFIG.personal;
+    const isToday = dk(currentDate)===todayKey();
+    const dateLabel = DAYS[currentDate.getDay()]+', '+MONTHS[currentDate.getMonth()]+' '+currentDate.getDate();
+    nn.className = 'banner-next';
+    nn.innerHTML = '<div class="bnext-icon">'+cat.emoji+'</div><div>'
+      + '<div class="bnext-title">Next: '+nxt.title+'</div>'
+      + '<div class="bnext-sub">'+(isToday?'Today':'📅 '+dateLabel)+' · '
+      + (nxt.all_day?'All Day':h12+':00 '+ampm)+' · '+(nxt.status||'Confirmed')
+      + (nxt.reminder?' · 🔔':'')+'</div></div>';
+    nn.onclick = ()=>openEditEvent(nxt.id);
+  } else {
+    nn.className = 'banner-empty';
+    nn.innerHTML = '✦ Nothing scheduled — add an event';
+    nn.onclick = ()=>openSheet('event');
+  }
+};
+
+/* Repaint now that the fix is in place */
+if(typeof updateAll === 'function') updateAll();
+</script>
+
 </body>
 </html>
