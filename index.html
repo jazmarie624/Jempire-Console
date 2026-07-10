@@ -3,494 +3,354 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>J Empire</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#4A2233">
+<title>J Empire · Console</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --cream: #F4EFE8;
-  --cream-deep: #EDE6DC;
-  --terra: #C4714F;
-  --terra-light: #D4906E;
-  --rose-gold: #B8896E;
-  --rose-light: #D4A574;
-  --sand: #E8DDD2;
-  --brown-dark: #2C1A0E;
-  --brown-mid: #6B4232;
-  --brown-muted: #9A6E58;
-  --brown-soft: #C4A090;
-  --white-warm: rgba(255,252,248,0.92);
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#EDE4DB;--card:#FBF5EF;
+  --wine:#4A2233;--wine-mid:#5C2B3D;--wine-light:#7B2D4A;
+  --rose:#A8536E;--champagne:#E8CDA8;
+  --gold:#8A6508;--gold-line:#D4A94E;
+  --ink:#24121C;--ink-mid:#54424A;--ink-soft:#826E76;
+  --line:#DDCDBF;
+}
+body{
+  font-family:'Inter',-apple-system,sans-serif;
+  background:var(--cream);color:var(--ink);
+  max-width:430px;margin:0 auto;min-height:100vh;padding-bottom:34px;
+  -webkit-tap-highlight-color:transparent;
 }
 
-html { scroll-behavior: smooth; }
+/* ═══ HEADER ═══ */
+.hdr{position:relative;overflow:hidden;padding:32px 20px 54px;text-align:center;
+  background:linear-gradient(160deg,#4A2233 0%,#5C2B3D 50%,#42202F 100%)}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,transparent,var(--gold-line) 20%,#F2DFA8 50%,var(--gold-line) 80%,transparent);
+  box-shadow:0 1px 14px rgba(212,169,78,.55)}
+.hdr::after{content:'';position:absolute;left:-10%;right:-10%;bottom:-42px;height:80px;
+  background:var(--cream);border-radius:50% 50% 0 0 / 100% 100% 0 0}
+.shimmer{position:absolute;top:0;left:-70%;width:55%;height:100%;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,235,190,.16),transparent);
+  animation:sweep 5.5s ease-in-out infinite}
+@keyframes sweep{0%{left:-60%}100%{left:130%}}
+.spk{position:absolute;font-family:'Cormorant Garamond',serif;color:var(--gold-line);
+  pointer-events:none;animation:twk ease-in-out infinite;z-index:1}
+@keyframes twk{0%,100%{opacity:.22;transform:translateY(0) scale(.8)}50%{opacity:.9;transform:translateY(-6px) scale(1.2)}}
+.eyebrow{position:relative;z-index:1;font-size:9.5px;font-weight:700;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--champagne);margin-bottom:6px}
+.ttl{position:relative;z-index:1;font-family:'Cormorant Garamond',serif;font-size:42px;
+  font-weight:400;color:#fff;line-height:1;letter-spacing:.02em}
+.ttl em{font-style:italic;font-weight:600;color:var(--champagne)}
+.grt{position:relative;z-index:1;font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-weight:600;font-size:15px;color:#F3E6DC;margin-top:10px}
+.quote{position:relative;z-index:1;font-size:10px;font-weight:500;letter-spacing:.06em;
+  color:#C9A98C;margin-top:5px;font-style:italic}
 
-body {
-  min-height: 100vh;
-  font-family: 'Inter', sans-serif;
-  background: var(--cream-deep);
-  color: var(--brown-dark);
-}
+/* ═══ BRIEFING ═══ */
+#brief{position:relative;z-index:2;margin:-34px 16px 0;
+  background:var(--card);border:1px solid var(--line);border-radius:19px;
+  padding:16px 17px 14px;box-shadow:0 8px 26px rgba(74,34,51,.18)}
+.b-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:11px}
+.b-lbl{font-size:9px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--gold)}
+.b-date{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.b-line{display:flex;gap:10px;align-items:flex-start;padding:8px 0}
+.b-line + .b-line{border-top:1px dashed var(--line)}
+.b-dot{width:5px;height:5px;border-radius:50%;background:var(--gold-line);flex-shrink:0;margin-top:7px}
+.b-txt{font-size:13.5px;font-weight:500;color:var(--ink);line-height:1.5}
+.b-src{color:var(--wine-light);font-weight:600}
+.b-quiet{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--ink-soft)}
+.b-skel{height:12px;border-radius:6px;margin:10px 0;
+  background:linear-gradient(90deg,#EFE3D9,#E6D6C9,#EFE3D9);background-size:200% 100%;
+  animation:sh 1.3s linear infinite}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-/* ═══════════════════════════
-   HERO
-═══════════════════════════ */
-.hero {
-  position: relative;
-  overflow: hidden;
-  padding: 56px 24px 36px;
-  text-align: center;
-  background-color: var(--cream);
-}
+/* ═══ STATS ═══ */
+.strip{margin:13px 22px 0;display:flex;align-items:center}
+.sv{flex:1;text-align:center;text-decoration:none;color:inherit}
+.sv + .sv{border-left:1px solid var(--line)}
+.sv .n{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:700;color:var(--wine-light);line-height:1}
+.sv .l{font-size:7.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mid);margin-top:3px}
+.sv.urg .n{color:#94391E}
 
-.hero-linen {
-  position: absolute; inset: 0;
-  background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(180,140,105,0.07) 3px, rgba(180,140,105,0.07) 4px),
-    repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(180,140,105,0.05) 3px, rgba(180,140,105,0.05) 4px);
-}
+/* ═══ GROUPS ═══ */
+.glbl{display:flex;align-items:center;gap:9px;margin:22px 16px 9px;
+  font-size:8.5px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--gold)}
+.glbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(138,101,8,.4),transparent)}
 
-.hero-marble {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-}
+.grid{margin:0 16px;display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:60px;gap:9px}
+.b{position:relative;overflow:hidden;text-decoration:none;border-radius:17px;
+  padding:13px;display:flex;flex-direction:column;justify-content:flex-end;
+  border:1px solid rgba(0,0,0,.07);transition:transform .16s ease;
+  box-shadow:0 2px 8px rgba(60,32,44,.06)}
+.b:active{transform:scale(.975)}
+.b .ic{position:absolute;top:11px;right:12px;font-size:19px;opacity:.9}
+.b .nm{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--ink);line-height:1.02;font-size:19px}
+.b .ds{font-size:10px;color:var(--ink-mid);margin-top:3px;font-weight:500;line-height:1.3}
+.bar{flex-direction:row;align-items:center;padding:11px 13px}
+.bar .ic{position:static;margin-left:auto}
+.bar .nm{font-size:16px}
+.b::after{content:'';position:absolute;top:0;left:14px;right:14px;height:2px;border-radius:2px;opacity:.9}
 
-.hero-glow {
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse 80% 55% at 88% 8%, rgba(196,113,79,0.16) 0%, transparent 55%),
-    radial-gradient(ellipse 55% 45% at 8% 88%, rgba(184,137,110,0.13) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 60% at 50% 50%, rgba(212,185,160,0.1) 0%, transparent 70%);
-}
+.t-planner{grid-column:1 / 4;grid-row:1 / 3;background:linear-gradient(150deg,#F6EAE4,rgba(123,45,74,.30))}
+.t-planner::after{left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--gold-line) 30%,#F2DFA8 50%,var(--gold-line) 70%,transparent)}
+.t-planner .nm{font-size:24px}
+.t-planner .tag{font-size:8px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#7A5606;margin-bottom:4px}
+.t-dump{grid-column:4 / 7;grid-row:1 / 3;background:linear-gradient(150deg,#F1E8F0,rgba(90,45,110,.26))}
+.t-dump::after{background:#5A2D6E}
+.t-dump .nm{font-size:24px}
 
-.hero-top-bar {
-  position: absolute; top: 0; left: 0; right: 0; height: 4px;
-  background: linear-gradient(90deg, transparent 0%, var(--terra) 20%, var(--rose-light) 50%, var(--rose-gold) 80%, transparent 100%);
-}
+.t-bills{grid-column:1 / 3;grid-row:1 / 3;background:linear-gradient(150deg,#E9F0EA,rgba(46,107,82,.28))}
+.t-bills::after{background:#2E6B52}
+.t-debt{grid-column:3 / 5;grid-row:1 / 3;background:linear-gradient(150deg,#F5E9E3,rgba(168,74,47,.28))}
+.t-debt::after{background:#A84A2F}
+.t-pay{grid-column:5 / 7;grid-row:1 / 3;background:linear-gradient(150deg,#F4EDDF,rgba(154,112,9,.30))}
+.t-pay::after{background:#9A7009}
+.t-bills .nm,.t-debt .nm,.t-pay .nm{font-size:18px}
+.t-bills .ic,.t-debt .ic,.t-pay .ic{font-size:18px}
 
-.bracket { position: absolute; width: 32px; height: 32px; opacity: 0.35; }
-.bracket-tl { top: 16px; left: 18px; border-top: 1.5px solid var(--terra); border-left: 1.5px solid var(--terra); }
-.bracket-tr { top: 16px; right: 18px; border-top: 1.5px solid var(--terra); border-right: 1.5px solid var(--terra); }
-.bracket-bl { bottom: 16px; left: 18px; border-bottom: 1.5px solid var(--terra); border-left: 1.5px solid var(--terra); }
-.bracket-br { bottom: 16px; right: 18px; border-bottom: 1.5px solid var(--terra); border-right: 1.5px solid var(--terra); }
+.t-family{grid-column:1 / 3;grid-row:1 / 3;background:linear-gradient(150deg,#F6E7EE,rgba(168,67,110,.28));
+  align-items:center;text-align:center;justify-content:center}
+.t-family::after{background:#A8436E}
+.t-family .ic{position:static;margin-bottom:5px;font-size:22px}
+.t-family .nm{font-size:16px}
+.t-meals{grid-column:3 / 7;grid-row:1 / 2;background:linear-gradient(150deg,#EAF0EB,rgba(63,122,92,.26))}
+.t-meals::after{background:#3F7A5C}
+.t-school{grid-column:3 / 7;grid-row:2 / 3;background:linear-gradient(150deg,#E7EBF3,rgba(53,82,140,.26))}
+.t-school::after{background:#35528C}
+.t-lists{grid-column:1 / 7;grid-row:3 / 4;background:linear-gradient(120deg,#EAE7F1,rgba(74,58,117,.26))}
+.t-lists::after{background:#4A3A75}
 
-.hero-content { position: relative; z-index: 2; }
+.t-study{grid-column:1 / 3;grid-row:1 / 3;background:linear-gradient(150deg,#EAE7F1,rgba(74,58,117,.26));
+  align-items:center;text-align:center;justify-content:center}
+.t-study::after{background:#4A3A75}
+.t-study .ic{position:static;margin-bottom:5px;font-size:21px}
+.t-study .nm{font-size:16px}
+.t-goals{grid-column:3 / 7;grid-row:1 / 2;background:linear-gradient(150deg,#F2E7EF,rgba(138,59,107,.26))}
+.t-goals::after{background:#8A3B6B}
+.t-care{grid-column:3 / 7;grid-row:2 / 3;background:linear-gradient(150deg,#F6E9EC,rgba(168,83,110,.28))}
+.t-care::after{background:#A8536E}
 
-.hero-eyebrow {
-  font-size: 9px; font-weight: 600; letter-spacing: 0.32em;
-  text-transform: uppercase; color: var(--rose-gold); margin-bottom: 10px;
-}
+.foot{margin:26px 16px 0;padding-top:14px;border-top:1px solid var(--line);text-align:center}
+.foot .mk{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--ink-soft)}
+.foot .tg{font-size:8.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:4px}
 
-.hero-crown { font-size: 32px; display: block; margin-bottom: 8px; }
-
-.hero-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 66px; font-weight: 300; color: var(--brown-dark);
-  line-height: 0.9; letter-spacing: 0.07em; margin-bottom: 16px;
-}
-.hero-title em { font-style: italic; color: var(--terra); font-weight: 400; }
-
-.hero-divider {
-  display: flex; align-items: center; gap: 10px;
-  width: 200px; margin: 0 auto 14px;
-}
-.hdl { flex: 1; height: 1px; background: rgba(196,113,79,0.32); }
-.hdg { width: 5px; height: 5px; background: var(--terra); transform: rotate(45deg); opacity: 0.75; }
-
-.hero-tags {
-  display: flex; gap: 0; justify-content: center;
-  flex-wrap: wrap; align-items: center;
-}
-.hero-tag-text {
-  font-size: 9.5px; font-weight: 500; letter-spacing: 0.1em;
-  color: var(--brown-mid);
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic; font-size: 13px;
-}
-.hero-tag-divider { color: var(--terra); margin: 0 8px; font-size: 11px; }
-
-/* ═══════════════════════════
-   QUOTE STRIP
-═══════════════════════════ */
-.quote-strip {
-  background: linear-gradient(135deg, var(--terra) 0%, var(--terra-light) 50%, var(--rose-gold) 100%);
-  padding: 14px 24px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.quote-strip::before {
-  content: '❝';
-  position: absolute; left: 14px; top: 8px;
-  font-size: 28px; color: rgba(255,252,248,0.2);
-  font-family: 'Cormorant Garamond', serif;
-}
-.quote-text {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic; font-size: 15px;
-  color: rgba(255,252,248,0.95); letter-spacing: 0.03em;
-  line-height: 1.5; position: relative; z-index: 1;
-}
-.quote-author {
-  font-size: 9px; font-weight: 600; letter-spacing: 0.2em;
-  text-transform: uppercase; color: rgba(255,252,248,0.65);
-  margin-top: 5px; position: relative; z-index: 1;
-}
-
-/* ═══════════════════════════
-   DATE BAR
-═══════════════════════════ */
-.date-bar {
-  background: var(--cream);
-  border-top: 1px solid rgba(196,113,79,0.15);
-  border-bottom: 1px solid rgba(196,113,79,0.15);
-  padding: 10px 24px;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-}
-.date-bar-gem { width: 4px; height: 4px; background: var(--terra); transform: rotate(45deg); opacity: 0.6; }
-.date-bar-text {
-  font-size: 10px; font-weight: 500; letter-spacing: 0.18em;
-  text-transform: uppercase; color: var(--brown-muted);
-}
-
-/* ═══════════════════════════
-   GRID SECTIONS
-═══════════════════════════ */
-.grid-wrap {
-  padding: 24px 16px 56px;
-  max-width: 500px; margin: 0 auto;
-  display: flex; flex-direction: column; gap: 28px;
-}
-
-.group { display: flex; flex-direction: column; gap: 12px; }
-
-.group-header {
-  display: flex; align-items: center; gap: 10px;
-}
-.group-icon { font-size: 14px; }
-.group-title {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.28em;
-  text-transform: uppercase; color: var(--rose-gold);
-}
-.group-line { flex: 1; height: 1px; background: rgba(196,113,79,0.2); }
-
-.group-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-/* ═══════════════════════════
-   TILES
-═══════════════════════════ */
-.tile {
-  background: var(--white-warm);
-  border: 1px solid rgba(196,113,79,0.18);
-  border-radius: 16px;
-  padding: 18px 8px 14px;
-  text-align: center;
-  display: flex; flex-direction: column;
-  align-items: center; gap: 7px;
-  text-decoration: none;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  box-shadow: 0 2px 10px rgba(196,113,79,0.07), 0 1px 3px rgba(0,0,0,0.04);
-  position: relative; overflow: hidden;
-}
-.tile::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(196,113,79,0.3), transparent);
-  opacity: 0; transition: opacity 0.2s;
-}
-.tile:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(196,113,79,0.18); border-color: rgba(196,113,79,0.42); }
-.tile:hover::before { opacity: 1; }
-.tile:active { transform: translateY(-1px); }
-
-.tile-icon { font-size: 26px; line-height: 1; }
-.tile-name {
-  font-size: 10px; font-weight: 600; color: var(--brown-dark);
-  letter-spacing: 0.03em; line-height: 1.3; text-align: center;
-}
-
-/* Wide tile */
-.tile-wide {
-  grid-column: span 2;
-  flex-direction: row; text-align: left;
-  padding: 16px 18px; gap: 13px;
-  justify-content: flex-start;
-}
-.tile-wide .tile-icon { font-size: 30px; flex-shrink: 0; }
-.tile-wide .tile-name { font-size: 13px; }
-.tile-wide .tile-sub {
-  font-size: 9.5px; color: var(--brown-muted); font-weight: 400; margin-top: 2px;
-}
-
-/* Full width tile */
-.tile-full {
-  grid-column: span 3;
-  flex-direction: row; text-align: left;
-  padding: 16px 20px; gap: 14px;
-  justify-content: flex-start;
-  background: linear-gradient(135deg, rgba(255,252,248,0.95), rgba(246,234,224,0.7));
-  border-color: rgba(196,113,79,0.28);
-}
-.tile-full .tile-icon { font-size: 30px; flex-shrink: 0; }
-.tile-full .tile-name { font-size: 13px; }
-.tile-full .tile-sub {
-  font-size: 9.5px; color: var(--brown-muted); font-weight: 400; margin-top: 2px;
-}
-
-/* My Anchor special tiles */
-.tile-anchor {
-  background: linear-gradient(135deg, rgba(255,252,248,0.98), rgba(244,239,232,0.85));
-  border-color: rgba(196,113,79,0.3);
-  box-shadow: 0 3px 14px rgba(196,113,79,0.1);
-}
-.tile-anchor .tile-name { color: var(--terra); font-size: 11px; }
-
-/* ═══════════════════════════
-   SPARKLE ANIMATION
-═══════════════════════════ */
-.sparkle {
-  position: fixed; pointer-events: none; z-index: 9999;
-  font-size: 18px;
-  animation: sparkle-fly 1.2s ease-out forwards;
-}
-@keyframes sparkle-fly {
-  0%   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
-  100% { opacity: 0; transform: translateY(-80px) scale(0.3) rotate(180deg); }
-}
-
-/* ═══════════════════════════
-   FOOTER
-═══════════════════════════ */
-.footer {
-  text-align: center; padding: 0 0 40px;
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-}
-.footer-divider {
-  display: flex; align-items: center; gap: 8px; width: 140px;
-}
-.fdl { flex: 1; height: 1px; background: rgba(196,113,79,0.25); }
-.fdg { width: 4px; height: 4px; background: rgba(196,113,79,0.5); transform: rotate(45deg); }
-.footer-text {
-  font-size: 9px; letter-spacing: 0.22em;
-  text-transform: uppercase; color: var(--brown-soft);
-}
-.footer-tagline {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic; font-size: 13px; color: var(--brown-muted);
-}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
-<!-- ═══ HERO ═══ -->
-<div class="hero">
-  <div class="hero-linen"></div>
-  <svg class="hero-marble" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-    <filter id="mf"><feGaussianBlur stdDeviation="3"/></filter>
-    <g filter="url(#mf)">
-      <path d="M -10 90 Q 90 45 180 110 Q 290 180 370 90 Q 440 20 530 80 Q 600 130 660 75" stroke="rgba(184,137,110,0.32)" stroke-width="3" fill="none"/>
-      <path d="M 60 220 Q 160 170 230 215 Q 330 270 410 195 Q 480 130 570 185" stroke="rgba(196,113,79,0.18)" stroke-width="1.8" fill="none"/>
-      <path d="M 310 -5 Q 340 70 315 150 Q 288 235 345 295" stroke="rgba(184,137,110,0.22)" stroke-width="1.2" fill="none"/>
-      <path d="M -10 310 Q 110 270 185 305 Q 285 350 365 285 Q 445 220 570 270 Q 640 305 700 255" stroke="rgba(196,113,79,0.14)" stroke-width="2" fill="none"/>
-      <ellipse cx="84%" cy="12%" rx="110" ry="55" fill="rgba(212,165,116,0.09)"/>
-      <ellipse cx="12%" cy="80%" rx="85" ry="45" fill="rgba(184,137,110,0.07)"/>
-    </g>
-  </svg>
-  <div class="hero-glow"></div>
-  <div class="hero-top-bar"></div>
-  <div class="bracket bracket-tl"></div>
-  <div class="bracket bracket-tr"></div>
-  <div class="bracket bracket-bl"></div>
-  <div class="bracket bracket-br"></div>
+<div class="hdr">
+  <div class="shimmer"></div>
+  <span class="spk" style="left:11%;top:22%;font-size:12px;animation-duration:3s">✦</span>
+  <span class="spk" style="left:85%;top:28%;font-size:9px;animation-duration:2.6s;animation-delay:.8s">⋆</span>
+  <span class="spk" style="left:47%;top:11%;font-size:8px;animation-duration:3.8s;animation-delay:1.2s">⋆</span>
+  <span class="spk" style="left:78%;top:56%;font-size:11px;animation-duration:2.9s;animation-delay:.4s">✦</span>
+  <div class="eyebrow">Jasz</div>
+  <div class="ttl">J <em>Empire</em></div>
+  <div class="grt" id="greeting">Good morning.</div>
+  <div class="quote" id="quote"></div>
+</div>
 
-  <div class="hero-content">
-    <div class="hero-eyebrow">Single Mom · Entrepreneur · Queen</div>
-    <span class="hero-crown">👑</span>
-    <div class="hero-title">J <em>Empire</em></div>
-    <div class="hero-divider"><div class="hdl"></div><div class="hdg"></div><div class="hdl"></div></div>
-    <div class="hero-tags">
-      <span class="hero-tag-text">Empire Builder</span>
-      <span class="hero-tag-divider">✦</span>
-      <span class="hero-tag-text">Boss Mother</span>
-      <span class="hero-tag-divider">✦</span>
-      <span class="hero-tag-text">She Rises Daily</span>
-    </div>
+<div id="brief">
+  <div class="b-head">
+    <span class="b-lbl">✦ Your Briefing</span>
+    <span class="b-date" id="briefDate"></span>
+  </div>
+  <div id="briefBody">
+    <div class="b-skel" style="width:92%"></div>
+    <div class="b-skel" style="width:76%"></div>
+    <div class="b-skel" style="width:85%"></div>
   </div>
 </div>
 
-<!-- ═══ QUOTE ═══ -->
-<div class="quote-strip">
-  <div class="quote-text" id="quoteText">"She believed she could, so she did."</div>
-  <div class="quote-author" id="quoteAuthor">— Daily Reminder</div>
+<div class="strip">
+  <a class="sv" href="planner.html"><div class="n" id="stEvents">–</div><div class="l">Events</div></a>
+  <a class="sv" href="planner.html"><div class="n" id="stTodos">–</div><div class="l">To-Dos</div></a>
+  <div class="sv urg"><div class="n" id="stDays">–</div><div class="l" id="stDaysLbl">Days</div></div>
 </div>
 
-<!-- ═══ DATE ═══ -->
-<div class="date-bar">
-  <div class="date-bar-gem"></div>
-  <div class="date-bar-text" id="dateText">Loading...</div>
-  <div class="date-bar-gem"></div>
+<div class="glbl">Every Day</div>
+<div class="grid">
+  <a class="b t-planner" href="planner.html">
+    <span class="ic">🗓️</span>
+    <div class="tag">Start here</div>
+    <div class="nm">Planner</div>
+    <div class="ds">Your day, your week</div>
+  </a>
+  <a class="b t-dump" href="brain_dump.html">
+    <span class="ic">🧠</span>
+    <div class="nm">Brain Dump</div>
+    <div class="ds">Before it gets loud</div>
+  </a>
 </div>
 
-<!-- ═══ APP GRID ═══ -->
-<div class="grid-wrap">
-
-  <!-- ⚓ MY ANCHOR -->
-  <div class="group">
-    <div class="group-header">
-      <span class="group-icon">⚓</span>
-      <span class="group-title">My Anchor</span>
-      <div class="group-line"></div>
-    </div>
-    <div class="group-grid">
-      <a class="tile tile-anchor tile-wide" href="https://jazmarie624.github.io/Jempire-Console/planner.html" target="_self">
-        <div class="tile-icon">🗓️</div>
-        <div><div class="tile-name">Planner</div><div class="tile-sub">Your day, your way</div></div>
-      </a>
-      <a class="tile tile-anchor" href="https://jazmarie624.github.io/Jempire-Console/brain_dump.html" target="_self">
-        <div class="tile-icon">🤍</div>
-        <div class="tile-name">Brain Dump</div>
-      </a>
-    </div>
-  </div>
-
-  <!-- 💰 MONEY -->
-  <div class="group">
-    <div class="group-header">
-      <span class="group-icon">💰</span>
-      <span class="group-title">Money</span>
-      <div class="group-line"></div>
-    </div>
-    <div class="group-grid">
-      <a class="tile tile-full" href="https://jazmarie624.github.io/Jempire-Console/paycheck_final.html" target="_self">
-        <div class="tile-icon">💰</div>
-        <div><div class="tile-name">Paycheck</div><div class="tile-sub">Track every dollar coming in</div></div>
-      </a>
-      <a class="tile" href="https://jazmarie624.github.io/Jempire-Console/bills_final.html" target="_self">
-        <div class="tile-icon">📩</div>
-        <div class="tile-name">Bills</div>
-      </a>
-      <a class="tile" href="https://jazmarie624.github.io/Jempire-Console/debt.html" target="_self">
-        <div class="tile-icon">📊</div>
-        <div class="tile-name">Debt</div>
-      </a>
-    </div>
-  </div>
-
-  <!-- 🏡 LIFE -->
-  <div class="group">
-    <div class="group-header">
-      <span class="group-icon">🏡</span>
-      <span class="group-title">Life</span>
-      <div class="group-line"></div>
-    </div>
-    <div class="group-grid">
-      <a class="tile" href="https://jazmarie624.github.io/Jempire-Console/family.html" target="_self">
-        <div class="tile-icon">🏡</div>
-        <div class="tile-name">Family</div>
-      </a>
-      <a class="tile" href="https://jazmarie624.github.io/Jempire-Console/lists.html" target="_self">
-        <div class="tile-icon">📋</div>
-        <div class="tile-name">Lists</div>
-      </a>
-      <a class="tile" href="https://jazmarie624.github.io/Jempire-Console/meal_planner.html" target="_self">
-        <div class="tile-icon">🫙</div>
-        <div class="tile-name">Meal Planner</div>
-      </a>
-      <a class="tile tile-wide" href="https://jazmarie624.github.io/Jempire-Console/back_to_school.html" target="_self">
-        <div class="tile-icon">🎒</div>
-        <div class="tile-name">Back to School</div>
-      </a>
-    </div>
-  </div>
-
-  <!-- 🌿 GROWTH & SELF -->
-  <div class="group">
-    <div class="group-header">
-      <span class="group-icon">🌿</span>
-      <span class="group-title">Growth &amp; Self</span>
-      <div class="group-line"></div>
-    </div>
-    <div class="group-grid">
-      <a class="tile" href="https://jazmarie624.github.io/Jempire-Console/goals.html" target="_self">
-        <div class="tile-icon">🌿</div>
-        <div class="tile-name">Goals</div>
-      </a>
-      <a class="tile" href="https://jazmarie624.github.io/Jempire-Console/study_tracker.html" target="_self">
-        <div class="tile-icon">📜</div>
-        <div class="tile-name">Study</div>
-      </a>
-
-      <a class="tile tile-wide" href="https://jazmarie624.github.io/Jempire-Console/self_care.html" target="_self">
-        <div class="tile-icon">🕊️</div>
-        <div><div class="tile-name">Self Care</div><div class="tile-sub">You can't pour from an empty cup</div></div>
-      </a>
-    </div>
-  </div>
-
+<div class="glbl">The Money</div>
+<div class="grid">
+  <a class="b t-bills" href="bills_final.html"><span class="ic">💵</span><div class="nm">Bills</div></a>
+  <a class="b t-debt" href="debt.html"><span class="ic">📉</span><div class="nm">Debt</div></a>
+  <a class="b t-pay" href="paycheck_final.html"><span class="ic">🪙</span><div class="nm">Paycheck</div></a>
 </div>
 
-<!-- ═══ FOOTER ═══ -->
-<div class="footer">
-  <div class="footer-divider"><div class="fdl"></div><div class="fdg"></div><div class="fdl"></div></div>
-  <div class="footer-tagline">Unapologetically Her</div>
-  <div class="footer-text">J Empire · Her Kingdom, Organized</div>
+<div class="glbl">The Household</div>
+<div class="grid">
+  <a class="b t-family" href="family.html"><span class="ic">🏡</span><div class="nm">Family</div></a>
+  <a class="b bar t-meals" href="meal_planner.html"><div class="nm">Meals</div><span class="ic">🍽️</span></a>
+  <a class="b bar t-school" href="back_to_school.html"><div class="nm">School</div><span class="ic">🎒</span></a>
+  <a class="b bar t-lists" href="lists.html"><div class="nm">Lists</div><span class="ic">📝</span></a>
+</div>
+
+<div class="glbl">You</div>
+<div class="grid">
+  <a class="b t-study" href="study_tracker.html"><span class="ic">📚</span><div class="nm">Study</div></a>
+  <a class="b bar t-goals" href="goals.html"><div class="nm">Goals</div><span class="ic">✦</span></a>
+  <a class="b bar t-care" href="self_care.html"><div class="nm">Self Care</div><span class="ic">🌿</span></a>
+</div>
+
+<div class="foot">
+  <div class="mk">J Empire</div>
+  <div class="tg">#rubiaxolinda</div>
 </div>
 
 <script>
-// ── DATE ──
-const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const now = new Date();
-document.getElementById('dateText').textContent =
-  days[now.getDay()] + ' · ' + months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+const JE_URL='https://ejseathlglvvnmkpchib.supabase.co';
+const JE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqc2VhdGhsZ2x2dm5ta3BjaGliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODc4NTUsImV4cCI6MjA5NzU2Mzg1NX0.o4crd1W5-NbVNXSOWNT-WPHS7R6orRe9CRYFZfZ41L8';
+window.JE_TOKEN=null;
 
-// ── ROTATING QUOTES ──
-const quotes = [
-  { text: "She believed she could, so she did.", author: "Daily Reminder" },
-  { text: "An empire doesn't get built in a day — but it gets built.", author: "J Empire" },
-  { text: "You are not just surviving. You are building a legacy.", author: "Daily Reminder" },
-  { text: "The most powerful woman in the room built herself.", author: "J Empire" },
-  { text: "Relentless, intentional, unstoppable.", author: "Daily Reminder" },
-  { text: "Chaos is just opportunity in disguise. You've got this.", author: "J Empire" },
-  { text: "Every bill paid, every goal set — that's empire building.", author: "Daily Reminder" },
-  { text: "She rises daily. Not perfectly. But faithfully.", author: "J Empire" },
-  { text: "You are the CEO of your life. Act accordingly.", author: "Daily Reminder" },
-  { text: "A boss mother doesn't stop. She pivots.", author: "J Empire" },
-  { text: "One decision at a time. One day at a time. One empire.", author: "Daily Reminder" },
-  { text: "Your children are watching you build. Show them everything.", author: "J Empire" },
+/* ── What you're counting down to. Change freely. ── */
+const MILESTONE={label:'To Mediation', date:'2026-07-28'};
+
+/* ── One line per weekday. Sunday first. ── */
+const QUOTES=[
+  'Rest is part of the plan.',
+  'Start where you are.',
+  'Small moves, repeated.',
+  'You have done harder things.',
+  'Almost. Keep going.',
+  'Finish it. Then close the laptop.',
+  'This is yours.'
 ];
-const dayIndex = now.getDay();
-const q = quotes[dayIndex % quotes.length];
-document.getElementById('quoteText').textContent = '\u201c' + q.text + '\u201d';
-document.getElementById('quoteAuthor').textContent = '— ' + q.author;
 
-// ── SPARKLE ON TAP ──
-function spawnSparkle(x, y) {
-  const symbols = ['✦','✧','⋆','◇','✦','⭑'];
-  const colors = ['#C4714F','#D4A574','#B8896E','#E8C9A0','#C4714F'];
-  for (let i = 0; i < 6; i++) {
-    const el = document.createElement('div');
-    el.className = 'sparkle';
-    el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-    el.style.left = (x + (Math.random() - 0.5) * 60) + 'px';
-    el.style.top = (y + (Math.random() - 0.5) * 40) + 'px';
-    el.style.color = colors[Math.floor(Math.random() * colors.length)];
-    el.style.animationDelay = (Math.random() * 0.3) + 's';
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 1500);
-  }
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DAYS_S=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS_S=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+/* ── LOGIN ── */
+function jeSave(d){localStorage.setItem('je_session',JSON.stringify({access_token:d.access_token,refresh_token:d.refresh_token,expires_at:d.expires_at}));}
+async function jeLogin(){
+  const pw=document.getElementById('jePw').value;
+  const msg=document.getElementById('jeMsg');
+  msg.textContent='Signing in...';
+  try{
+    const r=await fetch(JE_URL+'/auth/v1/token?grant_type=password',{method:'POST',
+      headers:{'apikey':JE_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email:'jempire@jempire.app',password:pw})});
+    if(!r.ok) throw 0;
+    jeSave(await r.json()); location.reload();
+  }catch(e){msg.textContent='Wrong password — try again';}
+}
+function jeShowLogin(){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#4A2233,#5C2B3D);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;';
+  d.innerHTML='<div style="font-family:\'Cormorant Garamond\',serif;font-size:40px;color:#fff;margin-bottom:4px;">J <em style="color:#E8CDA8">Empire</em></div>'
+    +'<div style="font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#C9A98C;margin-bottom:26px;">Sign in to continue</div>'
+    +'<input id="jePw" type="password" placeholder="Password" style="width:100%;max-width:300px;padding:14px;border-radius:12px;border:1px solid rgba(232,205,168,.35);background:rgba(255,255,255,.96);font-size:16px;margin-bottom:11px;">'
+    +'<button onclick="jeLogin()" style="width:100%;max-width:300px;padding:14px;border-radius:12px;border:none;background:#A8536E;color:#fff;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">Sign In</button>'
+    +'<div id="jeMsg" style="font-size:11px;color:#E8CDA8;margin-top:13px;min-height:14px;"></div>';
+  document.body.appendChild(d);
+  document.getElementById('jePw').addEventListener('keydown',e=>{if(e.key==='Enter')jeLogin();});
+}
+async function jeRefresh(rt){
+  try{
+    const r=await fetch(JE_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',
+      headers:{'apikey':JE_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({refresh_token:rt})});
+    if(!r.ok) throw 0;
+    jeSave(await r.json()); location.reload();
+  }catch(e){jeShowLogin();}
 }
 
-document.querySelectorAll('.tile').forEach(tile => {
-  tile.addEventListener('click', function(e) {
-    spawnSparkle(e.clientX, e.clientY);
-  });
-});
+/* ── DATA ── */
+async function sb(path){
+  const r=await fetch(JE_URL+'/rest/v1/'+path,{
+    headers:{apikey:JE_KEY, Authorization:'Bearer '+(window.JE_TOKEN||JE_KEY)}});
+  if(!r.ok) throw new Error(r.status);
+  return r.json();
+}
+function briefLine(raw){
+  let t=raw.replace(/^[-*•]\s*/,'').trim();
+  if(!t) return '';
+  t=esc(t).replace(/\(([^)]+)\)\s*$/,'<span class="b-src">($1)</span>');
+  return '<div class="b-line"><div class="b-dot"></div><div class="b-txt">'+t+'</div></div>';
+}
+async function loadBriefing(today){
+  const body=document.getElementById('briefBody');
+  try{
+    const rows=await sb('briefings?date_key=eq.'+today+'&select=briefing');
+    if(!rows.length){
+      body.innerHTML='<div class="b-quiet">No briefing yet today — it lands at 6am.</div>';
+      return;
+    }
+    const lines=rows[0].briefing.split('\n').map(l=>l.trim())
+      .filter(l=>l && !l.startsWith('#') && !/^\*\*/.test(l));
+    body.innerHTML = lines.length ? lines.map(briefLine).join('')
+      : '<div class="b-quiet">Nothing to report.</div>';
+  }catch(e){
+    body.innerHTML='<div class="b-quiet">Couldn\'t reach the briefing.</div>';
+  }
+}
+async function loadStats(today){
+  try{
+    const [ev,td]=await Promise.all([
+      sb('planner_events?date_key=eq.'+today+'&select=done'),
+      sb('planner_todos?date_key=eq.'+today+'&select=done')
+    ]);
+    document.getElementById('stEvents').textContent=ev.filter(e=>!e.done).length;
+    document.getElementById('stTodos').textContent=td.filter(t=>!t.done).length;
+  }catch(e){}
+}
+function loadCountdown(){
+  const days=Math.ceil((new Date(MILESTONE.date+'T12:00:00')-new Date())/86400000);
+  document.getElementById('stDays').textContent = days>0 ? days : '—';
+  document.getElementById('stDaysLbl').textContent = days>0 ? MILESTONE.label : 'Passed';
+}
+
+/* ── BOOT ── */
+(function(){
+  const now=new Date();
+  const h=now.getHours();
+  let g;
+  if(h<5)       g='Still up.';
+  else if(h<12) g='Good morning.';
+  else if(h<17) g='Good afternoon.';
+  else if(h<21) g='Good evening.';
+  else          g='Long day. Almost done.';
+  document.getElementById('greeting').textContent=g;
+  document.getElementById('quote').textContent=QUOTES[now.getDay()];
+  document.getElementById('briefDate').textContent=DAYS_S[now.getDay()]+' · '+MONTHS_S[now.getMonth()]+' '+now.getDate();
+  loadCountdown();
+
+  let s=null;
+  try{s=JSON.parse(localStorage.getItem('je_session')||'null');}catch(e){}
+  const t=Math.floor(Date.now()/1000);
+  if(s && s.expires_at > t+60){
+    window.JE_TOKEN=s.access_token;
+    const today=ymd(now);
+    loadBriefing(today);
+    loadStats(today);
+  } else if(s && s.refresh_token){
+    jeRefresh(s.refresh_token);
+  } else {
+    jeShowLogin();
+  }
+})();
 </script>
 </body>
 </html>
