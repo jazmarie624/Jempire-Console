@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4A2233">
+<title>J Empire · Follow-Ups</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#EFE6DE;--card:#FDF9F5;
+  --wine:#4A2233;--wine-mid:#5C2B3D;--wine-light:#7B2D4A;
+  --rose:#A8536E;--blush:#F7E9EE;--champagne:#E8CDA8;
+  --gold:#8A6508;--gold-line:#D4A94E;
+  --ink:#24121C;--ink-mid:#54424A;--ink-soft:#826E76;
+  --line:#E0D1C4;
+  --green:#2E6B52;--rust:#A84A2F;
+}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--cream);color:var(--ink);
+  max-width:430px;margin:0 auto;min-height:100vh;padding-bottom:110px;-webkit-tap-highlight-color:transparent;
+  position:relative;overflow-x:hidden}
+
+/* page sparkles */
+.pgspk{position:fixed;font-family:'Cormorant Garamond',serif;color:var(--gold-line);
+  pointer-events:none;z-index:0;animation:twk ease-in-out infinite}
+@keyframes twk{0%,100%{opacity:.12;transform:translateY(0) scale(.8)}50%{opacity:.5;transform:translateY(-8px) scale(1.2)}}
+
+/* ═══ HEADER ═══ */
+.hdr{position:relative;overflow:hidden;padding:30px 20px 30px;text-align:center;
+  background:linear-gradient(160deg,#4A2233 0%,#5C2B3D 50%,#42202F 100%);
+  border-radius:0 0 30px 30px}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,transparent,var(--gold-line) 20%,#F2DFA8 50%,var(--gold-line) 80%,transparent);
+  box-shadow:0 1px 14px rgba(212,169,78,.55)}
+.shim{position:absolute;top:0;left:-70%;width:55%;height:100%;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,235,190,.17),transparent);
+  animation:sweep 5s ease-in-out infinite}
+@keyframes sweep{0%{left:-60%}100%{left:130%}}
+.spk{position:absolute;font-family:'Cormorant Garamond',serif;color:var(--gold-line);
+  pointer-events:none;animation:twk2 ease-in-out infinite}
+@keyframes twk2{0%,100%{opacity:.25;transform:translateY(0) scale(.8)}50%{opacity:.95;transform:translateY(-6px) scale(1.25)}}
+.brk{position:absolute;width:20px;height:20px;opacity:.5}
+.btl{top:12px;left:14px;border-top:1.5px solid var(--gold-line);border-left:1.5px solid var(--gold-line)}
+.btr{top:12px;right:14px;border-top:1.5px solid var(--gold-line);border-right:1.5px solid var(--gold-line)}
+.back{position:absolute;left:17px;top:28px;color:var(--champagne);text-decoration:none;font-size:22px;z-index:3}
+.eyebrow{position:relative;font-size:9px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--champagne);margin-bottom:5px}
+.ttl{position:relative;font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:400;color:#fff;line-height:1}
+.ttl em{font-style:italic;font-weight:600;color:var(--champagne)}
+.divi{position:relative;display:flex;align-items:center;gap:7px;width:130px;margin:10px auto 8px}
+.dl{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold-line),transparent)}
+.dg{width:6px;height:6px;background:var(--gold-line);transform:rotate(45deg);box-shadow:0 0 8px rgba(212,169,78,.75)}
+.sub{position:relative;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13.5px;color:#EFDFD4}
+
+/* ═══ TABS (pill bubbles) ═══ */
+.tabs{display:flex;gap:10px;padding:16px 18px 0;position:relative;z-index:2}
+.tab{flex:1;padding:12px 4px;border-radius:26px;border:1.5px solid var(--line);background:var(--card);
+  font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--ink-mid);
+  cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;gap:7px;
+  box-shadow:0 2px 8px rgba(60,32,44,.05)}
+.tab .tic{font-size:15px}
+.tab.on{background:linear-gradient(145deg,#7B2D4A,#B96285);color:#fff;border-color:transparent;
+  box-shadow:0 5px 16px rgba(123,45,74,.35)}
+.tab.on::after{content:'✦';position:absolute;top:4px;right:12px;font-size:9px;color:#FFE9AE}
+.tab .badge{position:absolute;top:-6px;right:-2px;min-width:21px;height:21px;border-radius:11px;
+  background:var(--rust);color:#fff;font-family:'Inter',sans-serif;font-size:10px;font-weight:700;
+  display:none;align-items:center;justify-content:center;padding:0 5px;
+  box-shadow:0 2px 8px rgba(168,74,47,.5);border:2.5px solid var(--cream)}
+.tab .badge.show{display:flex}
+
+/* ═══ BUBBLES ═══ */
+.list{padding:22px 18px 0;position:relative;z-index:1}
+
+.bub{position:relative;margin-bottom:26px}
+.bub .glyph{position:absolute;left:-4px;top:-12px;width:46px;height:46px;border-radius:50%;
+  display:grid;place-items:center;font-size:20px;z-index:2;
+  box-shadow:0 4px 12px rgba(60,32,44,.16);border:2.5px solid var(--cream)}
+.g-call{background:linear-gradient(145deg,#F4E4EC,#E4BFD2)}
+.g-mail{background:linear-gradient(145deg,#E6EDF6,#C5D3E8)}
+
+.body{border-radius:26px 26px 26px 8px;padding:20px 18px 16px 20px;position:relative;
+  box-shadow:0 5px 18px rgba(60,32,44,.09)}
+.body::after{content:'';position:absolute;left:0;bottom:-9px;width:20px;height:18px;
+  border-bottom-left-radius:18px}
+
+/* bubble colours by status */
+.wait .body{background:linear-gradient(145deg,#FDF9F5,#E7F1EA)}
+.wait .body::after{background:#E7F1EA}
+.due  .body{background:linear-gradient(145deg,#FDF9F5,#F7EDD8)}
+.due  .body::after{background:#F7EDD8}
+.over .body{background:linear-gradient(145deg,#FDF9F5,#F6E2DA)}
+.over .body::after{background:#F6E2DA}
+.done .body{background:linear-gradient(145deg,#FBF7F4,#EFE8E3);opacity:.66}
+.done .body::after{background:#EFE8E3}
+
+.b-top{display:flex;align-items:flex-start;gap:10px;padding-left:44px;min-height:34px}
+.who{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:600;line-height:1.05;flex:1}
+.when{font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--gold);
+  text-transform:uppercase;white-space:nowrap;padding-top:6px}
+.subj{font-size:12.5px;color:var(--ink-mid);font-weight:500;margin-top:4px;padding-left:44px}
+
+/* sticky note */
+.pad{margin:13px 0 0;border-radius:5px 5px 10px 10px;padding:12px 13px 11px 17px;position:relative;
+  background:
+    linear-gradient(rgba(255,255,255,0) 0px,rgba(255,255,255,0) 21px,rgba(168,83,110,.18) 22px),
+    #FFFDFB;
+  background-size:100% 22px;
+  box-shadow:0 2px 8px rgba(60,32,44,.08);transform:rotate(-.5deg)}
+.pad::before{content:'';position:absolute;left:8px;top:6px;bottom:6px;width:1px;background:rgba(168,83,110,.3)}
+.pad-txt{font-size:12px;color:#4E3B44;line-height:22px;font-style:italic}
+.pad-clip{position:absolute;top:-10px;left:14px;font-size:15px;transform:rotate(-14deg)}
+
+.b-foot{display:flex;align-items:center;gap:8px;margin-top:14px}
+.pill{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:7px 12px;border-radius:20px;color:#fff;display:inline-flex;align-items:center;gap:5px;
+  box-shadow:0 2px 8px rgba(0,0,0,.13)}
+.pill.wait{background:linear-gradient(145deg,#357A5E,#2E6B52)}
+.pill.due{background:linear-gradient(145deg,#A57C0C,#8A6508)}
+.pill.over{background:linear-gradient(145deg,#BC5636,#A84A2F)}
+.pill.done{background:linear-gradient(145deg,#AC9B93,#95837B)}
+.act{margin-left:auto;display:flex;gap:6px}
+.btn{border:1px solid rgba(84,66,74,.22);background:rgba(255,255,255,.65);border-radius:20px;
+  padding:7px 13px;font-family:'Inter',sans-serif;font-size:10px;font-weight:600;
+  color:var(--ink-mid);cursor:pointer}
+.btn.pri{background:linear-gradient(145deg,#7B2D4A,#B96285);border-color:transparent;color:#fff;
+  box-shadow:0 3px 10px rgba(123,45,74,.3)}
+
+.empty{text-align:center;padding:56px 20px;color:var(--ink-soft);position:relative}
+.empty .e-ic{font-size:40px;opacity:.5;margin-bottom:12px}
+.empty .e-t{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;color:var(--ink-mid)}
+.empty .e-s{font-size:12px;margin-top:6px}
+
+/* ═══ FAB ═══ */
+.fab{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(145deg,#7B2D4A,#B96285);color:#fff;border:none;border-radius:34px;
+  padding:17px 32px;font-family:'Inter',sans-serif;font-size:11.5px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;cursor:pointer;z-index:50;
+  box-shadow:0 8px 26px rgba(123,45,74,.45);display:flex;align-items:center;gap:9px;
+  border:1.5px solid rgba(232,205,168,.35)}
+.fab .fs{color:#FFE9AE;font-size:13px}
+
+/* ═══ SHEET ═══ */
+.scrim{position:fixed;inset:0;background:rgba(36,18,28,.55);z-index:99;display:none}
+.scrim.open{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:100;max-width:430px;margin:0 auto;
+  background:var(--cream);border-radius:30px 30px 0 0;padding:18px 18px 30px;
+  transform:translateY(100%);transition:transform .26s cubic-bezier(.32,.72,0,1);
+  max-height:92vh;overflow-y:auto;border-top:2px solid var(--gold-line)}
+.sheet.open{transform:translateY(0)}
+.grab{width:40px;height:4px;border-radius:3px;background:var(--line);margin:0 auto 14px}
+.s-ttl{font-family:'Cormorant Garamond',serif;font-size:27px;font-weight:600;text-align:center}
+.s-sub{font-size:9px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--gold);text-align:center;margin-top:3px;margin-bottom:8px}
+.s-divi{display:flex;align-items:center;gap:7px;width:110px;margin:0 auto 16px}
+
+.fl{font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-mid);margin:15px 0 7px;display:flex;align-items:center;gap:6px}
+.fi{width:100%;padding:14px 16px;border-radius:24px;border:1.5px solid var(--line);
+  background:var(--card);font-family:'Inter',sans-serif;font-size:15px;color:var(--ink)}
+.fi:focus{outline:none;border-color:var(--rose)}
+.fi::placeholder{color:#BCA79B}
+input[type=date].fi{border-radius:24px}
+
+.padwrap{position:relative}
+.padwrap textarea{width:100%;border-radius:6px 6px 14px 14px;border:none;padding:13px 14px 13px 18px;
+  font-family:'Inter',sans-serif;font-size:13px;color:#3E2C35;line-height:24px;resize:none;min-height:100px;
+  background:linear-gradient(rgba(255,255,255,0) 0px,rgba(255,255,255,0) 23px,rgba(168,83,110,.18) 24px),#FFFDFB;
+  background-size:100% 24px;box-shadow:0 3px 12px rgba(60,32,44,.10)}
+.padwrap textarea:focus{outline:none}
+.padwrap::before{content:'';position:absolute;left:9px;top:8px;bottom:8px;width:1px;background:rgba(168,83,110,.32)}
+.padwrap .clip{position:absolute;top:-11px;left:16px;font-size:17px;transform:rotate(-14deg);z-index:2}
+
+.seg{display:flex;gap:10px}
+.sg{flex:1;padding:14px 4px;border-radius:26px;border:1.5px solid var(--line);background:var(--card);
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--ink-mid);cursor:pointer;text-align:center}
+.sg.on{background:linear-gradient(145deg,#7B2D4A,#B96285);border-color:transparent;color:#fff;
+  box-shadow:0 4px 14px rgba(123,45,74,.32)}
+
+.chase{display:flex;gap:8px}
+.ch{flex:1;padding:13px 3px;border-radius:20px;border:1.5px solid var(--line);background:var(--card);
+  cursor:pointer;text-align:center}
+.ch .n{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:700;color:var(--ink);line-height:1}
+.ch .u{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-top:3px}
+.ch.on{background:linear-gradient(145deg,#7B2D4A,#B96285);border-color:transparent;
+  box-shadow:0 4px 14px rgba(123,45,74,.32)}
+.ch.on .n,.ch.on .u{color:#fff}
+
+.save{width:100%;margin-top:24px;padding:17px;border-radius:30px;border:1.5px solid rgba(232,205,168,.35);
+  background:linear-gradient(145deg,#7B2D4A,#B96285);color:#fff;
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;cursor:pointer;box-shadow:0 6px 20px rgba(123,45,74,.38)}
+.cancel{width:100%;margin-top:10px;padding:15px;border-radius:30px;border:1px solid var(--line);
+  background:transparent;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);cursor:pointer}
+
+.toast{position:fixed;bottom:104px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#4A2233;color:#F3E6DC;padding:13px 24px;border-radius:26px;font-size:13px;
+  opacity:0;transition:.25s;z-index:200;pointer-events:none;box-shadow:0 6px 22px rgba(0,0,0,.3);
+  border:1px solid rgba(232,205,168,.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<span class="pgspk" style="left:6%;top:38%;font-size:13px;animation-duration:4s">✦</span>
+<span class="pgspk" style="right:5%;top:56%;font-size:10px;animation-duration:3.2s;animation-delay:1s">⋆</span>
+<span class="pgspk" style="left:8%;top:74%;font-size:11px;animation-duration:3.7s;animation-delay:2s">✦</span>
+
+<div class="hdr">
+  <div class="shim"></div>
+  <div class="brk btl"></div><div class="brk btr"></div>
+  <span class="spk" style="left:12%;top:30%;font-size:11px;animation-duration:3s">✦</span>
+  <span class="spk" style="left:86%;top:36%;font-size:9px;animation-duration:2.6s;animation-delay:.8s">⋆</span>
+  <span class="spk" style="left:76%;top:74%;font-size:10px;animation-duration:2.9s;animation-delay:.4s">✦</span>
+  <a class="back" href="index.html">‹</a>
+  <div class="eyebrow">J Empire</div>
+  <div class="ttl">Follow <em>Ups</em></div>
+  <div class="divi"><div class="dl"></div><div class="dg"></div><div class="dl"></div></div>
+  <div class="sub">Who owes you an answer ✦</div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-kind="call"><span class="tic">📞</span> Calls <span class="badge" id="badgeCall"></span></button>
+  <button class="tab" data-kind="email"><span class="tic">📧</span> Emails <span class="badge" id="badgeEmail"></span></button>
+</div>
+
+<div class="list" id="list"></div>
+
+<button class="fab" id="fab"><span class="fs">✦</span> Log a Contact</button>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet">
+  <div class="grab"></div>
+  <div class="s-ttl" id="sheetTitle">Log a Call</div>
+  <div class="s-sub">New Contact</div>
+  <div class="s-divi"><div class="dl"></div><div class="dg"></div><div class="dl"></div></div>
+
+  <div class="fl">Type</div>
+  <div class="seg">
+    <div class="sg on" id="segCall">📞 Call</div>
+    <div class="sg" id="segEmail">📧 Email</div>
+  </div>
+
+  <div class="fl">👤 Who</div>
+  <input class="fi" id="fWho" placeholder="Osceola Clerk of Court">
+
+  <div class="fl">✦ About</div>
+  <input class="fi" id="fSubject" placeholder="Amended Statement of Claim">
+
+  <div class="fl">📝 Notes</div>
+  <div class="padwrap">
+    <span class="clip">📎</span>
+    <textarea id="fNote" placeholder="Left a voicemail with the front desk..."></textarea>
+  </div>
+
+  <div class="fl">📅 When</div>
+  <input class="fi" id="fDate" type="date">
+
+  <div class="fl">⏳ Chase if no response in</div>
+  <div class="chase">
+    <div class="ch" data-d="1"><div class="n">1</div><div class="u">Day</div></div>
+    <div class="ch on" data-d="3"><div class="n">3</div><div class="u">Days</div></div>
+    <div class="ch" data-d="7"><div class="n">7</div><div class="u">Days</div></div>
+    <div class="ch" data-d="14"><div class="n">14</div><div class="u">Days</div></div>
+  </div>
+
+  <button class="save" id="save">✦ Save</button>
+  <button class="cancel" id="cancel">Cancel</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const JE_URL='https://ejseathlglvvnmkpchib.supabase.co';
+const JE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqc2VhdGhsZ2x2dm5ta3BjaGliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODc4NTUsImV4cCI6MjA5NzU2Mzg1NX0.o4crd1W5-NbVNXSOWNT-WPHS7R6orRe9CRYFZfZ41L8';
+window.JE_TOKEN=null;
+
+let ROWS=[], KIND='call', CHASE=3;
+const MONTHS_S=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function pretty(s){const d=new Date(s+'T12:00:00');return MONTHS_S[d.getMonth()]+' '+d.getDate();}
+function daysSince(s){return Math.floor((new Date(ymd(new Date())+'T12:00:00')-new Date(s+'T12:00:00'))/86400000);}
+function esc(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1900);}
+
+function jeSave(d){localStorage.setItem('je_session',JSON.stringify({access_token:d.access_token,refresh_token:d.refresh_token,expires_at:d.expires_at}));}
+async function jeLogin(){
+  const pw=document.getElementById('jePw').value, msg=document.getElementById('jeMsg');
+  msg.textContent='Signing in...';
+  try{
+    const r=await fetch(JE_URL+'/auth/v1/token?grant_type=password',{method:'POST',
+      headers:{'apikey':JE_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email:'jempire@jempire.app',password:pw})});
+    if(!r.ok) throw 0;
+    jeSave(await r.json()); location.reload();
+  }catch(e){msg.textContent='Wrong password — try again';}
+}
+function jeShowLogin(){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#4A2233,#5C2B3D);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;';
+  d.innerHTML='<div style="font-family:\'Cormorant Garamond\',serif;font-size:38px;color:#fff;margin-bottom:4px;">J <em style="color:#E8CDA8">Empire</em></div>'
+    +'<div style="font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#C9A98C;margin-bottom:26px;">Sign in to continue</div>'
+    +'<input id="jePw" type="password" placeholder="Password" style="width:100%;max-width:300px;padding:14px;border-radius:24px;border:1px solid rgba(232,205,168,.35);background:rgba(255,255,255,.96);font-size:16px;margin-bottom:11px;">'
+    +'<button onclick="jeLogin()" style="width:100%;max-width:300px;padding:14px;border-radius:24px;border:none;background:#A8536E;color:#fff;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">Sign In</button>'
+    +'<div id="jeMsg" style="font-size:11px;color:#E8CDA8;margin-top:13px;min-height:14px;"></div>';
+  document.body.appendChild(d);
+  document.getElementById('jePw').addEventListener('keydown',e=>{if(e.key==='Enter')jeLogin();});
+}
+async function jeRefresh(rt){
+  try{
+    const r=await fetch(JE_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',
+      headers:{'apikey':JE_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({refresh_token:rt})});
+    if(!r.ok) throw 0;
+    jeSave(await r.json()); location.reload();
+  }catch(e){jeShowLogin();}
+}
+
+async function sb(path,opts){
+  const o=opts||{};
+  o.headers=Object.assign({apikey:JE_KEY,Authorization:'Bearer '+(window.JE_TOKEN||JE_KEY),
+    'Content-Type':'application/json'},o.headers||{});
+  const r=await fetch(JE_URL+'/rest/v1/'+path,o);
+  if(!r.ok) throw new Error(r.status+' '+await r.text());
+  const txt=await r.text();
+  return txt?JSON.parse(txt):null;
+}
+function status(row){
+  if(row.answered) return {k:'done',label:'✓ Answered '+(row.answered_on?pretty(row.answered_on):'')};
+  const d=daysSince(row.logged_on);
+  if(d < row.chase_days) return {k:'wait',label:'⏳ Day '+d+' of '+row.chase_days};
+  if(d === row.chase_days) return {k:'due',label:'✦ Follow up today'};
+  return {k:'over',label:'Overdue · Day '+d};
+}
+function render(){
+  const list=document.getElementById('list');
+  const rows=ROWS.filter(r=>r.kind===KIND);
+
+  ['call','email'].forEach(k=>{
+    const n=ROWS.filter(r=>r.kind===k && !r.answered && daysSince(r.logged_on)>=r.chase_days).length;
+    const b=document.getElementById(k==='call'?'badgeCall':'badgeEmail');
+    b.textContent=n; b.classList.toggle('show', n>0);
+  });
+
+  if(!rows.length){
+    list.innerHTML='<div class="empty"><div class="e-ic">'+(KIND==='call'?'📞':'📧')+'</div>'
+      +'<div class="e-t">Nothing logged yet.</div>'
+      +'<div class="e-s">Tap below after your next '+(KIND==='call'?'call':'email')+' ✦</div></div>';
+    return;
+  }
+  rows.sort((a,b)=>{
+    if(a.answered!==b.answered) return a.answered?1:-1;
+    return b.logged_on.localeCompare(a.logged_on);
+  });
+  list.innerHTML=rows.map(r=>{
+    const s=status(r);
+    const g=r.kind==='call'
+      ? '<div class="glyph g-call">📞</div>'
+      : '<div class="glyph g-mail">📧</div>';
+    return '<div class="bub '+s.k+'">'+g
+      +'<div class="body">'
+      +'<div class="b-top"><div class="who">'+esc(r.who)+'</div>'
+      +'<div class="when">'+pretty(r.logged_on)+'</div></div>'
+      +(r.subject?'<div class="subj">'+esc(r.subject)+'</div>':'')
+      +(r.note?'<div class="pad"><span class="pad-clip">📎</span><div class="pad-txt">'+esc(r.note)+'</div></div>':'')
+      +'<div class="b-foot"><span class="pill '+s.k+'">'+s.label+'</span>'
+      +'<div class="act">'
+      +(r.answered
+        ? '<button class="btn" onclick="reopen('+r.id+')">Reopen</button>'
+        : '<button class="btn pri" onclick="markAnswered('+r.id+')">Answered</button>')
+      +'<button class="btn" onclick="del('+r.id+')">Delete</button>'
+      +'</div></div></div></div>';
+  }).join('');
+}
+async function load(){
+  try{ ROWS=await sb('follow_ups?select=*'); render(); }
+  catch(e){ document.getElementById('list').innerHTML='<div class="empty"><div class="e-t">Couldn\'t load.</div><div class="e-s">'+esc(e.message)+'</div></div>'; }
+}
+async function markAnswered(id){
+  try{
+    await sb('follow_ups?id=eq.'+id,{method:'PATCH',body:JSON.stringify({answered:true,answered_on:ymd(new Date())})});
+    const r=ROWS.find(x=>x.id===id); r.answered=true; r.answered_on=ymd(new Date());
+    render(); toast('Marked answered ✦');
+  }catch(e){toast('Failed to save');}
+}
+async function reopen(id){
+  try{
+    await sb('follow_ups?id=eq.'+id,{method:'PATCH',body:JSON.stringify({answered:false,answered_on:null})});
+    const r=ROWS.find(x=>x.id===id); r.answered=false; r.answered_on=null;
+    render(); toast('Reopened');
+  }catch(e){toast('Failed to save');}
+}
+async function del(id){
+  if(!confirm('Delete this entry?')) return;
+  try{ await sb('follow_ups?id=eq.'+id,{method:'DELETE'}); ROWS=ROWS.filter(x=>x.id!==id); render(); toast('Deleted'); }
+  catch(e){toast('Failed to delete');}
+}
+
+const scrim=document.getElementById('scrim'), sheet=document.getElementById('sheet');
+function openSheet(){
+  document.getElementById('fDate').value=ymd(new Date());
+  setSegment(KIND);
+  scrim.classList.add('open');
+  requestAnimationFrame(()=>sheet.classList.add('open'));
+}
+function closeSheet(){ sheet.classList.remove('open'); setTimeout(()=>scrim.classList.remove('open'),240); }
+function setSegment(k){
+  document.getElementById('segCall').classList.toggle('on',k==='call');
+  document.getElementById('segEmail').classList.toggle('on',k==='email');
+  document.getElementById('sheetTitle').textContent = k==='call'?'Log a Call':'Log an Email';
+  sheet.dataset.kind=k;
+}
+document.getElementById('segCall').onclick=()=>setSegment('call');
+document.getElementById('segEmail').onclick=()=>setSegment('email');
+document.querySelectorAll('.ch').forEach(el=>{
+  el.onclick=()=>{document.querySelectorAll('.ch').forEach(x=>x.classList.remove('on'));el.classList.add('on');CHASE=parseInt(el.dataset.d,10);};
+});
+document.getElementById('fab').onclick=openSheet;
+document.getElementById('cancel').onclick=closeSheet;
+scrim.onclick=closeSheet;
+
+document.getElementById('save').onclick=async()=>{
+  const who=document.getElementById('fWho').value.trim();
+  if(!who){toast('Who did you contact?');return;}
+  const row={
+    kind: sheet.dataset.kind || 'call',
+    who,
+    subject: document.getElementById('fSubject').value.trim() || null,
+    note: document.getElementById('fNote').value.trim() || null,
+    logged_on: document.getElementById('fDate').value || ymd(new Date()),
+    chase_days: CHASE
+  };
+  try{
+    const saved=await sb('follow_ups',{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(row)});
+    ROWS.push(saved[0]);
+    KIND=row.kind;
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.kind===KIND));
+    ['fWho','fSubject','fNote'].forEach(id=>document.getElementById(id).value='');
+    closeSheet(); render(); toast('Logged ✦');
+  }catch(e){toast('Failed to save');}
+};
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick=()=>{KIND=t.dataset.kind;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');render();};
+});
+
+(function(){
+  let s=null;
+  try{s=JSON.parse(localStorage.getItem('je_session')||'null');}catch(e){}
+  const t=Math.floor(Date.now()/1000);
+  if(s && s.expires_at > t+60){ window.JE_TOKEN=s.access_token; load(); }
+  else if(s && s.refresh_token){ jeRefresh(s.refresh_token); }
+  else { jeShowLogin(); }
+})();
+</script>
+</body>
+</html>
