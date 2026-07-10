@@ -476,3 +476,162 @@ document.querySelectorAll('.tab').forEach(t=>{
 </script>
 </body>
 </html>
+<!-- ══════════════════════════════════════════
+     J EMPIRE · FOLLOW-UPS · EDIT
+     Paste at the bottom of follow_ups.html,
+     just above </body>
+     ══════════════════════════════════════════ -->
+
+<style>
+#sheet .del-row{margin-top:14px;text-align:center}
+#sheet .del-row button{background:none;border:none;color:#A84A2F;
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:8px}
+</style>
+
+<script>
+let EDIT_ID = null;
+
+/* ── Rebuild each bubble with an Edit button ── */
+render = function(){
+  const list = document.getElementById('list');
+  const rows = ROWS.filter(r => r.kind === KIND);
+
+  ['call','email'].forEach(k=>{
+    const n = ROWS.filter(r => r.kind===k && !r.answered && daysSince(r.logged_on) >= r.chase_days).length;
+    const b = document.getElementById(k==='call' ? 'badgeCall' : 'badgeEmail');
+    b.textContent = n;
+    b.classList.toggle('show', n>0);
+  });
+
+  if(!rows.length){
+    list.innerHTML = '<div class="empty"><div class="e-ic">'+(KIND==='call'?'📞':'📧')+'</div>'
+      + '<div class="e-t">Nothing logged yet.</div>'
+      + '<div class="e-s">Tap below after your next '+(KIND==='call'?'call':'email')+' ✦</div></div>';
+    return;
+  }
+
+  rows.sort((a,b)=>{
+    if(a.answered !== b.answered) return a.answered ? 1 : -1;
+    return b.logged_on.localeCompare(a.logged_on);
+  });
+
+  list.innerHTML = rows.map(r=>{
+    const s = status(r);
+    const g = r.kind==='call'
+      ? '<div class="glyph g-call">📞</div>'
+      : '<div class="glyph g-mail">📧</div>';
+    return '<div class="bub '+s.k+'">' + g
+      + '<div class="body">'
+      + '<div class="b-top"><div class="who">'+esc(r.who)+'</div>'
+      + '<div class="when">'+pretty(r.logged_on)+'</div></div>'
+      + (r.subject ? '<div class="subj">'+esc(r.subject)+'</div>' : '')
+      + (r.note ? '<div class="pad"><span class="pad-clip">📎</span><div class="pad-txt">'+esc(r.note)+'</div></div>' : '')
+      + '<div class="b-foot"><span class="pill '+s.k+'">'+s.label+'</span>'
+      + '<div class="act">'
+      + '<button class="btn" onclick="openEdit('+r.id+')">✏️</button>'
+      + (r.answered
+          ? '<button class="btn" onclick="reopen('+r.id+')">Reopen</button>'
+          : '<button class="btn pri" onclick="markAnswered('+r.id+')">Answered</button>')
+      + '</div></div></div></div>';
+  }).join('');
+};
+
+/* ── Open the sheet pre-filled ── */
+window.openEdit = function(id){
+  const r = ROWS.find(x => x.id === id);
+  if(!r) return;
+
+  EDIT_ID = id;
+  CHASE = r.chase_days;
+
+  document.getElementById('fWho').value     = r.who || '';
+  document.getElementById('fSubject').value = r.subject || '';
+  document.getElementById('fNote').value    = r.note || '';
+  document.getElementById('fDate').value    = r.logged_on;
+
+  setSegment(r.kind);
+  document.getElementById('sheetTitle').textContent = 'Edit Entry';
+  document.querySelector('.s-sub').textContent = 'Fix a typo';
+  document.getElementById('save').textContent = '✦ Save Changes';
+
+  document.querySelectorAll('.ch').forEach(el=>{
+    el.classList.toggle('on', parseInt(el.dataset.d,10) === r.chase_days);
+  });
+
+  if(!document.getElementById('delRow')){
+    const d = document.createElement('div');
+    d.className = 'del-row';
+    d.id = 'delRow';
+    d.innerHTML = '<button onclick="delFromSheet()">Delete this entry</button>';
+    document.getElementById('cancel').after(d);
+  }
+  document.getElementById('delRow').style.display = 'block';
+
+  document.getElementById('scrim').classList.add('open');
+  requestAnimationFrame(()=>document.getElementById('sheet').classList.add('open'));
+};
+
+window.delFromSheet = function(){
+  if(EDIT_ID == null) return;
+  const id = EDIT_ID;
+  closeSheet();
+  setTimeout(()=>del(id), 260);
+};
+
+/* ── Fresh entry resets edit mode ── */
+document.getElementById('fab').onclick = function(){
+  EDIT_ID = null;
+  ['fWho','fSubject','fNote'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fDate').value = ymd(new Date());
+  CHASE = 3;
+  document.querySelectorAll('.ch').forEach(el=>{
+    el.classList.toggle('on', parseInt(el.dataset.d,10) === 3);
+  });
+  setSegment(KIND);
+  document.querySelector('.s-sub').textContent = 'New Contact';
+  document.getElementById('save').textContent = '✦ Save';
+  const dr = document.getElementById('delRow');
+  if(dr) dr.style.display = 'none';
+  document.getElementById('scrim').classList.add('open');
+  requestAnimationFrame(()=>document.getElementById('sheet').classList.add('open'));
+};
+
+/* ── Save: update when editing, insert when new ── */
+document.getElementById('save').onclick = async function(){
+  const who = document.getElementById('fWho').value.trim();
+  if(!who){ toast('Who did you contact?'); return; }
+
+  const row = {
+    kind: document.getElementById('sheet').dataset.kind || 'call',
+    who,
+    subject: document.getElementById('fSubject').value.trim() || null,
+    note: document.getElementById('fNote').value.trim() || null,
+    logged_on: document.getElementById('fDate').value || ymd(new Date()),
+    chase_days: CHASE
+  };
+
+  try{
+    if(EDIT_ID != null){
+      await sb('follow_ups?id=eq.'+EDIT_ID, {method:'PATCH', body:JSON.stringify(row)});
+      Object.assign(ROWS.find(x=>x.id===EDIT_ID), row);
+      KIND = row.kind;
+      document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.kind===KIND));
+      EDIT_ID = null;
+      closeSheet(); render(); toast('Updated ✦');
+    } else {
+      const saved = await sb('follow_ups', {method:'POST',
+        headers:{Prefer:'return=representation'}, body:JSON.stringify(row)});
+      ROWS.push(saved[0]);
+      KIND = row.kind;
+      document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.kind===KIND));
+      closeSheet(); render(); toast('Logged ✦');
+    }
+    ['fWho','fSubject','fNote'].forEach(id=>document.getElementById(id).value='');
+  }catch(e){ toast('Failed to save'); }
+};
+
+/* Repaint with the new buttons */
+if(typeof ROWS !== 'undefined' && ROWS.length) render();
+</script>
+
