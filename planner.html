@@ -3411,4 +3411,110 @@ window.renderBanner = function(){
 
 
 </body>
+<!-- ══ J EMPIRE · EMOJI + LABEL FIXES ══ -->
+<script>
+(function(){
+  // Personal = 🌸 (drop the yoga icon)
+  if(window.CAT_CONFIG && CAT_CONFIG.personal) CAT_CONFIG.personal.emoji='🌸';
+
+  // Smart emoji: 🚌 school days · ⭐ kid activities · 🧘 Pilates only · 🌸 Personal
+  window.jeEmoji=function(ev){
+    if(!ev) return '📌';
+    const t=(ev.title||'').toLowerCase(), c=ev.category||'';
+    if(t.includes('pilates')) return '🧘';
+    if(['closure','no_vpk','conference'].includes(c)) return '🚌';
+    if(ev.school && /(no school|closed|no vpk|holiday|break|conference|teacher (work|plan)|professional develop|dismiss|early release|resume|first day|last day|workday)/.test(t)) return '🚌';
+    if(c==='event') return '⭐';
+    if(ev.school) return '⭐';
+    if(c==='kids') return '⭐';
+    const cfg=CAT_CONFIG[c];
+    return (cfg&&cfg.emoji)||CAT_CONFIG.personal.emoji;
+  };
+  window.jeCls=function(ev){
+    if(!ev) return 'personal';
+    if(ev.school) return 'kids';
+    const cfg=CAT_CONFIG[ev.category];
+    return (cfg&&cfg.cls)||'personal';
+  };
+
+  // Fix the "🧘 Personal" button text in the add-event form
+  const _bes=window.buildEventSheet;
+  window.buildEventSheet=function(){
+    _bes();
+    setTimeout(()=>{const pb=document.querySelector('.cat-btn.cat-personal');if(pb)pb.textContent='🌸 Personal';},170);
+  };
+
+  // All-day chips: new emojis + show which child/school so twins don't look identical
+  window.renderSplitPanel=function(){
+    const key=dk(currentDate);
+    const allDay=events.filter(e=>e.all_day);
+    const strip=document.getElementById('allDayStrip'), box=document.getElementById('allDayEvents');
+    if(isPayday(key)&&!allDay.find(e=>e.title&&e.title.includes('Payday')))
+      allDay.unshift({id:'auto-pay-'+key,title:'💰 Payday',category:'finance',all_day:true,done:false,auto:true});
+    if(allDay.length){
+      strip.style.display='block';
+      box.innerHTML=allDay.map(e=>{
+        const emoji=e.auto?'💰':jeEmoji(e), cls=e.auto?'finance':jeCls(e);
+        let who='';
+        if(e.school) who=(e.child&&e.child!=='all')?e.child:((window.SCHOOLS&&SCHOOLS[e.school]&&SCHOOLS[e.school].name.split(' ')[0])||'');
+        return `<div class="allday-chip ${cls} ${e.done?'allday-done':''}" onclick="openAllDayMenu('${e.id}','${e.auto?'auto':''}')">${emoji} ${e.title}${who?`<span style="opacity:.55;font-weight:600;margin-left:5px;">· ${who}</span>`:''}${!e.auto?`<span style="font-size:9px;opacity:0.6;margin-left:4px;">✏️</span>`:''}</div>`;
+      }).join('');
+    } else strip.style.display='none';
+    const morn=events.filter(e=>!e.all_day&&(e.hour||0)>=6&&(e.hour||0)<12);
+    const aft=events.filter(e=>!e.all_day&&(e.hour||0)>=12&&(e.hour||0)<18);
+    const eve=events.filter(e=>!e.all_day&&(e.hour||0)>=18);
+    buildTimeCol(MORNING_HOURS,'tcMorning','morn');buildEventsCol(MORNING_HOURS,morn,'ecMorning','morn','✦ Add a morning event');
+    buildTimeCol(AFTERNOON_HOURS,'tcAfternoon','aft');buildEventsCol(AFTERNOON_HOURS,aft,'ecAfternoon','aft','✦ Add an afternoon event');
+    buildTimeCol(EVENING_HOURS,'tcEvening','eve');buildEventsCol(EVENING_HOURS,eve,'ecEvening','eve','✦ Add an evening event');
+  };
+
+  // Month cells: same smart emojis
+  window.renderMonth=async function(){
+    const year=currentDate.getFullYear(),month=currentDate.getMonth();
+    document.getElementById('monthTitleBig').textContent=MONTHS[month]+' '+year;
+    const grid=document.getElementById('monthGrid');grid.innerHTML='';
+    const firstDay=new Date(year,month,1).getDay(), daysInMonth=new Date(year,month+1,0).getDate();
+    const todKey=todayKey(), selKey=dk(currentDate);
+    const ms=`${year}-${String(month+1).padStart(2,'0')}-01`, me=`${year}-${String(month+1).padStart(2,'0')}-${String(daysInMonth).padStart(2,'0')}`;
+    const monthEvts=await sbFetch('planner_events','GET',null,`?date_key=gte.${ms}&date_key=lte.${me}&order=date_key.asc`);
+    const byDay={}; (monthEvts||[]).forEach(ev=>{(byDay[ev.date_key]=byDay[ev.date_key]||[]).push(ev);});
+    for(let i=0;i<firstDay;i++){const c=document.createElement('div');c.className='mc empty-mc';grid.appendChild(c);}
+    for(let d=1;d<=daysInMonth;d++){
+      const key=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const isPay=isPayday(key), isPinned=pinnedDays.includes(key), dayEvts=byDay[key]||[], stickers=dayStickers[key]||[];
+      const div=document.createElement('div');
+      div.className='mc'+(key===todKey?' today-mc':'')+(key===selKey?' active-mc':'')+(isPay?' payday-mc':'')+(isPinned?' pinned-mc':'');
+      const lbls=[]; if(isPay) lbls.push({text:'💰 Pay',cls:'lbl-payday'});
+      dayEvts.slice(0,2).forEach(ev=>lbls.push({text:jeEmoji(ev)+' '+(ev.title||'').slice(0,8),cls:'lbl-'+jeCls(ev)}));
+      const stk=stickers.slice(0,2).map(s=>`<div class="mc-sticker ${s.cls}">${s.label}</div>`).join('');
+      div.innerHTML=`<button class="pin-btn ${isPinned?'pinned':''}" onclick="togglePin('${key}',event)">${isPinned?'📌':'·'}</button><div class="mc-num">${d}</div><div class="mc-labels">${lbls.map(l=>`<div class="mc-lbl ${l.cls}">${l.text}</div>`).join('')}${stk}</div>`;
+      div.onclick=(e)=>{if(e.target.classList.contains('pin-btn'))return;if(selectedStickerMonth){stampStickerOnDate(key);return;}currentDate=new Date(year,month,d);switchView('week');};
+      grid.appendChild(div);
+    }
+    const total=firstDay+daysInMonth, rem=total%7===0?0:7-(total%7);
+    for(let i=0;i<rem;i++){const c=document.createElement('div');c.className='mc other-mc empty-mc';grid.appendChild(c);}
+  };
+
+  // Banner: smart emoji (closures no longer show here after Step 1)
+  window.renderBanner=function(){
+    const key=dk(currentDate), isPay=isPayday(key);
+    document.getElementById('bs-events').textContent=events.filter(e=>!e.done).length;
+    document.getElementById('bs-todos').textContent=todos.filter(t=>!t.done).length;
+    document.getElementById('bs-done').textContent=[...events,...todos].filter(x=>x.done).length;
+    document.getElementById('bs-payday').style.display=isPay?'block':'none';
+    const up=events.filter(e=>!e.done&&!e.all_day).sort((a,b)=>(a.hour||0)-(b.hour||0));
+    const nn=document.getElementById('bannerNext');
+    if(up.length){
+      const x=up[0], h=x.hour||0, h12=h%12||12, ampm=h<12?'AM':'PM', isToday=dk(currentDate)===todayKey();
+      const dl=DAYS[currentDate.getDay()]+', '+MONTHS[currentDate.getMonth()]+' '+currentDate.getDate();
+      nn.className='banner-next';
+      nn.innerHTML='<div class="bnext-icon">'+jeEmoji(x)+'</div><div><div class="bnext-title">Next: '+x.title+'</div><div class="bnext-sub">'+(isToday?'Today':'📅 '+dl)+' · '+(x.all_day?'All Day':h12+':00 '+ampm)+' · '+(x.status||'Confirmed')+(x.reminder?' · 🔔':'')+'</div></div>';
+      nn.onclick=()=>openEditEvent(x.id);
+    } else { nn.className='banner-empty'; nn.innerHTML='✦ Nothing scheduled — add an event'; nn.onclick=()=>openSheet('event'); }
+  };
+
+  try{ updateAll(); }catch(e){}
+})();
+</script>
+  
 </html>
