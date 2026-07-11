@@ -3717,5 +3717,85 @@ window.addEventListener('load',function(){
   window.openSheet=function(){ scrub(); return _open.apply(this,arguments); };
 })();
 </script>
+<!-- ══ J EMPIRE · ROOT-CAUSE FIX (templates + month tripling) ══ -->
+<script>
+(function(){
+  try{
+    CAT_CONFIG.personal.emoji='🌸';
+    CAT_CONFIG.school={label:'School',emoji:'🚌',cls:'school',lbl:'lbl-school'};
+    if(typeof SCHOOLS!=='undefined') SCHOOLS.osc={name:'Osceola School District',kids:['Jaylani','Juliusz','Jaliyah','Jazelli'],color:'var(--lane-school)'};
+  }catch(e){}
+
+  // 1) Reliable template cleanup — uses the real list, not window.TEMPLATES
+  function scrubTemplates(){
+    try{
+      const KILL=['doctor','dentist','eye','pharmacy','therapy','therapy-jeovane'];
+      for(let i=TEMPLATES.length-1;i>=0;i--){ if(KILL.includes(TEMPLATES[i].id)) TEMPLATES.splice(i,1); }
+      const a=TEMPLATES.find(t=>t.id==='appt'); if(a) a.title='';
+      const s=TEMPLATES.find(t=>t.id==='school'); if(s){ s.emoji='🚌'; s.cat='school'; }
+      const k=TEMPLATES.find(t=>t.id==='kids'); if(k) k.emoji='⭐';
+    }catch(e){}
+  }
+  scrubTemplates();
+  if(typeof window.openSheet==='function'){
+    const _open=window.openSheet;
+    window.openSheet=function(){ scrubTemplates(); return _open.apply(this,arguments); };
+  }
+
+  // 2) Month view: concurrency-safe redraw (kills the tripling)
+  let _mTok=0;
+  window.renderMonth=async function(){
+    const tok=++_mTok;
+    const year=currentDate.getFullYear(), month=currentDate.getMonth();
+    const titleEl=document.getElementById('monthTitleBig'); if(titleEl) titleEl.textContent=MONTHS[month]+' '+year;
+    const grid=document.getElementById('monthGrid'); if(!grid) return;
+    const firstDay=new Date(year,month,1).getDay(), daysInMonth=new Date(year,month+1,0).getDate();
+    const todKey=todayKey(), selKey=dk(currentDate);
+    const ms=year+'-'+String(month+1).padStart(2,'0')+'-01';
+    const me=year+'-'+String(month+1).padStart(2,'0')+'-'+String(daysInMonth).padStart(2,'0');
+    const monthEvts=await sbFetch('planner_events','GET',null,'?date_key=gte.'+ms+'&date_key=lte.'+me+'&order=date_key.asc');
+    if(tok!==_mTok) return;
+    const byDay={}; (monthEvts||[]).forEach(ev=>{(byDay[ev.date_key]=byDay[ev.date_key]||[]).push(ev);});
+    grid.innerHTML='';
+    for(let i=0;i<firstDay;i++){const c=document.createElement('div');c.className='mc empty-mc';grid.appendChild(c);}
+    for(let d=1;d<=daysInMonth;d++){
+      const key=year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      const isPay=isPayday(key), isPinned=pinnedDays.includes(key), dayEvts=byDay[key]||[], stickers=dayStickers[key]||[];
+      const div=document.createElement('div');
+      div.className='mc'+(key===todKey?' today-mc':'')+(key===selKey?' active-mc':'')+(isPay?' payday-mc':'')+(isPinned?' pinned-mc':'');
+      const lbls=[]; if(isPay) lbls.push({text:'💰 Pay',cls:'lbl-payday'});
+      dayEvts.slice(0,2).forEach(ev=>lbls.push({text:(window.jeEmoji?jeEmoji(ev):'')+' '+(ev.title||'').slice(0,8),cls:'lbl-'+(window.jeCls?jeCls(ev):(ev.category||'personal'))}));
+      const stk=stickers.slice(0,2).map(s=>`<div class="mc-sticker ${s.cls}">${s.label}</div>`).join('');
+      div.innerHTML=`<button class="pin-btn ${isPinned?'pinned':''}" onclick="togglePin('${key}',event)">${isPinned?'📌':'·'}</button><div class="mc-num">${d}</div><div class="mc-labels">${lbls.map(l=>`<div class="mc-lbl ${l.cls}">${l.text}</div>`).join('')}${stk}</div>`;
+      div.onclick=(e)=>{ if(e.target.classList.contains('pin-btn'))return; if(selectedStickerMonth){stampStickerOnDate(key);return;} currentDate=new Date(year,month,d); switchView('week'); };
+      grid.appendChild(div);
+    }
+    const total=firstDay+daysInMonth, rem=total%7===0?0:7-(total%7);
+    for(let i=0;i<rem;i++){const c=document.createElement('div');c.className='mc other-mc empty-mc';grid.appendChild(c);}
+  };
+
+  // 3) Add 🚌 School button + 🌸 Personal label to the Add Event form
+  if(typeof window.buildEventSheet==='function'){
+    const _bes=window.buildEventSheet;
+    window.buildEventSheet=function(){
+      _bes();
+      setTimeout(function(){
+        const grid=document.getElementById('catGrid');
+        if(grid && !grid.querySelector('.cat-school')){
+          const b=document.createElement('button');
+          b.className='cat-btn cat-school'; b.setAttribute('data-cat','school');
+          b.textContent='🚌 School';
+          b.onclick=function(){ selectCat('school',b); };
+          grid.appendChild(b);
+        }
+        const pb=document.querySelector('.cat-btn.cat-personal'); if(pb) pb.textContent='🌸 Personal';
+      },180);
+    };
+  }
+
+  // 4) One clean redraw after the messy on-load renders settle
+  setTimeout(function(){ try{ if(currentView==='month') renderMonth(); }catch(e){} }, 600);
+})();
+</script>
 
 </html>
