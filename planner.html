@@ -4003,5 +4003,24 @@ window.addEventListener('load',function(){
   try{ if(currentView==='week') renderBannerWithNudge(); }catch(e){}
 })();
 </script>
+<!-- ══ J EMPIRE · text swap: Next → Later today (screen-level) ══ -->
+<script>
+(function(){
+  function swap(){
+    var el=document.getElementById('bannerNext'); if(!el) return;
+    var t=el.querySelector('.bnext-title'); if(!t) return;
+    if(t.textContent.indexOf('Next:')===0){
+      // only relabel if the event is actually today
+      var sub=el.querySelector('.bnext-sub');
+      var isToday = sub && sub.textContent.indexOf('Today')!==-1;
+      t.textContent = t.textContent.replace(/^Next:/, isToday ? 'Later today:' : 'Next:');
+    }
+  }
+  var host=document.getElementById('bannerNext') || document.body;
+  new MutationObserver(swap).observe(document.body,{subtree:true,childList:true,characterData:true});
+  setInterval(swap, 800);
+  swap();
+})();
+</script>
 
 </html>
