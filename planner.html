@@ -3687,4 +3687,18 @@ window.addEventListener('load',function(){
 });
 </script>
 
+
+  <script>
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    if(!window.TEMPLATES) return;
+    const kill=['doctor','dentist','eye','pharmacy','therapy','therapy-jeovane'];
+    for(let i=TEMPLATES.length-1;i>=0;i--){ if(kill.includes(TEMPLATES[i].id)) TEMPLATES.splice(i,1); }
+    const appt=TEMPLATES.find(t=>t.id==='appt'); if(appt) appt.title='';
+    const sch=TEMPLATES.find(t=>t.id==='school'); if(sch){ sch.emoji='🚌'; sch.cat='school'; }
+    const ka=TEMPLATES.find(t=>t.id==='kids'); if(ka) ka.emoji='⭐';
+  },1200);
+});
+</script>
+
 </html>
