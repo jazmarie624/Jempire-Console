@@ -3797,5 +3797,143 @@ window.addEventListener('load',function(){
   setTimeout(function(){ try{ if(currentView==='month') renderMonth(); }catch(e){} }, 600);
 })();
 </script>
+<!-- ══ J EMPIRE · DOM-LEVEL TEMPLATE FIX (final) ══ -->
+<script>
+(function(){
+  var KILL=['doctor','dentist','eye','pharmacy','therapy','therapy-jeovane'];
+
+  function cleanGrid(){
+    var grid=document.getElementById('tmplGrid'); if(!grid) return;
+    KILL.forEach(function(id){
+      var card=document.getElementById('tmpl-'+id);
+      if(card) card.remove();
+    });
+    var sch=document.getElementById('tmpl-school');
+    if(sch){ var e=sch.querySelector('.tmpl-emoji'); if(e) e.textContent='🚌'; }
+    var pb=document.querySelector('.cat-btn.cat-personal'); if(pb) pb.textContent='🌸 Personal';
+  }
+
+  if(typeof window.buildEventSheet==='function'){
+    var _b=window.buildEventSheet;
+    window.buildEventSheet=function(){
+      var r=_b.apply(this,arguments);
+      setTimeout(cleanGrid,230);
+      return r;
+    };
+  }
+
+  // Appointment template → leave the title blank
+  if(typeof window.applyTemplate==='function'){
+    var _a=window.applyTemplate;
+    window.applyTemplate=function(id){
+      var r=_a.apply(this,arguments);
+      if(id==='appt'){ var t=document.getElementById('evTitle'); if(t) t.value=''; }
+      return r;
+    };
+  }
+
+  // Stop the month view from drawing 3× (token guard)
+  var _mTok=0;
+  window.renderMonth=async function(){
+    var tok=++_mTok;
+    var year=currentDate.getFullYear(), month=currentDate.getMonth();
+    var t=document.getElementById('monthTitleBig'); if(t) t.textContent=MONTHS[month]+' '+year;
+    var grid=document.getElementById('monthGrid'); if(!grid) return;
+    var firstDay=new Date(year,month,1).getDay(), daysInMonth=new Date(year,month+1,0).getDate();
+    var todKey=todayKey(), selKey=dk(currentDate);
+    var ms=year+'-'+String(month+1).padStart(2,'0')+'-01';
+    var me=year+'-'+String(month+1).padStart(2,'0')+'-'+String(daysInMonth).padStart(2,'0');
+    var monthEvts=await sbFetch('planner_events','GET',null,'?date_key=gte.'+ms+'&date_key=lte.'+me+'&order=date_key.asc');
+    if(tok!==_mTok) return;
+    var byDay={}; (monthEvts||[]).forEach(function(ev){(byDay[ev.date_key]=byDay[ev.date_key]||[]).push(ev);});
+    grid.innerHTML='';
+    for(var i=0;i<firstDay;i++){var c=document.createElement('div');c.className='mc empty-mc';grid.appendChild(c);}
+    for(var d=1;d<=daysInMonth;d++){
+      var key=year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      var isPay=isPayday(key), isPinned=pinnedDays.includes(key), dayEvts=byDay[key]||[], stickers=dayStickers[key]||[];
+      var div=document.createElement('div');
+      div.className='mc'+(key===todKey?' today-mc':'')+(key===selKey?' active-mc':'')+(isPay?' payday-mc':'')+(isPinned?' pinned-mc':'');
+      var lbls=[]; if(isPay) lbls.push({text:'💰 Pay',cls:'lbl-payday'});
+      dayEvts.slice(0,2).forEach(function(ev){lbls.push({text:(window.jeEmoji?jeEmoji(ev):'')+' '+(ev.title||'').slice(0,8),cls:'lbl-'+(window.jeCls?jeCls(ev):(ev.category||'personal'))});});
+      var stk=stickers.slice(0,2).map(function(s){return '<div class="mc-sticker '+s.cls+'">'+s.label+'</div>';}).join('');
+      div.innerHTML='<button class="pin-btn '+(isPinned?'pinned':'')+'" onclick="togglePin(\''+key+'\',event)">'+(isPinned?'📌':'·')+'</button><div class="mc-num">'+d+'</div><div class="mc-labels">'+lbls.map(function(l){return '<div class="mc-lbl '+l.cls+'">'+l.text+'</div>';}).join('')+stk+'</div>';
+      (function(k,dd){div.onclick=function(e){if(e.target.classList.contains('pin-btn'))return;if(selectedStickerMonth){stampStickerOnDate(k);return;}currentDate=new Date(year,month,dd);switchView('week');};})(key,d);
+      grid.appendChild(div);
+    }
+    var total=firstDay+daysInMonth, rem=total%7===0?0:7-(total%7);
+    for(var j=0;j<rem;j++){var e2=document.createElement('div');e2.className='mc other-mc empty-mc';grid.appendChild(e2);}
+  };
+  setTimeout(function(){ try{ if(currentView==='month') renderMonth(); }catch(e){} },700);
+})();
+</script>
+<!-- ══ J EMPIRE · DOM-LEVEL TEMPLATE FIX (final) ══ -->
+<script>
+(function(){
+  var KILL=['doctor','dentist','eye','pharmacy','therapy','therapy-jeovane'];
+
+  function cleanGrid(){
+    var grid=document.getElementById('tmplGrid'); if(!grid) return;
+    KILL.forEach(function(id){
+      var card=document.getElementById('tmpl-'+id);
+      if(card) card.remove();
+    });
+    var sch=document.getElementById('tmpl-school');
+    if(sch){ var e=sch.querySelector('.tmpl-emoji'); if(e) e.textContent='🚌'; }
+    var pb=document.querySelector('.cat-btn.cat-personal'); if(pb) pb.textContent='🌸 Personal';
+  }
+
+  if(typeof window.buildEventSheet==='function'){
+    var _b=window.buildEventSheet;
+    window.buildEventSheet=function(){
+      var r=_b.apply(this,arguments);
+      setTimeout(cleanGrid,230);
+      return r;
+    };
+  }
+
+  // Appointment template → leave the title blank
+  if(typeof window.applyTemplate==='function'){
+    var _a=window.applyTemplate;
+    window.applyTemplate=function(id){
+      var r=_a.apply(this,arguments);
+      if(id==='appt'){ var t=document.getElementById('evTitle'); if(t) t.value=''; }
+      return r;
+    };
+  }
+
+  // Stop the month view from drawing 3× (token guard)
+  var _mTok=0;
+  window.renderMonth=async function(){
+    var tok=++_mTok;
+    var year=currentDate.getFullYear(), month=currentDate.getMonth();
+    var t=document.getElementById('monthTitleBig'); if(t) t.textContent=MONTHS[month]+' '+year;
+    var grid=document.getElementById('monthGrid'); if(!grid) return;
+    var firstDay=new Date(year,month,1).getDay(), daysInMonth=new Date(year,month+1,0).getDate();
+    var todKey=todayKey(), selKey=dk(currentDate);
+    var ms=year+'-'+String(month+1).padStart(2,'0')+'-01';
+    var me=year+'-'+String(month+1).padStart(2,'0')+'-'+String(daysInMonth).padStart(2,'0');
+    var monthEvts=await sbFetch('planner_events','GET',null,'?date_key=gte.'+ms+'&date_key=lte.'+me+'&order=date_key.asc');
+    if(tok!==_mTok) return;
+    var byDay={}; (monthEvts||[]).forEach(function(ev){(byDay[ev.date_key]=byDay[ev.date_key]||[]).push(ev);});
+    grid.innerHTML='';
+    for(var i=0;i<firstDay;i++){var c=document.createElement('div');c.className='mc empty-mc';grid.appendChild(c);}
+    for(var d=1;d<=daysInMonth;d++){
+      var key=year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      var isPay=isPayday(key), isPinned=pinnedDays.includes(key), dayEvts=byDay[key]||[], stickers=dayStickers[key]||[];
+      var div=document.createElement('div');
+      div.className='mc'+(key===todKey?' today-mc':'')+(key===selKey?' active-mc':'')+(isPay?' payday-mc':'')+(isPinned?' pinned-mc':'');
+      var lbls=[]; if(isPay) lbls.push({text:'💰 Pay',cls:'lbl-payday'});
+      dayEvts.slice(0,2).forEach(function(ev){lbls.push({text:(window.jeEmoji?jeEmoji(ev):'')+' '+(ev.title||'').slice(0,8),cls:'lbl-'+(window.jeCls?jeCls(ev):(ev.category||'personal'))});});
+      var stk=stickers.slice(0,2).map(function(s){return '<div class="mc-sticker '+s.cls+'">'+s.label+'</div>';}).join('');
+      div.innerHTML='<button class="pin-btn '+(isPinned?'pinned':'')+'" onclick="togglePin(\''+key+'\',event)">'+(isPinned?'📌':'·')+'</button><div class="mc-num">'+d+'</div><div class="mc-labels">'+lbls.map(function(l){return '<div class="mc-lbl '+l.cls+'">'+l.text+'</div>';}).join('')+stk+'</div>';
+      (function(k,dd){div.onclick=function(e){if(e.target.classList.contains('pin-btn'))return;if(selectedStickerMonth){stampStickerOnDate(k);return;}currentDate=new Date(year,month,dd);switchView('week');};})(key,d);
+      grid.appendChild(div);
+    }
+    var total=firstDay+daysInMonth, rem=total%7===0?0:7-(total%7);
+    for(var j=0;j<rem;j++){var e2=document.createElement('div');e2.className='mc other-mc empty-mc';grid.appendChild(e2);}
+  };
+  setTimeout(function(){ try{ if(currentView==='month') renderMonth(); }catch(e){} },700);
+})();
+</script>
 
 </html>
