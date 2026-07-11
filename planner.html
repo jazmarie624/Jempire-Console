@@ -3950,7 +3950,7 @@ window.addEventListener('load',function(){
       var x=up[0], h=x.hour||0, h12=h%12||12, ampm=h<12?'AM':'PM';
       var isToday=dk(currentDate)===todayKey();
       var dl=DAYS[currentDate.getDay()]+', '+MONTHS[currentDate.getMonth()]+' '+currentDate.getDate();
-      var label=isToday?'Later today:':'Next:';
+      var label=isToday?'Later today:':'Coming up:';
       var when=isToday?(h12+':00 '+ampm):('📅 '+dl+' · '+(x.all_day?'All Day':h12+':00 '+ampm));
       nn.className='banner-next';
       nn.innerHTML='<div class="bnext-icon">'+(window.jeEmoji?jeEmoji(x):'📌')+'</div><div><div class="bnext-title">'+label+' '+x.title+'</div><div class="bnext-sub">'+when+' · '+(x.status||'Confirmed')+(x.reminder?' · 🔔':'')+'</div></div>';
@@ -3991,7 +3991,7 @@ window.addEventListener('load',function(){
       var x=up[0], h=x.hour||0, h12=h%12||12, ampm=h<12?'AM':'PM';
       var evKey=x.date_key||dk(currentDate), isToday=evKey===todayKey();
       var d=new Date(evKey+'T12:00:00'), dl=DAYS[d.getDay()]+', '+MONTHS[d.getMonth()]+' '+d.getDate();
-      var label=isToday?'Later today:':'Next:';
+      var label=isToday?'Later today:':'Coming up:';
       var when=isToday?(h12+':00 '+ampm):('📅 '+dl+' · '+(x.all_day?'All Day':h12+':00 '+ampm));
       nn.className='banner-next';
       nn.innerHTML='<div class="bnext-icon">'+(window.jeEmoji?jeEmoji(x):'📌')+'</div><div><div class="bnext-title">'+label+' '+x.title+'</div><div class="bnext-sub">'+when+' · '+(x.status||'Confirmed')+(x.reminder?' · 🔔':'')+'</div></div>';
