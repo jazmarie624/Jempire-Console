@@ -3964,5 +3964,18 @@ window.addEventListener('load',function(){
   try{ if(currentView==='week') renderBanner(); }catch(e){}
 })();
 </script>
+<!-- ══ J EMPIRE · route banner wrapper to new renderBanner ══ -->
+<script>
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    var real = window.renderBanner;
+    window.renderBannerWithNudge = function(){
+      try{ real(); }catch(e){}
+      try{ if(typeof checkStickerNudge==='function') checkStickerNudge(); }catch(e){}
+    };
+    try{ if(currentView==='week') renderBannerWithNudge(); }catch(e){}
+  }, 900);
+});
+</script>
 
 </html>
