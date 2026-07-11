@@ -195,9 +195,25 @@ body{font-family:'Inter',sans-serif;background:var(--wine-deep);color:var(--cham
 /* ===== SMART SYNC (preserved) ===== */
 const SUPABASE_URL='https://ejseathlglvvnmkpchib.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqc2VhdGhsZ2x2dm5ta3BjaGliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODc4NTUsImV4cCI6MjA5NzU2Mzg1NX0.o4crd1W5-NbVNXSOWNT-WPHS7R6orRe9CRYFZfZ41L8';
+
+/* ===== AUTO-LOGIN (so Send to Planner works) =====
+   👇👇👇  PUT YOUR PASSWORD BETWEEN THE QUOTES ON THE NEXT LINE  👇👇👇 */
+const JE_PASSWORD='Rasberry24!';
+/* 👆👆👆  (the one for jempire@jempire.app)  — then commit  👆👆👆 */
+const JE_EMAIL='jempire@jempire.app';
+let JE_TOKEN=null;
+async function jeLogin(){
+  if(!JE_PASSWORD||JE_PASSWORD==='PASTE_PASSWORD_HERE')return;
+  try{
+    const res=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`,{method:'POST',headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({email:JE_EMAIL,password:JE_PASSWORD})});
+    if(res.ok){const d=await res.json();JE_TOKEN=d.access_token;}
+  }catch(e){}
+}
+function authTok(){return JE_TOKEN||SUPABASE_KEY;}
+
 async function sbFetch(table,method='GET',body=null,filter=''){
   try{
-    const res=await fetch(`${SUPABASE_URL}/rest/v1/${table}${filter}`,{method,headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':method==='POST'?'return=representation':''},body:body?JSON.stringify(body):null});
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/${table}${filter}`,{method,headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+authTok(),'Content-Type':'application/json','Prefer':method==='POST'?'return=representation':''},body:body?JSON.stringify(body):null});
     if(!res.ok)return null;return method==='DELETE'?null:res.json();
   }catch{return null;}
 }
@@ -251,7 +267,7 @@ function hidePM(){document.getElementById('plannerMatch').classList.remove('visi
 
 /* ===== NOTES (Supabase-synced) ===== */
 async function sbWrite(method,filter,body){
-  try{const res=await fetch(`${SUPABASE_URL}/rest/v1/brain_dump${filter||''}`,{method,headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=representation'},body:body?JSON.stringify(body):null});if(!res.ok)return null;const t=await res.text();return t?JSON.parse(t):true;}catch(e){return null;}
+  try{const res=await fetch(`${SUPABASE_URL}/rest/v1/brain_dump${filter||''}`,{method,headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+authTok(),'Content-Type':'application/json','Prefer':'return=representation'},body:body?JSON.stringify(body):null});if(!res.ok)return null;const t=await res.text();return t?JSON.parse(t):true;}catch(e){return null;}
 }
 function rowToNote(r){return {id:r.id,text:r.content,category:r.category||'Notes',pinned:!!r.pinned,done:!!r.done,photo:r.photo||null,onPlanner:!!r.on_planner,created_at:r.created_at,completed_at:r.completed_at||null};}
 let notes=[],filter='all',selTag='Notes',pendingPhoto=null,editId=null,editTag='Notes',sendId=null;
@@ -348,7 +364,7 @@ function render(){
 function sparkles(){const s=['✦','✧','⋆','🌟','⭑'],col=['#C89A3E','#D69C8C','#E8CDA8'];for(let i=0;i<7;i++){const el=document.createElement('div');el.className='sparkle';el.textContent=s[Math.floor(Math.random()*s.length)];el.style.cssText=`left:${20+Math.random()*60}vw;top:${20+Math.random()*50}vh;color:${col[Math.floor(Math.random()*col.length)]};font-size:${12+Math.random()*14}px;animation-delay:${Math.random()*.4}s`;document.body.appendChild(el);setTimeout(()=>el.remove(),1600);}}
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
 
-(function init(){buildTags();render();loadNotes();loadSmartData().then(()=>{if(!document.getElementById('dumpText').value)showAutoSmartCards();});})();
+(async function init(){buildTags();render();await jeLogin();loadNotes();loadSmartData().then(()=>{if(!document.getElementById('dumpText').value)showAutoSmartCards();});})();
 </script>
 </body>
 </html>
