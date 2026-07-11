@@ -3977,5 +3977,31 @@ window.addEventListener('load',function(){
   }, 900);
 });
 </script>
+<script>
+(function(){
+  function drawBanner(){
+    var isPay=isPayday(dk(currentDate));
+    var be=document.getElementById('bs-events'); if(be) be.textContent=events.filter(function(e){return !e.done;}).length;
+    var bt=document.getElementById('bs-todos'); if(bt) bt.textContent=todos.filter(function(t){return !t.done;}).length;
+    var bd=document.getElementById('bs-done'); if(bd) bd.textContent=[].concat(events,todos).filter(function(x){return x.done;}).length;
+    var bp=document.getElementById('bs-payday'); if(bp) bp.style.display=isPay?'block':'none';
+    var up=events.filter(function(e){return !e.done && !e.all_day;}).sort(function(a,b){return (a.hour||0)-(b.hour||0);});
+    var nn=document.getElementById('bannerNext'); if(!nn) return;
+    if(up.length){
+      var x=up[0], h=x.hour||0, h12=h%12||12, ampm=h<12?'AM':'PM';
+      var evKey=x.date_key||dk(currentDate), isToday=evKey===todayKey();
+      var d=new Date(evKey+'T12:00:00'), dl=DAYS[d.getDay()]+', '+MONTHS[d.getMonth()]+' '+d.getDate();
+      var label=isToday?'Later today:':'Next:';
+      var when=isToday?(h12+':00 '+ampm):('📅 '+dl+' · '+(x.all_day?'All Day':h12+':00 '+ampm));
+      nn.className='banner-next';
+      nn.innerHTML='<div class="bnext-icon">'+(window.jeEmoji?jeEmoji(x):'📌')+'</div><div><div class="bnext-title">'+label+' '+x.title+'</div><div class="bnext-sub">'+when+' · '+(x.status||'Confirmed')+(x.reminder?' · 🔔':'')+'</div></div>';
+      nn.onclick=function(){openEditEvent(x.id);};
+    } else { nn.className='banner-empty'; nn.innerHTML='✦ Nothing scheduled — add an event'; nn.onclick=function(){openSheet('event');}; }
+  }
+  window.renderBanner=drawBanner;
+  window.renderBannerWithNudge=function(){ drawBanner(); try{ if(typeof checkStickerNudge==='function') checkStickerNudge(); }catch(e){} };
+  try{ if(currentView==='week') renderBannerWithNudge(); }catch(e){}
+})();
+</script>
 
 </html>
