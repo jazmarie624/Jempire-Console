@@ -3516,5 +3516,163 @@ window.renderBanner = function(){
   try{ updateAll(); }catch(e){}
 })();
 </script>
+  <!-- ══ J EMPIRE · CONSOLIDATED FIXES (paste above </body>) ══ -->
+<style>
+  :root{--lane-school:#3E6E8E;--lane-school-bg:rgba(62,110,142,0.12);}
+  .school-card.osc{background:rgba(62,110,142,0.10);border-color:#3E6E8E;}
+  .cat-btn.cat-school.active-cat{background:#3E6E8E;border-color:#3E6E8E;color:#fff;}
+  .evt-block.school{background:var(--lane-school-bg);border-color:var(--lane-school);}
+  .eb-tag.school{background:rgba(62,110,142,0.2);color:var(--lane-school);}
+  .allday-chip.school{background:var(--lane-school-bg);border-color:var(--lane-school);color:var(--lane-school);}
+  .mc-lbl.lbl-school{background:rgba(62,110,142,0.16);color:var(--lane-school);}
+  .agenda-evt.school{border-left-color:var(--lane-school);}
+  .ae-chip.school{background:rgba(62,110,142,0.16);color:var(--lane-school);}
+</style>
+<script>
+(function(){
+  if(window.CAT_CONFIG){
+    CAT_CONFIG.personal.emoji='🌸';
+    CAT_CONFIG.school={label:'School',emoji:'🚌',cls:'school',lbl:'lbl-school'};
+  }
+  if(window.SCHOOLS){
+    window.SCHOOLS={
+      osc:{name:'Osceola School District',kids:['Jaylani','Juliusz','Jaliyah','Jazelli'],color:'var(--lane-school)'},
+      hg:{name:'Hansel & Gretel',kids:['Jeovane'],color:'var(--school-hg)'}
+    };
+  }
+  if(window.TEMPLATES){
+    const kill=['doctor','dentist','eye','pharmacy','therapy','therapy-jeovane'];
+    for(let i=TEMPLATES.length-1;i>=0;i--){ if(kill.includes(TEMPLATES[i].id)) TEMPLATES.splice(i,1); }
+    const appt=TEMPLATES.find(t=>t.id==='appt'); if(appt) appt.title='';
+    const sch=TEMPLATES.find(t=>t.id==='school'); if(sch){ sch.emoji='🚌'; sch.cat='school'; }
+    const ka=TEMPLATES.find(t=>t.id==='kids'); if(ka) ka.emoji='⭐';
+  }
+  window.jeEmoji=function(ev){
+    if(!ev) return '📌';
+    const t=(ev.title||'').toLowerCase(), c=ev.category||'';
+    if(t.includes('pilates')) return '🧘';
+    if(c==='school'||ev.school) return '🚌';
+    if(c==='event') return '⭐';
+    if(c==='kids') return '⭐';
+    const cfg=CAT_CONFIG[c]; return (cfg&&cfg.emoji)||'🌸';
+  };
+  window.jeCls=function(ev){
+    if(!ev) return 'personal';
+    if(ev.school||ev.category==='school') return 'school';
+    const cfg=CAT_CONFIG[ev.category]; return (cfg&&cfg.cls)||'personal';
+  };
+  const _bes=window.buildEventSheet;
+  window.buildEventSheet=function(){
+    _bes();
+    setTimeout(()=>{
+      const grid=document.getElementById('catGrid');
+      if(grid && !grid.querySelector('.cat-school')){
+        const b=document.createElement('button');
+        b.className='cat-btn cat-school'; b.dataset.cat='school';
+        b.textContent='🚌 School';
+        b.onclick=function(){selectCat('school',b);};
+        grid.appendChild(b);
+      }
+      const pb=document.querySelector('.cat-btn.cat-personal'); if(pb) pb.textContent='🌸 Personal';
+    },170);
+  };
+  window.renderSplitPanel=function(){
+    const key=dk(currentDate);
+    const allDay=events.filter(e=>e.all_day);
+    const strip=document.getElementById('allDayStrip'), box=document.getElementById('allDayEvents');
+    if(isPayday(key)&&!allDay.find(e=>e.title&&e.title.includes('Payday')))
+      allDay.unshift({id:'auto-pay-'+key,title:'💰 Payday',category:'finance',all_day:true,done:false,auto:true});
+    if(allDay.length){
+      strip.style.display='block';
+      box.innerHTML=allDay.map(e=>{
+        const emoji=e.auto?'💰':jeEmoji(e), cls=e.auto?'finance':jeCls(e);
+        let who=''; if(e.school==='hg') who=(e.child&&e.child!=='all')?e.child:'Jeovane';
+        return `<div class="allday-chip ${cls} ${e.done?'allday-done':''}" onclick="openAllDayMenu('${e.id}','${e.auto?'auto':''}')">${emoji} ${e.title}${who?`<span style="opacity:.55;font-weight:600;margin-left:5px;">· ${who}</span>`:''}${!e.auto?`<span style="font-size:9px;opacity:0.6;margin-left:4px;">✏️</span>`:''}</div>`;
+      }).join('');
+    } else strip.style.display='none';
+    const morn=events.filter(e=>!e.all_day&&(e.hour||0)>=6&&(e.hour||0)<12);
+    const aft=events.filter(e=>!e.all_day&&(e.hour||0)>=12&&(e.hour||0)<18);
+    const eve=events.filter(e=>!e.all_day&&(e.hour||0)>=18);
+    buildTimeCol(MORNING_HOURS,'tcMorning','morn');buildEventsCol(MORNING_HOURS,morn,'ecMorning','morn','✦ Add a morning event');
+    buildTimeCol(AFTERNOON_HOURS,'tcAfternoon','aft');buildEventsCol(AFTERNOON_HOURS,aft,'ecAfternoon','aft','✦ Add an afternoon event');
+    buildTimeCol(EVENING_HOURS,'tcEvening','eve');buildEventsCol(EVENING_HOURS,eve,'ecEvening','eve','✦ Add an evening event');
+  };
+  window.renderBanner=function(){
+    const key=dk(currentDate), isPay=isPayday(key);
+    document.getElementById('bs-events').textContent=events.filter(e=>!e.done).length;
+    document.getElementById('bs-todos').textContent=todos.filter(t=>!t.done).length;
+    document.getElementById('bs-done').textContent=[...events,...todos].filter(x=>x.done).length;
+    document.getElementById('bs-payday').style.display=isPay?'block':'none';
+    const up=events.filter(e=>!e.done&&!e.all_day).sort((a,b)=>(a.hour||0)-(b.hour||0));
+    const nn=document.getElementById('bannerNext');
+    if(up.length){
+      const x=up[0], h=x.hour||0, h12=h%12||12, ampm=h<12?'AM':'PM', isToday=dk(currentDate)===todayKey();
+      const dl=DAYS[currentDate.getDay()]+', '+MONTHS[currentDate.getMonth()]+' '+currentDate.getDate();
+      nn.className='banner-next';
+      nn.innerHTML='<div class="bnext-icon">'+jeEmoji(x)+'</div><div><div class="bnext-title">Next: '+x.title+'</div><div class="bnext-sub">'+(isToday?'Today':'📅 '+dl)+' · '+(x.all_day?'All Day':h12+':00 '+ampm)+' · '+(x.status||'Confirmed')+(x.reminder?' · 🔔':'')+'</div></div>';
+      nn.onclick=()=>openEditEvent(x.id);
+    } else { nn.className='banner-empty'; nn.innerHTML='✦ Nothing scheduled — add an event'; nn.onclick=()=>openSheet('event'); }
+  };
+  let expanded={osc:false,hg:false}, cachedEvts=null;
+  async function renderExpandable(force){
+    if(force||!cachedEvts){
+      cachedEvts=[];
+      const res=await sbFetch('planner_events','GET',null,'?school=not.is.null&order=date_key.asc&limit=500');
+      if(res&&res.length) res.forEach(e=>cachedEvts.push({...e,_date:new Date(e.date_key+'T12:00:00'),_key:e.date_key}));
+    }
+    const wrap=document.querySelector('#schoolsView > div');
+    if(wrap && !document.getElementById('card-osc')){
+      wrap.querySelectorAll('.school-card').forEach(c=>c.remove());
+      const upLabel=document.querySelector('#schoolsView .mini-label');
+      const mk=(id,name,kids,color)=>`<div class="school-card ${id}" id="card-${id}" style="margin-bottom:12px;">
+        <div class="school-card-hdr"><div class="school-dot" style="background:${color};width:14px;height:14px;"></div>
+        <div style="flex:1;"><div class="school-name">${name}</div><div class="school-kids">${kids}</div></div></div>
+        <div class="school-events" id="school-events-${id}-v"></div></div>`;
+      const html=mk('osc','🏫 Osceola School District','👧 Jaylani · 👦 Juliusz · 👧 Jaliyah · 👧 Jazelli','var(--lane-school)')
+               +mk('hg','Hansel & Gretel VPK','👦 Jeovane','var(--school-hg)');
+      if(upLabel) upLabel.insertAdjacentHTML('beforebegin',html); else wrap.insertAdjacentHTML('beforeend',html);
+    }
+    ['osc','hg'].forEach(school=>{
+      const c=document.getElementById('school-events-'+school+'-v'); if(!c)return;
+      const evts=cachedEvts.filter(e=>e.school===school);
+      if(!evts.length){c.innerHTML='<div style="font-size:10px;color:var(--brown-soft);font-style:italic;padding:4px 0;">No events yet ✦</div>';return;}
+      const color=school==='osc'?'var(--lane-school)':'var(--school-hg)';
+      const open=expanded[school], shown=open?evts:evts.slice(0,5);
+      let html=shown.map(e=>{
+        const d=e._date, ds=DAYS[d.getDay()].slice(0,3)+' '+MONTHS[d.getMonth()].slice(0,3)+' '+d.getDate()+', '+d.getFullYear();
+        const who=(school==='hg')?'':(e.child&&e.child!=='all'?' — '+e.child:'');
+        return `<div class="school-evt" onclick="currentDate=new Date('${e._key}T12:00:00');switchView('week');">
+          <div class="school-evt-dot" style="background:${color};"></div>
+          <div style="flex:1;"><div style="font-size:11px;font-weight:600;color:var(--brown-dark);">${jeEmoji(e)} ${e.title}${who}</div>
+          <div style="font-size:9px;color:var(--brown-muted);">${ds}</div></div>
+          <button onclick="event.stopPropagation();deleteSchoolEvt('${e.id}','${e._key}')" style="font-size:11px;background:none;border:none;color:var(--brown-soft);cursor:pointer;padding:2px 4px;">✕</button></div>`;
+      }).join('');
+      if(evts.length>5){
+        html+=open
+          ?`<div onclick="window._toggleSch('${school}')" style="font-size:10px;font-weight:700;color:${color};text-align:center;padding:9px;cursor:pointer;">▲ Show less</div>`
+          :`<div onclick="window._toggleSch('${school}')" style="font-size:10px;font-weight:700;color:${color};text-align:center;padding:9px;cursor:pointer;text-decoration:underline;">+${evts.length-5} more events ✦ — tap to show all</div>`;
+      }
+      c.innerHTML=html;
+    });
+    const up=document.getElementById('schoolUpcomingList');
+    if(up){
+      const today=dk(new Date()), list=cachedEvts.filter(e=>e._key>=today).slice(0,15);
+      up.innerHTML=list.length?list.map(e=>{
+        const s=SCHOOLS[e.school]||{name:e.school}, d=e._date;
+        const ds=DAYS[d.getDay()]+', '+MONTHS[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();
+        const col=e.school==='osc'?'var(--lane-school)':'var(--school-hg)';
+        const who=(e.school==='hg')?'':(e.child&&e.child!=='all'?' — '+e.child:'');
+        return `<div style="background:var(--white-warm);border:1px solid rgba(196,113,79,0.12);border-left:3px solid ${col};border-radius:0 11px 11px 0;padding:9px 12px;margin-bottom:6px;cursor:pointer;" onclick="currentDate=new Date('${e._key}T12:00:00');switchView('week');">
+          <div style="font-size:11px;font-weight:700;color:var(--brown-dark);">${jeEmoji(e)} ${e.title}${who}</div>
+          <div style="font-size:9px;color:var(--brown-muted);margin-top:2px;">${s.name} · ${ds}</div></div>`;
+      }).join(''):'<div style="text-align:center;padding:20px;font-style:italic;font-size:13px;color:rgba(196,113,79,0.35);">✦ No upcoming events</div>';
+    }
+  }
+  window._toggleSch=function(s){expanded[s]=!expanded[s];renderExpandable(false);};
+  window.renderSchoolsView=function(){return renderExpandable(true);};
+  try{ updateAll(); }catch(e){}
+})();
+</script>
+
   
 </html>
