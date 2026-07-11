@@ -3701,4 +3701,21 @@ window.addEventListener('load',function(){
 });
 </script>
 
+
+<script>
+(function(){
+  const KILL=['doctor','dentist','eye','pharmacy','therapy','therapy-jeovane'];
+  function scrub(){
+    if(!window.TEMPLATES) return;
+    for(let i=TEMPLATES.length-1;i>=0;i--){ if(KILL.includes(TEMPLATES[i].id)) TEMPLATES.splice(i,1); }
+    const a=TEMPLATES.find(t=>t.id==='appt'); if(a) a.title='';
+    const s=TEMPLATES.find(t=>t.id==='school'); if(s){ s.emoji='🚌'; s.cat='school'; }
+    const k=TEMPLATES.find(t=>t.id==='kids'); if(k) k.emoji='⭐';
+  }
+  scrub();
+  const _open=window.openSheet;
+  window.openSheet=function(){ scrub(); return _open.apply(this,arguments); };
+})();
+</script>
+
 </html>
