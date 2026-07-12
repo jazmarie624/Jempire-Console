@@ -1,6 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+const JE_URL='https://ejseathlglvvnmkpchib.supabase.co';
+const JE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqc2VhdGhsZ2x2dm5ta3BjaGliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODc4NTUsImV4cCI6MjA5NzU2Mzg1NX0.o4crd1W5-NbVNXSOWNT-WPHS7R6orRe9CRYFZfZ41L8';
+window.JE_TOKEN=null;
+const _jeFetch=window.fetch;
+window.fetch=function(u,o){
+  if(window.JE_TOKEN&&typeof u==='string'&&u.indexOf('/rest/v1/')>-1&&o&&o.headers){o.headers['Authorization']='Bearer '+window.JE_TOKEN;}
+  return _jeFetch(u,o);
+};
+function jeSave(d){localStorage.setItem('je_session',JSON.stringify({access_token:d.access_token,refresh_token:d.refresh_token,expires_at:d.expires_at}));}
+async function jeLogin(){
+  const pw=document.getElementById('jePw').value;
+  const msg=document.getElementById('jeMsg');
+  msg.textContent='Signing in...';
+  try{
+    const r=await fetch(JE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':JE_KEY,'Content-Type':'application/json'},body:JSON.stringify({email:'jempire@jempire.app',password:pw})});
+    if(!r.ok) throw 0;
+    jeSave(await r.json());
+    location.reload();
+  }catch(e){msg.textContent='Wrong password — try again';}
+}
+function jeShowLogin(){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;inset:0;z-index:99999;background:#F8F0E8;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;';
+  d.innerHTML='<div style="font-family:serif;font-size:32px;color:#2C1A0E;margin-bottom:6px;">J Empire</div><div style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#C4956E;margin-bottom:24px;">Sign in to continue</div><input id="jePw" type="password" placeholder="Password" style="width:100%;max-width:300px;padding:13px;border-radius:11px;border:1px solid rgba(196,113,79,.3);font-size:16px;margin-bottom:10px;"><button onclick="jeLogin()" style="width:100%;max-width:300px;padding:13px;border-radius:11px;border:none;background:#C4714F;color:#fff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Sign In</button><div id="jeMsg" style="font-size:11px;color:#9A6E58;margin-top:12px;min-height:14px;"></div>';
+  document.body.appendChild(d);
+}
+async function jeRefresh(rt){
+  try{
+    const r=await fetch(JE_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{'apikey':JE_KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})});
+    if(!r.ok) throw 0;
+    jeSave(await r.json());
+    location.reload();
+  }catch(e){document.addEventListener('DOMContentLoaded',jeShowLogin);}
+}
+(function(){
+  let s=null;
+  try{s=JSON.parse(localStorage.getItem('je_session')||'null');}catch(e){}
+  const now=Math.floor(Date.now()/1000);
+  if(s&&s.expires_at>now+60) window.JE_TOKEN=s.access_token;
+  else if(s&&s.refresh_token) jeRefresh(s.refresh_token);
+  else document.addEventListener('DOMContentLoaded',jeShowLogin);
+})();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>J Empire · Study</title>
