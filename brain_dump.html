@@ -124,6 +124,7 @@ body{font-family:'Inter',sans-serif;background:var(--wine-deep);color:var(--cham
 .nav a{display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--champ-dim);}
 .nav a.on{color:var(--gold-bright);}.nav .ic{font-size:19px;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="wrap">
@@ -377,7 +378,22 @@ function render(){
 function sparkles(){const s=['✦','✧','⋆','🌟','⭑'],col=['#C89A3E','#D69C8C','#E8CDA8'];for(let i=0;i<7;i++){const el=document.createElement('div');el.className='sparkle';el.textContent=s[Math.floor(Math.random()*s.length)];el.style.cssText=`left:${20+Math.random()*60}vw;top:${20+Math.random()*50}vh;color:${col[Math.floor(Math.random()*col.length)]};font-size:${12+Math.random()*14}px;animation-delay:${Math.random()*.4}s`;document.body.appendChild(el);setTimeout(()=>el.remove(),1600);}}
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
 
-(async function init(){buildTags();render();await jeLogin();loadNotes();loadSmartData().then(()=>{if(!document.getElementById('dumpText').value)showAutoSmartCards();});})();
+/* ===== LIVE SYNC (realtime across devices, no refresh) ===== */
+async function loadNotesQuiet(){const rows=await sbFetch('brain_dump','GET',null,'?order=created_at.desc&limit=500');if(rows){notes=rows.map(rowToNote);render();}}
+function startLiveSync(){
+  try{
+    if(!window.supabase) return;
+    const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    if(JE_TOKEN&&client.realtime&&client.realtime.setAuth){try{client.realtime.setAuth(JE_TOKEN);}catch(e){}}
+    client.channel('brain_dump_live')
+      .on('postgres_changes',{event:'*',schema:'public',table:'brain_dump'},()=>{loadNotesQuiet();})
+      .subscribe();
+  }catch(e){}
+  // fallback: refresh when the app comes back to the foreground
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadNotesQuiet();});
+}
+
+(async function init(){buildTags();render();await jeLogin();loadNotes();startLiveSync();loadSmartData().then(()=>{if(!document.getElementById('dumpText').value)showAutoSmartCards();});})();
 </script>
 </body>
 </html>
