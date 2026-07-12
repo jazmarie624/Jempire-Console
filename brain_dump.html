@@ -196,17 +196,15 @@ body{font-family:'Inter',sans-serif;background:var(--wine-deep);color:var(--cham
 const SUPABASE_URL='https://ejseathlglvvnmkpchib.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVqc2VhdGhsZ2x2dm5ta3BjaGliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5ODc4NTUsImV4cCI6MjA5NzU2Mzg1NX0.o4crd1W5-NbVNXSOWNT-WPHS7R6orRe9CRYFZfZ41L8';
 
-/* ===== AUTO-LOGIN (so Send to Planner works) =====
-   👇👇👇  PUT YOUR PASSWORD BETWEEN THE QUOTES ON THE NEXT LINE  👇👇👇 */
-const JE_PASSWORD='PASTE_PASSWORD_HERE';
-/* 👆👆👆  (the one for jempire@jempire.app)  — then commit  👆👆👆 */
-const JE_EMAIL='jempire@jempire.app';
+/* ===== SECURE AUTO-LOGIN =====
+   Password lives safely in Supabase secrets — NOT in this code.
+   This calls the 'clever-worker' function to get a login token. */
+const LOGIN_URL='https://ejseathlglvvnmkpchib.supabase.co/functions/v1/clever-worker';
 let JE_TOKEN=null;
 async function jeLogin(){
-  if(!JE_PASSWORD||JE_PASSWORD==='PASTE_PASSWORD_HERE')return;
   try{
-    const res=await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`,{method:'POST',headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({email:JE_EMAIL,password:JE_PASSWORD})});
-    if(res.ok){const d=await res.json();JE_TOKEN=d.access_token;}
+    const res=await fetch(LOGIN_URL,{method:'POST',headers:{'Authorization':'Bearer '+SUPABASE_KEY,'apikey':SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({})});
+    if(res.ok){const d=await res.json();if(d&&d.access_token)JE_TOKEN=d.access_token;}
   }catch(e){}
 }
 function authTok(){return JE_TOKEN||SUPABASE_KEY;}
