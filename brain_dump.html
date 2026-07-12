@@ -198,7 +198,7 @@ const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 
 /* ===== AUTO-LOGIN (so Send to Planner works) =====
    👇👇👇  PUT YOUR PASSWORD BETWEEN THE QUOTES ON THE NEXT LINE  👇👇👇 */
-const JE_PASSWORD='Rasberry24!';
+const JE_PASSWORD='PASTE_PASSWORD_HERE';
 /* 👆👆👆  (the one for jempire@jempire.app)  — then commit  👆👆👆 */
 const JE_EMAIL='jempire@jempire.app';
 let JE_TOKEN=null;
@@ -293,14 +293,29 @@ function startVoice(){
   showToast('Tap the 🎤 on your keyboard to dictate');
 }
 /* photo */
+const OCR_URL='https://ejseathlglvvnmkpchib.supabase.co/functions/v1/quick-service';
 function handlePhoto(input){
   const f=input.files&&input.files[0];if(!f)return;
   const rd=new FileReader();rd.onload=e=>{const img=new Image();img.onload=()=>{
-    const max=900,scale=Math.min(1,max/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=img.width*scale;cv.height=img.height*scale;cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
-    pendingPhoto=cv.toDataURL('image/jpeg',0.55);
+    const max=1100,scale=Math.min(1,max/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=img.width*scale;cv.height=img.height*scale;cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+    pendingPhoto=cv.toDataURL('image/jpeg',0.6);
     document.getElementById('photoThumb').src=pendingPhoto;document.getElementById('photoChip').classList.add('on');
-    showToast('📷 Screenshot attached ✦');
+    readScreenshot(pendingPhoto);
   };img.src=e.target.result;};rd.readAsDataURL(f);input.value='';
+}
+async function readScreenshot(dataUrl){
+  const ta=document.getElementById('dumpText');
+  showToast('📷 Reading your screenshot… ✦');
+  try{
+    const b64=dataUrl.split(',')[1];
+    const res=await fetch(OCR_URL,{method:'POST',headers:{'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({image:b64,mediaType:'image/jpeg'})});
+    const data=await res.json();
+    if(data&&data.text){
+      ta.value=ta.value?ta.value+' '+data.text:data.text;
+      checkPlannerMatch(ta.value);
+      showToast('✨ Read it! Check the note & Stick It');
+    } else { showToast('📷 Attached — type your note (couldn\u2019t auto-read)'); }
+  }catch(e){ showToast('📷 Attached — type your note'); }
 }
 function clearPhoto(){pendingPhoto=null;document.getElementById('photoChip').classList.remove('on');}
 
