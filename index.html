@@ -359,5 +359,76 @@ function loadCountdown(){
   }
 })();
 </script>
+  <!-- ══════════════════════════════════════════
+     J EMPIRE · CONSOLE · FOLLOW-UPS BADGE
+     Paste at the bottom of index.html,
+     just above </body>
+     ══════════════════════════════════════════ -->
+
+<style>
+.t-follow{position:relative}
+#followBadge{
+  position:absolute;top:-7px;right:-6px;z-index:3;
+  min-width:24px;height:24px;border-radius:12px;
+  background:linear-gradient(145deg,#BC5636,#A84A2F);color:#fff;
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:700;
+  display:none;align-items:center;justify-content:center;padding:0 6px;
+  box-shadow:0 3px 10px rgba(168,74,47,.5);
+  border:2.5px solid #EDE4DB;
+}
+#followBadge.show{display:flex}
+</style>
+
+<script>
+(async function followBadge(){
+  // Wait until the sign-in has produced a token
+  if(!window.JE_TOKEN){
+    // try again shortly in case auth is still resolving
+    let tries = 0;
+    const iv = setInterval(()=>{
+      tries++;
+      if(window.JE_TOKEN){ clearInterval(iv); run(); }
+      else if(tries > 20){ clearInterval(iv); }
+    }, 300);
+    return;
+  }
+  run();
+
+  async function run(){
+    try{
+      const today = new Date();
+      const todayStr = today.getFullYear()+'-'
+        +String(today.getMonth()+1).padStart(2,'0')+'-'
+        +String(today.getDate()).padStart(2,'0');
+
+      const r = await fetch(
+        JE_URL + '/rest/v1/follow_ups?answered=eq.false&select=logged_on,chase_days',
+        { headers:{ apikey: JE_KEY, Authorization:'Bearer '+(window.JE_TOKEN||JE_KEY) } }
+      );
+      if(!r.ok) return;
+      const rows = await r.json();
+
+      const overdue = rows.filter(f=>{
+        const logged = new Date(f.logged_on+'T12:00:00');
+        const now = new Date(todayStr+'T12:00:00');
+        const days = Math.floor((now - logged)/86400000);
+        return days >= f.chase_days;
+      }).length;
+
+      if(overdue > 0){
+        const tile = document.querySelector('.t-follow');
+        if(tile){
+          const b = document.createElement('span');
+          b.id = 'followBadge';
+          b.className = 'show';
+          b.textContent = overdue;
+          tile.appendChild(b);
+        }
+      }
+    }catch(e){ /* silent — the tile still works */ }
+  }
+})();
+</script>
+
 </body>
 </html>
