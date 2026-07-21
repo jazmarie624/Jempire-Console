@@ -123,6 +123,19 @@ button{font-family:inherit;cursor:pointer;}
 .toast.on{opacity:1;}
 
 
+
+/* draw layer */
+.pbody{position:relative;z-index:3;}
+.subject{position:relative;z-index:3;}
+.draw{position:absolute;inset:0;z-index:2;pointer-events:none;}
+.page.drawing .draw{pointer-events:auto;cursor:crosshair;}
+.page.drawing .pbody,.page.drawing .subject{pointer-events:none;}
+.drawbar{position:absolute;left:50%;bottom:70px;transform:translateX(-50%);z-index:45;display:none;align-items:center;gap:9px;background:rgba(30,22,42,.95);border:1px solid var(--gold-hair);border-radius:26px;padding:9px 14px;box-shadow:0 10px 28px rgba(0,0,0,.45);}
+.dcolor{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;}
+.dcolor.on{border-color:#fff;}
+.dtool{color:var(--ink);font-size:12px;font-weight:700;padding:6px 10px;border-radius:14px;background:rgba(255,255,255,.09);cursor:pointer;}
+.dtool.on{background:var(--iris2);color:#2a1e33;}
+
 /* type selector (used in sticker maker) */
 .types{display:flex;gap:8px;}
 .ty{flex:1;padding:9px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--ink-mut);font-size:12px;font-weight:700;text-align:center;}
@@ -207,12 +220,14 @@ button{font-family:inherit;cursor:pointer;}
     <button class="tool" onclick="openFonts()">✎ Font</button>
     <button class="tool" onclick="openSticker()">✦ Sticker</button>
     <button class="tool" onclick="toggleDark()" id="darkBtn">🌙 Dark</button>
+    <button class="tool" onclick="toggleDraw()" id="drawBtn">✏️ Draw</button>
   </div>
   <div class="book">
     <div class="binding" id="binding"></div>
     <div class="pagewrap">
       <div class="page lined" id="page">
         <input class="subject" id="subject" placeholder="Subject — e.g. Lash techs to try" oninput="onEdit()">
+        <canvas class="draw" id="draw"></canvas>
         <div class="pbody" id="pbody" contenteditable="true" oninput="onEdit()"></div>
         <div class="pfoot">
           <div class="pnav">
@@ -223,6 +238,16 @@ button{font-family:inherit;cursor:pointer;}
           <button class="delpage" onclick="deletePage()" id="delPageBtn" title="Delete this page">🗑</button>
           <button class="paddbtn" onclick="addPage()">＋ Add page</button>
         </div>
+      </div>
+      <div class="drawbar" id="drawbar">
+        <span class="dcolor on" data-c="#3A2E52" style="background:#3A2E52"></span>
+        <span class="dcolor" data-c="#C4714F" style="background:#C4714F"></span>
+        <span class="dcolor" data-c="#7A4FB0" style="background:#7A4FB0"></span>
+        <span class="dcolor" data-c="#9FB4E8" style="background:#9FB4E8"></span>
+        <span class="dcolor" data-c="#D4B978" style="background:#D4B978"></span>
+        <span class="dcolor" data-c="#E8A9CE" style="background:#E8A9CE"></span>
+        <span class="dtool" id="eraseBtn" onclick="toggleErase()">Eraser</span>
+        <span class="dtool" onclick="clearDraw()">Clear</span>
       </div>
       <div class="tabs" id="tabs"></div>
     </div>
@@ -435,6 +460,8 @@ function renderPage(){
   document.getElementById('prevBtn').disabled=curPage===0;
   document.getElementById('nextBtn').disabled=curPage===curSec.pages.length-1;
   renderStickers();
+  initCanvas();
+  applyDrawMode();
 }
 function onEdit(){
   if(!curSec)return;var p=curPageObj();
@@ -469,26 +496,37 @@ document.getElementById('pal').addEventListener('click',function(e){
     applyPen();
   }
 });
+/* remember the caret/selection inside the body so popovers don't lose it */
+var savedRange=null;
+document.addEventListener('selectionchange',function(){
+  var s=window.getSelection();
+  var pb=document.getElementById('pbody');
+  if(s.rangeCount && pb && pb.contains(s.anchorNode)){ savedRange=s.getRangeAt(0).cloneRange(); }
+});
+function restoreSel(){
+  var pb=document.getElementById('pbody'); pb.focus();
+  if(savedRange){ var s=window.getSelection(); s.removeAllRanges(); s.addRange(savedRange); }
+}
+function insertStyledSpan(prop,val){
+  var pb=document.getElementById('pbody');
+  var s=window.getSelection(); if(!s.rangeCount)return;
+  var span=document.createElement('span'); span.style[prop]=val; span.appendChild(document.createTextNode('\u200b'));
+  var r=s.getRangeAt(0); r.deleteContents(); r.insertNode(span);
+  var nr=document.createRange(); nr.setStart(span.firstChild,1); nr.collapse(true);
+  s.removeAllRanges(); s.addRange(nr);
+}
 function applyPen(){
   if(lastField==='subject'){
-    // subject is a plain input — color the whole subject text
-    document.getElementById('subject').style.color=penColor;
-    var p=curPageObj(); if(p){p.titleColor=penColor;} onEdit();
-    return;
+    var sub=document.getElementById('subject'); sub.style.color=penColor;
+    var p=curPageObj(); if(p){p.titleColor=penColor;} onEdit(); return;
   }
-  var pb=document.getElementById('pbody');
-  pb.focus();
-  var sel=window.getSelection();
-  try{
-    document.execCommand('styleWithCSS',false,true);
-    if(sel && !sel.isCollapsed){
-      // recolor the highlighted text
-      document.execCommand('foreColor',false,penColor);
-    }else{
-      // nothing selected — set color for what you type next
-      document.execCommand('foreColor',false,penColor);
-    }
-  }catch(e){}
+  restoreSel();
+  var s=window.getSelection();
+  if(s.rangeCount && !s.getRangeAt(0).collapsed){
+    try{document.execCommand('styleWithCSS',false,true);document.execCommand('foreColor',false,penColor);}catch(e){}
+  }else{
+    insertStyledSpan('color',penColor);
+  }
   onEdit();
 }
 
@@ -502,8 +540,13 @@ function setFont(el){
     var sub=document.getElementById('subject');sub.style.fontFamily=f;
     var p=curPageObj(); if(p)p.titleFont=f; onEdit();
   }else{
-    var pb=document.getElementById('pbody'); pb.focus();
-    try{document.execCommand('styleWithCSS',false,true);document.execCommand('fontName',false,fam);}catch(e){}
+    restoreSel();
+    var s2=window.getSelection();
+    if(s2.rangeCount && !s2.getRangeAt(0).collapsed){
+      try{document.execCommand('styleWithCSS',false,true);document.execCommand('fontName',false,fam);}catch(e){}
+    }else{
+      insertStyledSpan('fontFamily',f);
+    }
     onEdit();
   }
   toast('Font set ✦');
@@ -580,6 +623,44 @@ function wireSticker(el,st){
     var addi=el.querySelector('.addi'); if(addi)addi.onclick=function(){st.items.push({t:'',done:false});save();renderStickers();};
   }
 }
+
+/* ===== draw mode (Apple Pencil / finger) ===== */
+var draw=document.getElementById('draw'), dctx=null, drawing=false, penC='#3A2E52', erasing=false;
+function initCanvas(){
+  var pageEl=document.getElementById('page');
+  if(!pageEl.clientWidth)return;
+  draw.width=pageEl.clientWidth; draw.height=pageEl.clientHeight;
+  dctx=draw.getContext('2d'); dctx.lineCap='round'; dctx.lineJoin='round';
+  var p=curPageObj();
+  if(p && p.drawing){ var img=new Image(); img.onload=function(){dctx.drawImage(img,0,0,draw.width,draw.height);}; img.src=p.drawing; }
+}
+function applyDrawMode(){
+  var p=curPageObj(); if(!p)return;
+  var on=p.drawMode===true;
+  document.getElementById('page').classList.toggle('drawing',on);
+  document.getElementById('drawbar').style.display=on?'flex':'none';
+  var db=document.getElementById('drawBtn'); if(db)db.textContent=on?'⌨️ Type':'✏️ Draw';
+}
+function toggleDraw(){ var p=curPageObj(); p.drawMode=!(p.drawMode===true); save(); applyDrawMode(); }
+function setDrawColor(c){ penC=c; erasing=false; document.getElementById('eraseBtn').classList.remove('on'); document.querySelectorAll('.dcolor').forEach(function(d){d.classList.toggle('on',d.dataset.c===c);}); }
+function toggleErase(){ erasing=!erasing; document.getElementById('eraseBtn').classList.toggle('on',erasing); if(erasing)document.querySelectorAll('.dcolor').forEach(function(d){d.classList.remove('on');}); }
+function clearDraw(){ if(!dctx)return; dctx.clearRect(0,0,draw.width,draw.height); var p=curPageObj(); if(p)p.drawing=''; save(); toast('Drawing cleared'); }
+function saveDraw(){ var p=curPageObj(); if(!p)return; try{p.drawing=draw.toDataURL('image/png');}catch(e){} clearTimeout(window._dsv); window._dsv=setTimeout(save,300); }
+document.querySelector('.drawbar').addEventListener('click',function(e){ if(e.target.classList.contains('dcolor'))setDrawColor(e.target.dataset.c); });
+draw.addEventListener('pointerdown',function(e){
+  if(!document.getElementById('page').classList.contains('drawing'))return;
+  drawing=true; var r=draw.getBoundingClientRect();
+  dctx.strokeStyle=penC; dctx.lineWidth=erasing?20:2.8; dctx.globalCompositeOperation=erasing?'destination-out':'source-over';
+  dctx.beginPath(); dctx.moveTo(e.clientX-r.left,e.clientY-r.top); e.preventDefault();
+},{passive:false});
+draw.addEventListener('pointermove',function(e){
+  if(!drawing)return; var r=draw.getBoundingClientRect();
+  dctx.lineTo(e.clientX-r.left,e.clientY-r.top); dctx.stroke(); e.preventDefault();
+},{passive:false});
+function endStroke(){ if(!drawing)return; drawing=false; dctx.globalCompositeOperation='source-over'; saveDraw(); }
+draw.addEventListener('pointerup',endStroke);
+draw.addEventListener('pointerleave',endStroke);
+draw.addEventListener('pointercancel',endStroke);
 
 /* boot */
 load();renderGrid();
