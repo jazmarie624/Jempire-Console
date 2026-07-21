@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,500..600&family=Inter:wght@400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Quicksand:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,500..600&family=Inter:wght@400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet">
 <style>
 :root{
   --plum:#2E2440;--plum-d:#271E36;--gold:#D4B978;--gold-lt:#EAD79A;--gold-br:#F6E9B8;--gold-deep:#B0975A;--gold-hair:rgba(212,185,120,.3);
@@ -67,7 +67,8 @@ button{font-family:inherit;cursor:pointer;}
 .pnav{display:flex;align-items:center;gap:8px;font-size:12px;color:#6a5a80;font-weight:700;}
 .pnav button{width:30px;height:30px;border-radius:50%;border:1px solid rgba(120,100,150,.3);background:rgba(255,255,255,.6);color:#5a3a6a;font-weight:800;}
 .pnav button:disabled{opacity:.35;}
-.paddbtn{margin-left:auto;background:var(--iris2);border:none;color:#2a1e33;font-weight:800;font-size:12px;padding:9px 14px;border-radius:20px;}
+.delpage{margin-left:auto;background:rgba(255,255,255,.5);border:1px solid rgba(120,100,150,.3);color:#8a4a5a;font-size:13px;padding:8px 11px;border-radius:18px;}
+.paddbtn{background:var(--iris2);border:none;color:#2a1e33;font-weight:800;font-size:12px;padding:9px 14px;border-radius:20px;}
 
 /* side tabs */
 .tabs{position:absolute;top:38px;right:-15px;display:flex;flex-direction:column;gap:9px;z-index:8;max-height:80%;}
@@ -100,6 +101,10 @@ button{font-family:inherit;cursor:pointer;}
 .pal-apply button{flex:1;padding:11px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--ink);font-weight:700;font-size:12px;}
 .pal-apply button.on{background:var(--iris2);color:#2a1e33;border-color:transparent;}
 
+.fontlist{display:flex;flex-direction:column;gap:9px;}
+.fontopt{text-align:left;padding:15px 16px;border-radius:13px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--ink);font-size:17px;font-weight:600;}
+.fontopt.on{background:var(--iris2);color:#2a1e33;border-color:transparent;}
+
 /* generic modal (name a section) */
 .modal{position:fixed;inset:0;z-index:210;background:rgba(20,14,30,.55);display:none;align-items:center;justify-content:center;padding:20px;}
 .modal.on{display:flex;}
@@ -116,6 +121,30 @@ button{font-family:inherit;cursor:pointer;}
 /* toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(30,22,42,.96);color:var(--ink);padding:11px 20px;border-radius:22px;font-size:13px;font-weight:600;border:1px solid var(--gold-hair);z-index:300;opacity:0;transition:opacity .25s;pointer-events:none;}
 .toast.on{opacity:1;}
+
+
+/* type selector (used in sticker maker) */
+.types{display:flex;gap:8px;}
+.ty{flex:1;padding:9px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--ink-mut);font-size:12px;font-weight:700;text-align:center;}
+.ty.on{background:var(--iris2);color:#2a1e33;border-color:transparent;}
+
+/* stickers on the page */
+.nsticker{position:absolute;z-index:20;max-width:240px;min-width:70px;border-radius:13px;padding:10px 13px;color:#2a1e33;box-shadow:0 7px 18px rgba(0,0,0,.28);border:1.5px solid rgba(255,255,255,.55);touch-action:none;cursor:grab;font-family:'Caveat',cursive;}
+.nsticker:active{cursor:grabbing;}
+.nsticker .st-head{display:flex;align-items:center;gap:7px;font-size:21px;font-weight:700;line-height:1.15;}
+.nsticker .st-head .ttl{flex:1;outline:none;min-width:20px;}
+.nsticker .st-fold,.nsticker .st-x{font-family:'Inter',sans-serif;font-size:12px;font-weight:800;opacity:.5;padding:0 3px;cursor:pointer;}
+.nsticker.folded .st-body{display:none;}
+.nsticker .st-body{margin-top:7px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+.nsticker.checklist .ci{display:flex;align-items:center;gap:8px;margin:5px 0;}
+.nsticker.checklist .box{width:18px;height:18px;border-radius:5px;border:2px solid rgba(0,0,0,.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;}
+.nsticker.checklist .box.on{background:rgba(0,0,0,.55);color:#fff;border-color:transparent;}
+.nsticker.checklist .ci .t{flex:1;outline:none;}
+.nsticker.checklist .ci.done .t{text-decoration:line-through;opacity:.6;}
+.nsticker .addi{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;opacity:.7;cursor:pointer;margin-top:6px;display:inline-block;}
+.nsticker.price{border-radius:8px 16px 16px 8px;padding:9px 16px 9px 22px;}
+.nsticker.price .st-head{font-size:23px;}
+.nsticker.price::before{content:'';position:absolute;left:8px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.9);}
 
 /* ===== iPad: bigger page ===== */
 @media(min-width:820px){
@@ -152,6 +181,8 @@ button{font-family:inherit;cursor:pointer;}
     <div class="sname"><span class="sw-dot" id="secDot"></span><span id="secName">Section</span></div>
     <div class="tool" onclick="toggleLined()"><span class="seg on" id="segLined">Lined</span><span>/</span><span class="seg" id="segBlank">Blank</span></div>
     <button class="tool pen" onclick="openPalette()"><span class="pen-dot" id="penDot" style="background:var(--penink)"></span>Color</button>
+    <button class="tool" onclick="openFonts()">✎ Font</button>
+    <button class="tool" onclick="openSticker()">✦ Sticker</button>
   </div>
   <div class="book">
     <div class="binding" id="binding"></div>
@@ -165,11 +196,26 @@ button{font-family:inherit;cursor:pointer;}
             <span id="pageLbl">Page 1 / 1</span>
             <button id="nextBtn" onclick="flip(1)">›</button>
           </div>
+          <button class="delpage" onclick="deletePage()" id="delPageBtn" title="Delete this page">🗑</button>
           <button class="paddbtn" onclick="addPage()">＋ Add page</button>
         </div>
       </div>
       <div class="tabs" id="tabs"></div>
     </div>
+  </div>
+</div>
+
+<!-- font picker -->
+<div class="pal" id="fontPal">
+  <div class="pal-box">
+    <h3>Section font</h3>
+    <p>Pick the vibe for this whole section.</p>
+    <div class="fontlist">
+      <button class="fontopt" data-f="'Quicksand',sans-serif" style="font-family:'Quicksand',sans-serif" onclick="setFont(this)">Quicksand — soft &amp; rounded</button>
+      <button class="fontopt" data-f="'Caveat',cursive" style="font-family:'Caveat',cursive;font-size:24px" onclick="setFont(this)">Caveat — handwritten &amp; cute</button>
+      <button class="fontopt" data-f="'Cormorant Garamond',serif" style="font-family:'Cormorant Garamond',serif;font-size:21px" onclick="setFont(this)">Cormorant — elegant &amp; flowing</button>
+    </div>
+    <button class="pal-close" onclick="closeFonts()">Done</button>
   </div>
 </div>
 
@@ -206,6 +252,33 @@ button{font-family:inherit;cursor:pointer;}
       <div class="sw" data-c="#FBF7F2" style="background:#FBF7F2"></div>
     </div>
     <button class="pal-close" onclick="closePalette()">Done</button>
+  </div>
+</div>
+
+<!-- sticker maker -->
+<div class="modal" id="stickerModal">
+  <div class="modal-box">
+    <h3>New sticker</h3>
+    <input id="stText" placeholder="Type anything… e.g. Nail salons" maxlength="60">
+    <div class="sw-lbl">Type</div>
+    <div class="types" id="stTypes">
+      <div class="ty on" data-t="label" onclick="setStType(this)">Label</div>
+      <div class="ty" data-t="checklist" onclick="setStType(this)">Checklist</div>
+      <div class="ty" data-t="price" onclick="setStType(this)">Price</div>
+    </div>
+    <div class="sw-lbl">Color</div>
+    <div class="swrow" id="stColors">
+      <div class="sw on" data-c="#E8A9CE" style="background:#E8A9CE"></div>
+      <div class="sw" data-c="#BCA6E8" style="background:#BCA6E8"></div>
+      <div class="sw" data-c="#9FB4E8" style="background:#9FB4E8"></div>
+      <div class="sw" data-c="#8FD8C4" style="background:#8FD8C4"></div>
+      <div class="sw" data-c="#E6C766" style="background:#E6C766"></div>
+      <div class="sw" data-c="#E39B7E" style="background:#E39B7E"></div>
+    </div>
+    <div class="mrow" style="margin-top:14px">
+      <button class="m-cancel" onclick="closeSticker()">Cancel</button>
+      <button class="m-ok" onclick="makeSticker()">Add sticker</button>
+    </div>
   </div>
 </div>
 
@@ -295,7 +368,7 @@ function openSection(id){
   document.getElementById('backLbl').textContent='Sections';
   document.getElementById('secName').textContent=curSec.name;
   document.getElementById('secDot').style.background=swBg(curSec.color);
-  renderBinding();renderTabs();renderPage();window.scrollTo(0,0);
+  renderBinding();renderTabs();renderPage();applyFont();window.scrollTo(0,0);
 }
 function goHome(){
   if(document.getElementById('sectionView').style.display==='block'){
@@ -325,6 +398,7 @@ function curPageObj(){return curSec.pages[curPage];}
 function renderPage(){
   var p=curPageObj();
   document.getElementById('subject').value=p.title||'';
+  document.getElementById('subject').style.color=p.titleColor||'var(--penink)';
   document.getElementById('pbody').innerHTML=p.body||'';
   var pg=document.getElementById('page');
   pg.classList.toggle('lined',p.lined!==false);pg.classList.toggle('blank',p.lined===false);
@@ -333,6 +407,7 @@ function renderPage(){
   document.getElementById('pageLbl').textContent='Page '+(curPage+1)+' / '+curSec.pages.length;
   document.getElementById('prevBtn').disabled=curPage===0;
   document.getElementById('nextBtn').disabled=curPage===curSec.pages.length-1;
+  renderStickers();
 }
 function onEdit(){
   if(!curSec)return;var p=curPageObj();
@@ -341,13 +416,23 @@ function onEdit(){
   clearTimeout(window._sv);window._sv=setTimeout(save,400);
 }
 function addPage(){curSec.pages.push({id:uid(),title:'',body:'',lined:document.getElementById('page').classList.contains('lined')});curPage=curSec.pages.length-1;save();renderPage();toast('New page ✦');}
+function deletePage(){
+  if(curSec.pages.length<=1){toast('A section needs at least one page');return;}
+  if(!confirm('Delete this page?'))return;
+  curSec.pages.splice(curPage,1);
+  if(curPage>=curSec.pages.length)curPage=curSec.pages.length-1;
+  save();renderPage();toast('Page deleted');
+}
 function flip(d){var n=curPage+d;if(n<0||n>=curSec.pages.length)return;curPage=n;renderPage();}
 function toggleLined(){var p=curPageObj();p.lined=!(p.lined!==false);save();renderPage();}
 
 /* ===== color palette (pen color for typed text) ===== */
 function openPalette(){document.getElementById('pal').classList.add('on');}
 function closePalette(){document.getElementById('pal').classList.remove('on');}
-document.querySelector('#pal .swrow').parentNode.addEventListener('click',function(e){
+var lastField='pbody'; // remember which field was focused (subject or body)
+document.getElementById('subject').addEventListener('focus',function(){lastField='subject';});
+document.getElementById('pbody').addEventListener('focus',function(){lastField='pbody';});
+document.getElementById('pal').addEventListener('click',function(e){
   if(e.target.classList.contains('sw')){
     var c=e.target.dataset.c;
     penColor=(c==='iris')?'#BCA6E8':c;
@@ -357,10 +442,100 @@ document.querySelector('#pal .swrow').parentNode.addEventListener('click',functi
   }
 });
 function applyPen(){
-  // color the current text selection, or set for upcoming typing
-  document.getElementById('pbody').focus();
-  try{document.execCommand('styleWithCSS',false,true);document.execCommand('foreColor',false,penColor);}catch(e){}
+  if(lastField==='subject'){
+    // subject is a plain input — color the whole subject text
+    document.getElementById('subject').style.color=penColor;
+    var p=curPageObj(); if(p){p.titleColor=penColor;} onEdit();
+    return;
+  }
+  var pb=document.getElementById('pbody');
+  pb.focus();
+  var sel=window.getSelection();
+  try{
+    document.execCommand('styleWithCSS',false,true);
+    if(sel && !sel.isCollapsed){
+      // recolor the highlighted text
+      document.execCommand('foreColor',false,penColor);
+    }else{
+      // nothing selected — set color for what you type next
+      document.execCommand('foreColor',false,penColor);
+    }
+  }catch(e){}
   onEdit();
+}
+
+/* fonts */
+function openFonts(){var cur=(curSec&&curSec.font)||"'Quicksand',sans-serif";document.querySelectorAll('.fontopt').forEach(function(x){x.classList.toggle('on',x.dataset.f===cur);});document.getElementById('fontPal').classList.add('on');}
+function closeFonts(){document.getElementById('fontPal').classList.remove('on');}
+function setFont(el){if(!curSec)return;curSec.font=el.dataset.f;save();applyFont();document.querySelectorAll('.fontopt').forEach(function(x){x.classList.remove('on');});el.classList.add('on');toast('Font set ✦');}
+function applyFont(){var f=(curSec&&curSec.font)||"'Quicksand',sans-serif";document.getElementById('pbody').style.fontFamily=f;document.getElementById('subject').style.fontFamily=(f.indexOf('Caveat')>=0||f.indexOf('Cormorant')>=0)?f:"var(--disp)";}
+
+/* ===== stickers ===== */
+var stType='label', stColor='#E8A9CE';
+function openSticker(){
+  if(!curSec)return;
+  stType='label';stColor='#E8A9CE';
+  document.getElementById('stText').value='';
+  document.querySelectorAll('#stTypes .ty').forEach(function(x){x.classList.toggle('on',x.dataset.t==='label');});
+  document.querySelectorAll('#stColors .sw').forEach(function(x,i){x.classList.toggle('on',i===0);});
+  document.getElementById('stickerModal').classList.add('on');
+  setTimeout(function(){document.getElementById('stText').focus();},100);
+}
+function closeSticker(){document.getElementById('stickerModal').classList.remove('on');}
+function setStType(el){document.querySelectorAll('#stTypes .ty').forEach(function(x){x.classList.remove('on');});el.classList.add('on');stType=el.dataset.t;}
+document.getElementById('stColors').addEventListener('click',function(e){if(e.target.classList.contains('sw')){document.querySelectorAll('#stColors .sw').forEach(function(x){x.classList.remove('on');});e.target.classList.add('on');stColor=e.target.dataset.c;}});
+function makeSticker(){
+  var txt=document.getElementById('stText').value.trim(); if(!txt){closeSticker();return;}
+  var p=curPageObj(); if(!p.stickers)p.stickers=[];
+  var st={id:uid(),type:stType,text:txt,color:stColor,x:70+Math.random()*90,y:130+Math.random()*130,rot:(Math.random()*8-4),folded:false};
+  if(stType==='checklist')st.items=[{t:'first item…',done:false}];
+  p.stickers.push(st);save();closeSticker();renderStickers();toast('Sticker added ✦');
+}
+function renderStickers(){
+  var page=document.getElementById('page');
+  page.querySelectorAll('.nsticker').forEach(function(n){n.remove();});
+  var p=curPageObj(); if(!p||!p.stickers)return;
+  p.stickers.forEach(function(st){page.appendChild(buildSticker(st));});
+}
+function buildSticker(st){
+  var el=document.createElement('div');
+  el.className='nsticker '+st.type+(st.folded?' folded':'');
+  el.style.left=st.x+'px';el.style.top=st.y+'px';el.style.background=st.color;el.style.transform='rotate('+(st.rot||0)+'deg)';
+  el.dataset.id=st.id;
+  if(st.type==='price'){
+    el.innerHTML='<div class="st-head"><span class="ttl" contenteditable="true">'+esc(st.text)+'</span><span class="st-x">✕</span></div>';
+  }else{
+    var head='<div class="st-head"><span class="ttl" contenteditable="true">'+esc(st.text)+'</span><span class="st-fold">'+(st.folded?'▸':'▾')+'</span><span class="st-x">✕</span></div>';
+    var body='';
+    if(st.type==='checklist'){
+      body='<div class="st-body">'+(st.items||[]).map(function(it,i){return '<div class="ci'+(it.done?' done':'')+'"><span class="box'+(it.done?' on':'')+'" data-i="'+i+'">'+(it.done?'✓':'')+'</span><span class="t" contenteditable="true" data-i="'+i+'">'+esc(it.t)+'</span></div>';}).join('')+'<span class="addi">＋ add item</span></div>';
+    }
+    el.innerHTML=head+body;
+  }
+  wireSticker(el,st);
+  return el;
+}
+function wireSticker(el,st){
+  var sx,sy,ox,oy,dragging=false;
+  el.addEventListener('pointerdown',function(e){
+    var t=e.target;
+    if(t.classList.contains('ttl')||t.classList.contains('t')||t.classList.contains('box')||t.classList.contains('st-x')||t.classList.contains('st-fold')||t.classList.contains('addi'))return;
+    dragging=true;el.setPointerCapture(e.pointerId);
+    sx=e.clientX;sy=e.clientY;ox=el.offsetLeft;oy=el.offsetTop;el.style.zIndex=60;
+  });
+  el.addEventListener('pointermove',function(e){if(!dragging)return;el.style.left=(ox+e.clientX-sx)+'px';el.style.top=(oy+e.clientY-sy)+'px';});
+  el.addEventListener('pointerup',function(){if(!dragging)return;dragging=false;el.style.zIndex=20;st.x=el.offsetLeft;st.y=el.offsetTop;save();});
+  var fold=el.querySelector('.st-fold');
+  if(fold)fold.onclick=function(){st.folded=!st.folded;el.classList.toggle('folded',st.folded);fold.textContent=st.folded?'▸':'▾';save();};
+  el.querySelector('.st-x').onclick=function(){if(!confirm('Delete this sticker?'))return;var p=curPageObj();p.stickers=p.stickers.filter(function(x){return x.id!==st.id;});save();renderStickers();};
+  var ttl=el.querySelector('.ttl');
+  if(ttl)ttl.addEventListener('input',function(){st.text=ttl.textContent;clearTimeout(window._sv);window._sv=setTimeout(save,400);});
+  if(st.type==='checklist'){
+    el.querySelectorAll('.box').forEach(function(b){b.onclick=function(){var i=+b.dataset.i;st.items[i].done=!st.items[i].done;save();renderStickers();};});
+    el.querySelectorAll('.ci .t').forEach(function(t){t.addEventListener('input',function(){var i=+t.dataset.i;st.items[i].t=t.textContent;clearTimeout(window._sv);window._sv=setTimeout(save,400);});});
+    var addi=el.querySelector('.addi');
+    if(addi)addi.onclick=function(){st.items.push({t:'',done:false});save();renderStickers();};
+  }
 }
 
 /* boot */
