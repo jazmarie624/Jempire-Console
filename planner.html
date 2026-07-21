@@ -660,9 +660,10 @@ body{font-family:'Inter',sans-serif;background:#F0ECE8;color:var(--brown-dark);m
   <span class="h-spark" style="left:82%;top:70%;font-size:10px;animation-duration:2.8s;animation-delay:0.4s;">✦</span>
   <span class="h-spark" style="left:50%;top:15%;font-size:8px;animation-duration:4s;animation-delay:1.2s;">⋆</span>
   <div class="h-eyebrow">My Anchor · J Empire</div>
+  <div class="h-greeting" id="hGreeting">Good Day, Jasz ✦</div>
   <div class="h-title">🗓️ <em>Planner</em></div>
   <div class="h-divider"><div class="hdl"></div><div class="hdg"></div><div class="hdl"></div></div>
-  <div class="h-quote">"Your day, your way. Plan it like a queen." ✦</div>
+  <div class="h-quote"><span id="hFloatLine">"Your day, your way. Plan it like a queen." ✦</span></div>
 </div>
 
 <!-- FLOATING BELL — fixed position, nothing can block it -->
@@ -4125,5 +4126,49 @@ body{
 .day-note-input{color:#F0EAF6 !important;}
 .day-note-input::placeholder,.field-input::placeholder{color:#B6AACA !important;}
 
+/* ── header greeting + floating tagline ── */
+.h-greeting{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--gold-light);letter-spacing:.02em;margin-bottom:2px;text-align:center;}
+.h-greeting .sp{color:var(--gold);}
+#hFloatLine{transition:opacity .9s ease;display:inline-block;}
+#hFloatLine.fade{opacity:0;}
+
 </style>
+<script id="je-header-lines">
+(function(){
+  // time-aware greeting
+  function setGreeting(){
+    var el=document.getElementById('hGreeting'); if(!el) return;
+    var h=new Date().getHours(), g='Good Evening';
+    if(h<12) g='Good Morning'; else if(h<17) g='Good Afternoon';
+    el.innerHTML=g+', Jasz <span class="sp">✦</span>';
+  }
+  setGreeting();
+  // floating lines — tagline is home base
+  var LINES=[
+    '"Your day, your way. Plan it like a queen." ✦',
+    'She who plans, reigns ✦',
+    'A throne is built on ordinary days ✦',
+    'J ✦ Empire — built by a Strong Mama',
+    'Plan the day. Rule the day. ✦',
+    'Where the chaos meets its queen ✦',
+    'Calm is the crown ✦',
+    'Order is my kind of luxury ✦',
+    'Little by little, a legacy ✦',
+    'Queen of the details ✦',
+    'Six crowns to raise, and you wear yours well ✦',
+    'Your peace is the whole point ✦',
+    'Softly in control ✦',
+    'The empire runs on today ✦',
+    'Every day, on purpose ✦'
+  ];
+  var el=document.getElementById('hFloatLine');
+  if(el){
+    var i=0;
+    setInterval(function(){
+      el.classList.add('fade');
+      setTimeout(function(){ i=(i+1)%LINES.length; el.textContent=LINES[i]; el.classList.remove('fade'); },900);
+    },5000);
+  }
+})();
+</script>
 </html>
