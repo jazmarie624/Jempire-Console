@@ -3373,7 +3373,7 @@ window.renderBanner = function(){
 
     const body = lines.length
       ? lines.map(renderLine).join('')
-      : '<div class="je-quiet">Nothing to report today.</div>';
+      : '<div class="je-quiet">✦ Your briefing is brewing — check back this morning.</div>';
 
     const d = new Date(dateKey + 'T12:00:00');
     const nice = DAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + ' ' + d.getDate();
@@ -3400,6 +3400,7 @@ window.renderBanner = function(){
       if(!r.ok) return;
       const rows = await r.json();
       if(rows && rows.length) draw(rows[0].briefing, rows[0].date_key);
+      else draw('', today);
     }catch(e){ /* silent — the planner still works without it */ }
   }
 
@@ -4021,7 +4022,7 @@ window.addEventListener('load',function(){
 /* ══ J EMPIRE · OPAL THEME LAYER ══ */
 :root{
   --cream:#2E2442; --cream-deep:#251C36;
-  --brown-dark:#FCFAF6; --brown-mid:#E4DCEC; --brown-muted:#D8CEE6; --brown-soft:#BCB0CC;
+  --brown-dark:#FCFAF6; --brown-mid:#E4DCEC; --brown-muted:#D8CEE6; --brown-soft:#C6BAD6;
   --white-warm:rgba(255,255,255,0.07);
   --terra:#D4B978; --terra-light:#EAD79A;
   --rose-gold:#C9A98E; --rose-light:#E0C3A0;
@@ -4118,6 +4119,11 @@ body{
 .ws-num{color:var(--gold-light) !important;}
 .nav-item.active{color:var(--gold-light) !important;}
 .notif-panel-header{background:linear-gradient(135deg,#2E2145,#4A3A66) !important;}
+
+/* ── faint empty-state / placeholder text → readable ── */
+.banner-empty,.empty-slot,.agenda-empty,.notif-empty{color:#CBBFDD !important;}
+.day-note-input{color:#F0EAF6 !important;}
+.day-note-input::placeholder,.field-input::placeholder{color:#B6AACA !important;}
 
 </style>
 </html>
