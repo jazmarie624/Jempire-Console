@@ -4004,4 +4004,65 @@ window.addEventListener('load',function(){
 })();
 </script>
 
+<style id="opal-theme">
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Pinyon+Script&display=swap');
+
+/* ══ J EMPIRE · OPAL THEME LAYER ══ */
+:root{
+  --cream:#2E2442; --cream-deep:#251C36;
+  --brown-dark:#FCFAF6; --brown-mid:#DAD2E2; --brown-muted:#C4B9CE; --brown-soft:#9D91AB;
+  --white-warm:rgba(255,255,255,0.07);
+  --terra:#D4B978; --terra-light:#EAD79A;
+  --rose-gold:#C9A98E; --rose-light:#E0C3A0;
+  --gold:#D4B978; --gold-light:#EAD79A;
+  --lane-finance:#7FC98A; --lane-finance-bg:rgba(127,201,138,0.16);
+  --lane-kids:#E6C766;    --lane-kids-bg:rgba(230,199,102,0.16);
+  --lane-gig:#E39B7E;     --lane-gig-bg:rgba(227,155,126,0.16);
+  --lane-personal:#DDA0C8;--lane-personal-bg:rgba(221,160,200,0.16);
+  --lane-legal:#9FB4E8;   --lane-legal-bg:rgba(159,180,232,0.16);
+  --lane-appt:#FF6B5E;    --lane-appt-bg:rgba(255,107,94,0.16);
+  --school-hg:#7FC98A; --school-hg-bg:rgba(127,201,138,0.16);
+  --school-sc:#9FB4E8; --school-sc-bg:rgba(159,180,232,0.16);
+  --school-lv:#DDA0C8; --school-lv-bg:rgba(221,160,200,0.16);
+}
+body{
+  background:
+    radial-gradient(38% 30% at 18% 14%, rgba(232,169,206,.20), transparent 70%),
+    radial-gradient(42% 32% at 84% 18%, rgba(159,180,232,.18), transparent 72%),
+    radial-gradient(46% 34% at 60% 86%, rgba(143,216,196,.16), transparent 72%),
+    radial-gradient(38% 30% at 10% 82%, rgba(240,201,168,.15), transparent 72%),
+    linear-gradient(165deg,#372C4A 0%,#2E2440 45%,#271E36 100%) !important;
+  background-attachment:fixed !important;
+  color:var(--brown-dark) !important;
+}
+/* header → deep opal plum */
+.header{background:linear-gradient(160deg,#2E2145 0%,#3A2A56 55%,#271C3E 100%) !important;}
+.h-title,.h-title em{font-family:'Pinyon Script',cursive !important;}
+
+/* tabs + nav */
+.tab-btn{background:rgba(255,255,255,.05) !important;color:var(--brown-mid) !important;border-color:rgba(212,185,120,.28) !important;}
+.tab-btn.active{color:#2A1E12 !important;}
+.nav-bar{background:rgba(26,18,36,.94) !important;border-top-color:rgba(212,185,120,.2) !important;}
+.date-nav{border-bottom-color:rgba(212,185,120,.16) !important;}
+
+/* month grid — dark cells, light Fraunces numbers */
+.month-title-big{color:#FCFAF6 !important;font-family:'Fraunces',serif !important;}
+.m-dow-lbl{color:var(--gold) !important;}
+.mc{background:rgba(255,255,255,.07) !important;border-color:rgba(255,255,255,.12) !important;box-shadow:0 1px 4px rgba(0,0,0,.22) !important;}
+.mc-num{color:#FCFAF6 !important;font-family:'Fraunces',serif !important;}
+.mc.today-mc{background:rgba(255,255,255,.05) !important;border:2px solid var(--gold) !important;box-shadow:0 0 0 3px rgba(212,185,120,.25) !important;}
+.mc.today-mc .mc-num{color:var(--gold) !important;}
+.mc.active-mc{border-color:#C79FD4 !important;border-width:2px !important;}
+.mc.active-mc .mc-num{color:#DDB8EC !important;}
+.mc.payday-mc{background:rgba(127,201,138,.14) !important;border-color:rgba(127,201,138,.30) !important;}
+.mc.empty-mc{background:transparent !important;border-color:transparent !important;box-shadow:none !important;}
+
+/* cards / panels that used literal light fills */
+.banner{background:rgba(255,255,255,.06) !important;border-color:rgba(212,185,120,.2) !important;}
+.bstat{background:rgba(255,255,255,.05) !important;}
+.split-panel{background:rgba(255,255,255,.05) !important;border-color:rgba(255,255,255,.1) !important;}
+
+/* reading font on event + agenda titles */
+.ae-title,.eb-title,.agenda-evt,.ag-num,.week-num-label{font-family:'Fraunces',serif !important;}
+</style>
 </html>
