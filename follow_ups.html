@@ -635,3 +635,59 @@ document.getElementById('save').onclick = async function(){
 if(typeof ROWS !== 'undefined' && ROWS.length) render();
 </script>
 
+<style id="opal-followups">
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,500..600&family=Pinyon+Script&display=swap');
+/* ══ J EMPIRE · OPAL THEME — FOLLOW-UPS ══ */
+:root{
+  --cream:#2E2442; --card:rgba(255,255,255,.06);
+  --wine:#2E2145; --wine-mid:#3A2A56; --wine-light:#4A3A66;
+  --rose:#BCA6E8; --blush:rgba(188,166,232,.15); --champagne:#EAD79A;
+  --gold:#D4B978; --gold-line:#EAD79A;
+  --ink:#FCFAF6; --ink-mid:#D8CEE6; --ink-soft:#A99EB6;
+  --line:rgba(255,255,255,.12);
+  --green:#7FC98A; --rust:#FF6B5E;
+}
+body{
+  background:
+    radial-gradient(38% 26% at 16% 12%,rgba(232,169,206,.16),transparent 70%),
+    radial-gradient(40% 28% at 86% 16%,rgba(159,180,232,.14),transparent 72%),
+    radial-gradient(44% 30% at 60% 90%,rgba(143,216,196,.12),transparent 72%),
+    linear-gradient(170deg,#372C4A 0%,#2E2440 45%,#271E36 100%) !important;
+  background-attachment:fixed !important; color:var(--ink) !important;
+}
+/* header */
+.hdr{background:linear-gradient(160deg,#2E2145 0%,#3A2A56 55%,#271C3E 100%) !important;}
+.ttl{background:linear-gradient(115deg,#F6E9B8,#D4B978,#B0975A);-webkit-background-clip:text;background-clip:text;color:transparent !important;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));}
+.sub{color:var(--ink-mid) !important;}
+.eyebrow{color:var(--gold-line) !important;}
+/* Calls / Emails tabs */
+.tab{background:rgba(255,255,255,.05) !important;color:var(--ink-mid) !important;border-color:var(--gold-hair,rgba(212,185,120,.3)) !important;}
+.tab.on{background:linear-gradient(135deg,#E8A9CE,#BCA6E8,#9FB4E8) !important;color:#2a1e33 !important;border-color:transparent !important;box-shadow:0 4px 16px rgba(190,150,205,.4) !important;}
+.tab.on::after{color:#4a3a2a !important;}
+/* contact cards → dark glass with a status color bar */
+.body{background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.03)) !important;border:1px solid var(--line) !important;border-left-width:4px !important;box-shadow:0 6px 18px rgba(0,0,0,.25) !important;}
+.wait .body{border-left-color:var(--green) !important;}
+.due  .body{border-left-color:var(--gold) !important;}
+.over .body{border-left-color:var(--rust) !important;}
+.done .body{opacity:.55 !important;border-left-color:var(--ink-soft) !important;}
+.body::after{background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.02)) !important;}
+.who{color:var(--ink) !important;}
+/* empty state */
+.empty{color:var(--ink-soft) !important;}
+.empty .e-t{color:var(--ink-mid) !important;}
+/* Log a Contact button */
+.fab{background:linear-gradient(135deg,#E8A9CE,#BCA6E8,#9FB4E8) !important;color:#2a1e33 !important;box-shadow:0 8px 24px rgba(190,150,205,.45) !important;}
+/* log sheet + fields */
+.sheet{background:linear-gradient(170deg,#332843,#251C36) !important;border-top:1px solid rgba(212,185,120,.3) !important;}
+.s-ttl{color:var(--ink) !important;}
+.field,.padwrap textarea,.padwrap input{background:rgba(255,255,255,.06) !important;color:var(--ink) !important;border-color:var(--line) !important;}
+.field::placeholder,textarea::placeholder{color:var(--ink-soft) !important;}
+.ch{background:rgba(255,255,255,.05) !important;border-color:var(--line) !important;}
+.ch.on{background:linear-gradient(135deg,#E8A9CE,#BCA6E8,#9FB4E8) !important;border-color:transparent !important;}
+.ch.on .n,.ch.on .u{color:#2a1e33 !important;}
+.ch .n{color:var(--ink) !important;}
+/* bottom nav */
+.navbar{background:rgba(26,18,36,.94) !important;border-top:1px solid rgba(212,185,120,.2) !important;}
+/* display font for the title */
+.ttl{font-family:'Fraunces',serif !important;}
+</style>
