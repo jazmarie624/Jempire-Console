@@ -690,4 +690,22 @@ body{
 .navbar{background:rgba(26,18,36,.94) !important;border-top:1px solid rgba(212,185,120,.2) !important;}
 /* display font for the title */
 .ttl{font-family:'Fraunces',serif !important;}
+
+/* bolder, brighter card text (easier on the eyes) */
+.who{color:#FFFFFF !important;font-weight:700 !important;}
+.pad-txt{color:#EFE7F5 !important;font-weight:500 !important;}
+.subj{color:#EFE7F5 !important;font-weight:600 !important;}
+.empty .e-t{color:#F0E9F6 !important;font-weight:600 !important;}
+.empty .e-s{color:#D8CEE6 !important;}
+
+/* ── iPad: fill the screen, contacts in 2 columns ── */
+@media (min-width:820px){
+  body{max-width:980px !important;}
+  .navbar,.sheet{max-width:980px !important;}
+  .list{display:grid !important;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
+  .bub{margin:0 !important;}
+  .empty{grid-column:1/-1;}
+  .who{font-size:18px !important;}
+  .pad-txt,.subj{font-size:14px !important;}
+}
 </style>
