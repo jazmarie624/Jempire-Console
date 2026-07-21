@@ -4132,6 +4132,20 @@ body{
 #hFloatLine{transition:opacity .9s ease;display:inline-block;}
 #hFloatLine.fade{opacity:0;}
 
+/* ── iPad: unlock the phone-width cap, bigger calendar ── */
+@media (min-width:700px){
+  body{max-width:920px !important;}
+  .nav-bar,.notif-panel,.bottom-sheet{max-width:920px !important;}
+  .m-grid{grid-auto-rows:120px !important;gap:7px !important;}
+  .mc{height:120px !important;}
+  .mc-num{font-size:23px !important;}
+  .mc-bar{height:8px !important;}
+  .month-title-big{font-size:42px !important;}
+  .h-title{font-size:52px !important;}
+  .h-greeting{font-size:20px !important;}
+  .header{padding:44px 20px 28px !important;}
+}
+
 </style>
 <script id="je-header-lines">
 (function(){
