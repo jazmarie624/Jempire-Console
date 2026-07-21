@@ -934,6 +934,8 @@ body{font-family:'Inter',sans-serif;background:#F0ECE8;color:var(--brown-dark);m
       <div class="legend-item"><div class="ldot" style="background:var(--lane-gig)"></div>Gig</div>
       <div class="legend-item"><div class="ldot" style="background:var(--lane-kids)"></div>Kids</div>
       <div class="legend-item"><div class="ldot" style="background:var(--lane-legal)"></div>Legal</div>
+      <div class="legend-item"><div class="ldot" style="background:var(--lane-personal)"></div>Personal</div>
+      <div class="legend-item"><div class="ldot" style="background:var(--lane-appt)"></div>Appt</div>
     </div>
     <div class="m-dow"><div class="m-dow-lbl">Su</div><div class="m-dow-lbl">Mo</div><div class="m-dow-lbl">Tu</div><div class="m-dow-lbl">We</div><div class="m-dow-lbl">Th</div><div class="m-dow-lbl">Fr</div><div class="m-dow-lbl">Sa</div></div>
     <div class="m-grid" id="monthGrid"></div>
@@ -3922,10 +3924,19 @@ window.addEventListener('load',function(){
       var isPay=isPayday(key), isPinned=pinnedDays.includes(key), dayEvts=byDay[key]||[], stickers=dayStickers[key]||[];
       var div=document.createElement('div');
       div.className='mc'+(key===todKey?' today-mc':'')+(key===selKey?' active-mc':'')+(isPay?' payday-mc':'')+(isPinned?' pinned-mc':'');
-      var lbls=[]; if(isPay) lbls.push({text:'💰 Pay',cls:'lbl-payday'});
-      dayEvts.slice(0,2).forEach(function(ev){lbls.push({text:(window.jeEmoji?jeEmoji(ev):'')+' '+(ev.title||'').slice(0,8),cls:'lbl-'+(window.jeCls?jeCls(ev):(ev.category||'personal'))});});
+      var PRIO=['kids','appt','personal','finance','legal','gig'];
+      var cset={}; if(isPay) cset['finance']=1;
+      dayEvts.forEach(function(ev){var c=(window.jeCls?jeCls(ev):(ev.category||'personal'));if(PRIO.indexOf(c)<0)c='personal';cset[c]=1;});
+      var cats=PRIO.filter(function(c){return cset[c];});
+      var bar='';
+      if(cats.length){
+        var segs;
+        if(cats.length<=3){segs=cats.map(function(c){return '<span class="mc-seg seg-'+c+'"></span>';});}
+        else{segs=cats.slice(0,2).map(function(c){return '<span class="mc-seg seg-'+c+'"></span>';});segs.push('<span class="mc-seg mc-more">+</span>');}
+        bar='<div class="mc-bar">'+segs.join('')+'</div>';
+      }
       var stk=stickers.slice(0,2).map(function(s){return '<div class="mc-sticker '+s.cls+'">'+s.label+'</div>';}).join('');
-      div.innerHTML='<button class="pin-btn '+(isPinned?'pinned':'')+'" onclick="togglePin(\''+key+'\',event)">'+(isPinned?'📌':'·')+'</button><div class="mc-num">'+d+'</div><div class="mc-labels">'+lbls.map(function(l){return '<div class="mc-lbl '+l.cls+'">'+l.text+'</div>';}).join('')+stk+'</div>';
+      div.innerHTML='<button class="pin-btn '+(isPinned?'pinned':'')+'" onclick="togglePin(\''+key+'\',event)">'+(isPinned?'📌':'·')+'</button><div class="mc-num">'+d+'</div><div class="mc-labels">'+stk+'</div>'+bar;
       (function(k,dd){div.onclick=function(e){if(e.target.classList.contains('pin-btn'))return;if(selectedStickerMonth){stampStickerOnDate(k);return;}currentDate=new Date(year,month,dd);switchView('week');};})(key,d);
       grid.appendChild(div);
     }
@@ -4074,6 +4085,18 @@ body{
   linear-gradient(160deg,#4A3A66 0%,#54427A 55%,#453765 100%) !important;
   border:1px solid rgba(199,159,212,.35) !important;
   box-shadow:0 10px 30px rgba(120,90,160,.35) !important;}
+
+/* month color bar (priority segments + overflow) */
+.mc{position:relative;}
+.mc-bar{position:absolute;left:6px;right:6px;bottom:6px;height:6px;border-radius:4px;overflow:hidden;display:flex;gap:2px;z-index:2;}
+.mc-bar .mc-seg{flex:1;border-radius:2px;}
+.mc-seg.seg-finance{background:var(--lane-finance);}
+.mc-seg.seg-gig{background:var(--lane-gig);}
+.mc-seg.seg-kids{background:var(--lane-kids);}
+.mc-seg.seg-legal{background:var(--lane-legal);}
+.mc-seg.seg-personal{background:var(--lane-personal);}
+.mc-seg.seg-appt{background:var(--lane-appt);}
+.mc-seg.mc-more{background:rgba(212,185,120,.35);color:var(--gold-light);font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;line-height:1;}
 
 </style>
 </html>
