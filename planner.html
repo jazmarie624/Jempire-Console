@@ -4021,7 +4021,7 @@ window.addEventListener('load',function(){
 /* ══ J EMPIRE · OPAL THEME LAYER ══ */
 :root{
   --cream:#2E2442; --cream-deep:#251C36;
-  --brown-dark:#FCFAF6; --brown-mid:#DAD2E2; --brown-muted:#C4B9CE; --brown-soft:#9D91AB;
+  --brown-dark:#FCFAF6; --brown-mid:#E4DCEC; --brown-muted:#D8CEE6; --brown-soft:#BCB0CC;
   --white-warm:rgba(255,255,255,0.07);
   --terra:#D4B978; --terra-light:#EAD79A;
   --rose-gold:#C9A98E; --rose-light:#E0C3A0;
@@ -4097,6 +4097,27 @@ body{
 .mc-seg.seg-personal{background:var(--lane-personal);}
 .mc-seg.seg-appt{background:var(--lane-appt);}
 .mc-seg.mc-more{background:rgba(212,185,120,.35);color:var(--gold-light);font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;line-height:1;}
+
+/* ── legibility: brighten faint labels ── */
+.legend-item,.m-legend-item{color:#ECE4F4 !important;font-weight:700 !important;font-size:9.5px !important;}
+.bstat-lbl{color:#CFC2E2 !important;font-weight:700 !important;}
+.bstat-num{color:var(--gold-light) !important;font-weight:700 !important;}
+.sticker-toggle{color:#E8DEF2 !important;}
+.allday-lbl,.section-label,.mini-label,.section-title,.sticker-tray-lbl,.prep-title{color:var(--gold-light) !important;}
+.wdl{color:#CBC0DC !important;font-weight:600 !important;}
+.wdn{color:#FCFAF6 !important;}
+.m-dow-lbl{color:var(--gold-light) !important;font-weight:700 !important;}
+
+/* ── replace wine accents with opal / gold / iridescent ── */
+.wd.active{background:linear-gradient(135deg,#8F6FB0,#B79AD8) !important;}
+.wd.active .wdn,.wd.active .wdl{color:#241A33 !important;}
+.wd-badge{background:#9F7EC8 !important;}
+.wd.selected-day{border-color:var(--gold) !important;}
+.wd.selected-day .wdn,.wd.selected-day .wdl{color:var(--gold-light) !important;}
+.ag-num{color:var(--gold-light) !important;}
+.ws-num{color:var(--gold-light) !important;}
+.nav-item.active{color:var(--gold-light) !important;}
+.notif-panel-header{background:linear-gradient(135deg,#2E2145,#4A3A66) !important;}
 
 </style>
 </html>
