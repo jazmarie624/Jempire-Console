@@ -938,8 +938,10 @@ body{font-family:'Inter',sans-serif;background:#F0ECE8;color:var(--brown-dark);m
       <div class="legend-item"><div class="ldot" style="background:var(--lane-personal)"></div>Personal</div>
       <div class="legend-item"><div class="ldot" style="background:var(--lane-appt)"></div>Appt</div>
     </div>
+    <div id="mSplitWrap"><div id="mCalCol">
     <div class="m-dow"><div class="m-dow-lbl">Su</div><div class="m-dow-lbl">Mo</div><div class="m-dow-lbl">Tu</div><div class="m-dow-lbl">We</div><div class="m-dow-lbl">Th</div><div class="m-dow-lbl">Fr</div><div class="m-dow-lbl">Sa</div></div>
     <div class="m-grid" id="monthGrid"></div>
+    </div><div id="ipadDayPanel"></div></div>
   </div>
 </div>
 
@@ -3939,11 +3941,13 @@ window.addEventListener('load',function(){
       }
       var stk=stickers.slice(0,2).map(function(s){return '<div class="mc-sticker '+s.cls+'">'+s.label+'</div>';}).join('');
       div.innerHTML='<button class="pin-btn '+(isPinned?'pinned':'')+'" onclick="togglePin(\''+key+'\',event)">'+(isPinned?'📌':'·')+'</button><div class="mc-num">'+d+'</div><div class="mc-labels">'+stk+'</div>'+bar;
-      (function(k,dd){div.onclick=function(e){if(e.target.classList.contains('pin-btn'))return;if(selectedStickerMonth){stampStickerOnDate(k);return;}currentDate=new Date(year,month,dd);switchView('week');};})(key,d);
+      (function(k,dd){div.onclick=function(e){if(e.target.classList.contains('pin-btn'))return;if(selectedStickerMonth){stampStickerOnDate(k);return;}currentDate=new Date(year,month,dd);if(window.innerWidth>=900){renderMonth();}else{switchView('week');}};})(key,d);
       grid.appendChild(div);
     }
+    window._monthByDay=byDay; window._monthCtx={year:year,month:month};
     var total=firstDay+daysInMonth, rem=total%7===0?0:7-(total%7);
     for(var j=0;j<rem;j++){var e2=document.createElement('div');e2.className='mc other-mc empty-mc';grid.appendChild(e2);}
+    if(window.innerWidth>=900){ try{renderIpadDay();}catch(e){} }
   };
   setTimeout(function(){ try{ if(currentView==='month') renderMonth(); }catch(e){} },700);
 })();
@@ -4146,6 +4150,24 @@ body{
   .header{padding:44px 20px 28px !important;}
 }
 
+/* ── iPad side-by-side: calendar left, day panel right ── */
+#ipadDayPanel{display:none;}
+@media (min-width:900px){
+  #mSplitWrap{display:grid;grid-template-columns:1.55fr 1fr;gap:22px;align-items:start;}
+  #ipadDayPanel{display:block;position:sticky;top:14px;background:rgba(255,255,255,.05);border:1px solid rgba(212,185,120,.25);border-radius:18px;padding:18px 18px 20px;box-shadow:0 10px 30px rgba(0,0,0,.28);}
+}
+.idp-date{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:#FCFAF6;line-height:1.1;}
+.idp-sub{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#C9BEDA;font-weight:700;margin:5px 0 16px;}
+.idp-ev{display:flex;background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.1);border-radius:13px;overflow:hidden;margin-bottom:11px;box-shadow:0 6px 18px rgba(0,0,0,.25);}
+.idp-stripe{width:5px;flex:0 0 5px;}
+.idp-body{padding:13px 15px;flex:1;}
+.idp-cat{font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin-bottom:3px;}
+.idp-nm{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#FCFAF6;line-height:1.2;}
+.idp-tm{font-size:14px;color:#CBC0DC;margin-top:3px;}
+.idp-empty{background:rgba(255,255,255,.03);border:1px dashed rgba(212,185,120,.3);border-radius:13px;padding:26px;text-align:center;color:#C9BEDA;font-family:'Fraunces',serif;font-style:italic;font-size:17px;}
+.idp-empty b{color:var(--gold-light);font-style:normal;}
+.idp-add{width:100%;margin-top:6px;padding:14px;border:none;border-radius:13px;background:linear-gradient(135deg,#E8A9CE,#BCA6E8,#9FB4E8);color:#241a2c;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 5px 16px rgba(190,150,205,.4);}
+
 </style>
 <script id="je-header-lines">
 (function(){
@@ -4183,6 +4205,35 @@ body{
       setTimeout(function(){ i=(i+1)%LINES.length; el.textContent=LINES[i]; el.classList.remove('fade'); },900);
     },5000);
   }
+})();
+</script>
+<script id="je-ipad-daypanel">
+(function(){
+  var CATS={finance:{l:'Finance',c:'#7FC98A'},gig:{l:'Gig',c:'#E39B7E'},kids:{l:'Kids',c:'#E6C766'},legal:{l:'Legal',c:'#9FB4E8'},personal:{l:'Personal',c:'#DDA0C8'},appt:{l:'Appt',c:'#FF6B5E'}};
+  function ord(n){var s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
+  function fmtHour(h){if(h==null||h==='')return 'All day';h=parseInt(h);if(isNaN(h))return 'All day';var ap=h>=12?'PM':'AM';var h12=((h+11)%12)+1;return h12+':00 '+ap;}
+  window.renderIpadDay=function(){
+    var panel=document.getElementById('ipadDayPanel'); if(!panel) return;
+    var key=dk(currentDate);
+    var byDay=window._monthByDay||{};
+    var evts=(byDay[key]||[]).slice().sort(function(a,b){var ah=(a.hour==null?-1:a.hour),bh=(b.hour==null?-1:b.hour);return ah-bh;});
+    var isPay=(typeof isPayday==='function')?isPayday(key):false;
+    var d=currentDate, wd=DAYS[d.getDay()], mo=MONTHS[d.getMonth()], dn=d.getDate();
+    var count=evts.length+(isPay?1:0);
+    var html='<div class="idp-date">'+wd+', '+mo+' '+ord(dn)+'</div>';
+    html+='<div class="idp-sub">'+(count?count+(count>1?' events':' event'):'Open — nothing booked')+'</div>';
+    var rows='';
+    if(isPay){ rows+='<div class="idp-ev"><div class="idp-stripe" style="background:#7FC98A"></div><div class="idp-body"><div class="idp-cat" style="color:#7FC98A">Finance</div><div class="idp-nm">💰 Payday</div><div class="idp-tm">All day</div></div></div>'; }
+    evts.forEach(function(ev){
+      var cat=(ev.category&&CATS[ev.category])?ev.category:'personal';
+      var c=CATS[cat];
+      rows+='<div class="idp-ev"><div class="idp-stripe" style="background:'+c.c+'"></div><div class="idp-body"><div class="idp-cat" style="color:'+c.c+'">'+c.l+'</div><div class="idp-nm">'+((ev.title||'Untitled')+'').replace(/</g,'&lt;')+'</div><div class="idp-tm">'+fmtHour(ev.hour)+'</div></div></div>';
+    });
+    if(!rows) rows='<div class="idp-empty">This day is <b>open</b>.<br>A good one to book into.</div>';
+    html+=rows;
+    html+='<button class="idp-add" onclick="currentDate=new Date(\''+key+'T12:00:00\');openSheet(\'event\')">＋ Add Event</button>';
+    panel.innerHTML=html;
+  };
 })();
 </script>
 </html>
