@@ -4175,6 +4175,14 @@ body{
   .day-note-input{font-size:16px !important;}
 }
 
+/* ── iPad fixes: centered edit/add sheet + compact tab bar ── */
+@media (min-width:900px){
+  .bottom-sheet{top:50%;bottom:auto;left:50%;transform:translate(-50%,-50%) scale(.95);max-width:640px !important;max-height:88vh;border-radius:22px !important;opacity:0;pointer-events:none;transition:transform .28s cubic-bezier(.3,.9,.3,1),opacity .2s ease;}
+  .bottom-sheet.open{transform:translate(-50%,-50%) scale(1) !important;opacity:1;pointer-events:auto;}
+  .tab-bar{max-width:880px;margin-left:auto;margin-right:auto;}
+  .tab-btn{padding:8px 4px !important;font-size:13px !important;}
+}
+
 </style>
 <script id="je-header-lines">
 (function(){
