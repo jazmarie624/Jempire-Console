@@ -1084,20 +1084,11 @@ const CAT_CONFIG={
 };
 
 const TEMPLATES=[
-  {id:'gig',name:'Gig Shift',emoji:'🚗',desc:'Gig · Timed',cat:'gig',allDay:false,status:'confirmed',title:'Gig Shift'},
-  {id:'bill',name:'Bill Due',emoji:'📩',desc:'Finance · All Day',cat:'finance',allDay:true,status:'confirmed',title:'Bill Due'},
-  {id:'school',name:'School Event',emoji:'🏫',desc:'Kids · All Day',cat:'kids',allDay:true,status:'confirmed',title:'School Event'},
-  {id:'appt',name:'Appointment',emoji:'📋',desc:'Appt · Timed',cat:'appt',allDay:false,status:'confirmed',title:'Appointment'},
-  {id:'legal',name:'Legal / Court',emoji:'⚖️',desc:'Legal · Timed',cat:'legal',allDay:false,status:'confirmed',title:'Legal Appointment'},
-  {id:'kids',name:'Kids Activity',emoji:'⭐',desc:'Kids · Timed',cat:'kids',allDay:false,status:'confirmed',title:'Kids Activity'},
   {id:'payday',name:'Payday',emoji:'💰',desc:'Finance · All Day',cat:'finance',allDay:true,status:'confirmed',title:'💰 Payday'},
-  {id:'doctor',name:'Doctor Appt',emoji:'🏥',desc:'Appt · Timed',cat:'appt',allDay:false,status:'confirmed',title:'Doctor Appointment'},
-  {id:'dentist',name:'Dentist Appt',emoji:'🦷',desc:'Appt · Timed',cat:'appt',allDay:false,status:'confirmed',title:'Dentist Appointment'},
-  {id:'eye',name:'Eye Appt',emoji:'👁️',desc:'Appt · Timed',cat:'appt',allDay:false,status:'confirmed',title:'Eye Appointment'},
-  {id:'pharmacy',name:'Pharmacy',emoji:'💊',desc:'Appt · Timed',cat:'appt',allDay:false,status:'confirmed',title:'Pharmacy / Prescription'},
-  {id:'therapy',name:'Therapy',emoji:'🧠',desc:'Appt · Timed',cat:'appt',allDay:false,status:'confirmed',title:'Therapy Session'},
-  {id:'pilates',name:'Pilates',emoji:'🧘',desc:'Personal · Timed',cat:'personal',allDay:false,status:'confirmed',title:'Pilates Class'},
-  {id:'gym',name:'Gym',emoji:'🏋️',desc:'Personal · Timed',cat:'personal',allDay:false,status:'confirmed',title:'Gym Session'},
+  {id:'football-game',name:'Football Game',emoji:'🏈',desc:'Kids · Timed',cat:'kids',allDay:false,status:'confirmed',title:'🏈 Football Game'},
+  {id:'football-practice',name:'Football Practice',emoji:'🏈',desc:'Kids · 5:30 PM',cat:'kids',allDay:false,status:'confirmed',title:'🏈 Football Practice',time:'17:30'},
+  {id:'bill',name:'Bill Due',emoji:'🧾',desc:'Finance · All Day',cat:'finance',allDay:true,status:'confirmed',title:'Bill Due'},
+  {id:'appt',name:'Appointment',emoji:'📅',desc:'Appt · Timed',cat:'appt',allDay:false,status:'confirmed',title:''},
   {id:'custom',name:'Custom',emoji:'✦',desc:'Start from scratch',cat:'personal',allDay:false,status:'confirmed',title:''},
 ];
 
@@ -2004,6 +1995,7 @@ function applyTemplate(id){
     document.getElementById('allDaySwitch').classList.remove('on');
     document.getElementById('timeField').style.display='';
     document.getElementById('durationField').style.display='';
+    if(t.time){ var tf=document.getElementById('evTime'); if(tf) tf.value=t.time; }
   }
   // Set category variable AND visual
   _formCat=t.cat;
@@ -2745,12 +2737,7 @@ function dismissBrainDump(key){
 
 // ── UPDATE TEMPLATES with therapy ──
 // Add therapy template to existing list
-(function addTherapyTemplate(){
-  if(!TEMPLATES.find(t=>t.id==='therapy-jeovane')){
-    const idx=TEMPLATES.findIndex(t=>t.id==='therapy');
-    TEMPLATES.splice(idx+1,0,{id:'therapy-jeovane',name:"Jeovane's Therapy",emoji:'🧠',desc:'Appt · Timed · Prep checklist',cat:'appt',allDay:false,status:'confirmed',title:"Jeovane's Therapy Session"});
-  }
-})();
+/* therapy template removed in template cleanup */
 
 // ── NOTIFICATION CENTER ──
 let notifPanelOpen=false;
@@ -3546,13 +3533,7 @@ window.renderBanner = function(){
       hg:{name:'Hansel & Gretel',kids:['Jeovane'],color:'var(--school-hg)'}
     };
   }
-  if(window.TEMPLATES){
-    const kill=['doctor','dentist','eye','pharmacy','therapy','therapy-jeovane'];
-    for(let i=TEMPLATES.length-1;i>=0;i--){ if(kill.includes(TEMPLATES[i].id)) TEMPLATES.splice(i,1); }
-    const appt=TEMPLATES.find(t=>t.id==='appt'); if(appt) appt.title='';
-    const sch=TEMPLATES.find(t=>t.id==='school'); if(sch){ sch.emoji='🚌'; sch.cat='school'; }
-    const ka=TEMPLATES.find(t=>t.id==='kids'); if(ka) ka.emoji='⭐';
-  }
+  /* template list already curated */
   window.jeEmoji=function(ev){
     if(!ev) return '📌';
     const t=(ev.title||'').toLowerCase(), c=ev.category||'';
