@@ -71,7 +71,7 @@ async function jeRefresh(rt){
   --lane-gig:#C4714F;--lane-gig-bg:rgba(196,113,79,0.12);
   --lane-personal:#A0527A;--lane-personal-bg:rgba(160,82,122,0.11);
   --lane-legal:#5C7FA8;--lane-legal-bg:rgba(92,127,168,0.12);
-  --lane-appt:#1A8C7A;--lane-appt-bg:rgba(26,140,122,0.11);
+  --lane-appt:#D93A2E;--lane-appt-bg:rgba(217,58,46,0.11);
   --school-hg:#6A9E7A;--school-hg-bg:rgba(106,158,122,0.12);
   --school-sc:#2E5C9E;--school-sc-bg:rgba(46,92,158,0.11);
   --school-lv:#C4718A;--school-lv-bg:rgba(196,113,138,0.11);
@@ -347,7 +347,7 @@ body{font-family:'Inter',sans-serif;background:#F0ECE8;color:var(--brown-dark);m
 .eb-tag.kids{background:rgba(212,150,10,0.2);color:var(--lane-kids);}
 .eb-tag.legal{background:rgba(92,127,168,0.2);color:var(--lane-legal);}
 .eb-tag.personal{background:rgba(160,82,122,0.16);color:var(--lane-personal);}
-.eb-tag.appt{background:rgba(26,140,122,0.18);color:var(--lane-appt);}
+.eb-tag.appt{background:rgba(217,58,46,0.18);color:var(--lane-appt);}
 .eb-status{font-size:7px;font-weight:600;padding:2px 6px;border-radius:6px;}
 .eb-status.confirmed{background:rgba(74,140,82,0.14);color:var(--lane-finance);}
 .eb-status.tentative{background:rgba(92,127,168,0.14);color:var(--lane-legal);}
@@ -444,7 +444,7 @@ body{font-family:'Inter',sans-serif;background:#F0ECE8;color:var(--brown-dark);m
 .mc-lbl.lbl-kids{background:rgba(212,150,10,0.16);color:var(--lane-kids);}
 .mc-lbl.lbl-legal{background:rgba(92,127,168,0.16);color:var(--lane-legal);}
 .mc-lbl.lbl-personal{background:rgba(160,82,122,0.13);color:var(--lane-personal);}
-.mc-lbl.lbl-appt{background:rgba(26,140,122,0.14);color:var(--lane-appt);}
+.mc-lbl.lbl-appt{background:rgba(217,58,46,0.14);color:var(--lane-appt);}
 .mc-lbl.lbl-payday{background:rgba(74,140,82,0.18);color:var(--lane-finance);}
 .mc-lbl.lbl-bill{background:rgba(196,113,79,0.13);color:var(--terra);}
 .mc-sticker{display:inline-flex;align-items:center;gap:2px;padding:1px 4px;border-radius:4px;font-size:6.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;border:1px solid;margin-top:1px;white-space:nowrap;}
@@ -494,7 +494,7 @@ body{font-family:'Inter',sans-serif;background:#F0ECE8;color:var(--brown-dark);m
 .ae-chip.kids{background:rgba(212,150,10,0.15);color:var(--lane-kids);}
 .ae-chip.legal{background:rgba(92,127,168,0.16);color:var(--lane-legal);}
 .ae-chip.personal{background:rgba(160,82,122,0.14);color:var(--lane-personal);}
-.ae-chip.appt{background:rgba(26,140,122,0.14);color:var(--lane-appt);}
+.ae-chip.appt{background:rgba(217,58,46,0.14);color:var(--lane-appt);}
 .ae-chip.confirmed{background:rgba(74,140,82,0.12);color:var(--lane-finance);}
 .ae-chip.tentative{background:rgba(92,127,168,0.12);color:var(--lane-legal);}
 .ae-chip.recur{background:rgba(196,113,79,0.1);color:var(--terra);}
@@ -2711,7 +2711,7 @@ async function checkBrainDumpSync(){
   const cat=CAT_CONFIG[m.cat]||CAT_CONFIG.personal;
   const snippet=m.text?.slice(0,55)+(m.text?.length>55?'...':'');
   nudgeDiv.style.display='block';
-  nudgeDiv.innerHTML=`<div class="sticker-nudge" style="border-color:rgba(${m.cat==='appt'?'26,140,122':m.cat==='legal'?'92,127,168':m.cat==='kids'?'212,150,10':'196,113,79'},0.3);">
+  nudgeDiv.innerHTML=`<div class="sticker-nudge" style="border-color:rgba(${m.cat==='appt'?'217,58,46':m.cat==='legal'?'92,127,168':m.cat==='kids'?'212,150,10':'196,113,79'},0.3);">
     <div class="nudge-icon">${cat.emoji}</div>
     <div class="nudge-body">
       <div class="nudge-title">Brain Dump mentions "${m.keyword}"</div>
@@ -3082,7 +3082,7 @@ window.buildEventSheet=function(){
   --lane-gig:#A84A2F;--lane-gig-bg:rgba(168,74,47,0.12);
   --lane-personal:#8A3B6B;--lane-personal-bg:rgba(138,59,107,0.12);
   --lane-legal:#4A3A75;--lane-legal-bg:rgba(74,58,117,0.12);
-  --lane-appt:#1F6B6B;--lane-appt-bg:rgba(31,107,107,0.12);
+  --lane-appt:#B5342A;--lane-appt-bg:rgba(181,52,42,0.12);
   --school-hg:#3F7A5C;--school-hg-bg:rgba(63,122,92,0.12);
   --school-sc:#35528C;--school-sc-bg:rgba(53,82,140,0.12);
   --school-lv:#A8436E;--school-lv-bg:rgba(168,67,110,0.12);
