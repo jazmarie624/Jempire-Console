@@ -36,9 +36,9 @@ a{text-decoration:none;color:inherit;}
 .b-date{font-size:11px;letter-spacing:.06em;color:var(--ink-mut);font-weight:600;}
 .b-line{display:flex;gap:9px;padding:5px 0;}
 .b-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);margin-top:7px;flex-shrink:0;}
-.b-txt{font-size:13.5px;color:var(--ink);line-height:1.45;}
-.b-src{color:var(--gold-lt);font-weight:600;}
-.b-quiet{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--ink-mut);}
+.b-txt{font-size:15px;color:#FFFFFF;line-height:1.5;font-weight:600;}
+.b-src{color:var(--gold-lt);font-weight:700;}
+.b-quiet{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:#EFE7F5;font-weight:500;}
 .b-skel{height:11px;border-radius:6px;background:linear-gradient(90deg,rgba(255,255,255,.07),rgba(255,255,255,.16),rgba(255,255,255,.07));background-size:200% 100%;animation:sk 1.4s infinite;margin:7px 0;}
 @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
@@ -93,6 +93,23 @@ a{text-decoration:none;color:inherit;}
   background:linear-gradient(135deg,#E8A9CE,#9FB4E8) !important;color:#2a1e33 !important;font-size:10px;font-weight:800;
   display:none;align-items:center;justify-content:center;padding:0 5px;border:2px solid #2E2440 !important;box-shadow:0 3px 10px rgba(190,150,205,.5) !important;}
 #followBadge.show{display:flex;}
+
+/* ── iPad: fill the screen, panels 2-across ── */
+@media (min-width:820px){
+  body{max-width:1040px;padding-left:28px;padding-right:28px;}
+  .panels{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .panels .panel{margin-top:0;min-height:150px;}
+  .panel .wname{font-size:28px;}
+  .panel .big-em{font-size:44px;}
+  .chip{font-size:13px;padding:8px 15px;}
+  .ttl{font-size:64px;}
+  .grt{font-size:32px;}
+  .quote{font-size:19px;}
+  #brief{padding:20px 24px;}
+  .b-txt{font-size:17px;font-weight:600;}
+  .statrow .sv .n{font-size:30px;}
+  .floatnote{width:66px;height:66px;}
+}
 </style>
 </head>
 <body>
@@ -117,6 +134,7 @@ a{text-decoration:none;color:inherit;}
 
 <div class="glbl">Your Empire</div>
 
+<div class="panels">
 <div class="panel tw-1">
   <span class="big-em">🗓️</span>
   <div class="wname">Every Day</div>
@@ -156,6 +174,7 @@ a{text-decoration:none;color:inherit;}
     <a class="chip t-goals" href="goals.html">Goals</a>
     <a class="chip t-care" href="self_care.html">Self Care</a>
   </div>
+</div>
 </div>
 
 <div class="glbl">Today</div>
