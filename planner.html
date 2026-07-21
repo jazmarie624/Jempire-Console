@@ -735,7 +735,7 @@ body{font-family:'Inter',sans-serif;background:#F0ECE8;color:var(--brown-dark);m
     <div class="legend-item"><div class="ldot" style="background:var(--lane-legal)"></div>Legal</div>
     <div class="legend-item"><div class="ldot" style="background:var(--lane-personal)"></div>Personal</div>
     <div class="legend-item"><div class="ldot" style="background:var(--lane-appt)"></div>Appt</div>
-    <div class="legend-item"><div style="width:10px;height:10px;border-radius:2px;border:1.5px solid var(--rose-gold);flex-shrink:0;"></div>Pinned</div>
+
   </div>
 
   <!-- Today Banner -->
@@ -4040,7 +4040,7 @@ body{
 /* tabs + nav */
 .tab-bar{background:linear-gradient(160deg,#2E2145 0%,#251C36 50%,#2E2145 100%) !important;box-shadow:0 3px 14px rgba(0,0,0,.3) !important;}
 .tab-btn{background:rgba(255,255,255,.06) !important;color:var(--brown-mid) !important;border-color:rgba(212,185,120,.28) !important;}
-.tab-btn.active{background:linear-gradient(145deg,#D4B978 0%,#EAD79A 50%,#C9A98E 100%) !important;color:#2A1E12 !important;border-color:transparent !important;}
+.tab-btn.active{background:linear-gradient(135deg,#E8A9CE 0%,#BCA6E8 50%,#9FB4E8 100%) !important;color:#241a2c !important;border-color:transparent !important;box-shadow:0 4px 16px rgba(190,150,205,.4) !important;}
 .nav-bar{background:rgba(26,18,36,.94) !important;border-top-color:rgba(212,185,120,.2) !important;}
 .date-nav{border-bottom-color:rgba(212,185,120,.16) !important;}
 
@@ -4143,7 +4143,8 @@ body{
 }
 .idp-date{font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:#FCFAF6;line-height:1.1;}
 .idp-sub{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#C9BEDA;font-weight:700;margin:5px 0 16px;}
-.idp-ev{display:flex;background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.1);border-radius:13px;overflow:hidden;margin-bottom:11px;box-shadow:0 6px 18px rgba(0,0,0,.25);}
+.idp-ev{display:flex;background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.1);border-radius:13px;overflow:hidden;margin-bottom:11px;box-shadow:0 6px 18px rgba(0,0,0,.25);transition:transform .12s ease,border-color .12s ease;}
+.idp-ev:hover{transform:translateY(-1px);border-color:rgba(212,185,120,.4);}
 .idp-stripe{width:5px;flex:0 0 5px;}
 .idp-body{padding:13px 15px;flex:1;}
 .idp-cat{font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin-bottom:3px;}
@@ -4233,7 +4234,7 @@ body{
     evts.forEach(function(ev){
       var cat=(ev.category&&CATS[ev.category])?ev.category:'personal';
       var c=CATS[cat];
-      rows+='<div class="idp-ev"><div class="idp-stripe" style="background:'+c.c+'"></div><div class="idp-body"><div class="idp-cat" style="color:'+c.c+'">'+c.l+'</div><div class="idp-nm">'+((ev.title||'Untitled')+'').replace(/</g,'&lt;')+'</div><div class="idp-tm">'+fmtHour(ev.hour)+'</div></div></div>';
+      rows+='<div class="idp-ev" onclick="openEditEvent(\''+ev.id+'\')" style="cursor:pointer"><div class="idp-stripe" style="background:'+c.c+'"></div><div class="idp-body"><div class="idp-cat" style="color:'+c.c+'">'+c.l+'</div><div class="idp-nm">'+((ev.title||'Untitled')+'').replace(/</g,'&lt;')+'</div><div class="idp-tm">'+fmtHour(ev.hour)+'</div></div></div>';
     });
     if(!rows) rows='<div class="idp-empty">This day is <b>open</b>.<br>A good one to book into.</div>';
     html+=rows;
