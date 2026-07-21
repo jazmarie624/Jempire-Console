@@ -4040,8 +4040,9 @@ body{
 .h-title,.h-title em{font-family:'Pinyon Script',cursive !important;}
 
 /* tabs + nav */
-.tab-btn{background:rgba(255,255,255,.05) !important;color:var(--brown-mid) !important;border-color:rgba(212,185,120,.28) !important;}
-.tab-btn.active{color:#2A1E12 !important;}
+.tab-bar{background:linear-gradient(160deg,#2E2145 0%,#251C36 50%,#2E2145 100%) !important;box-shadow:0 3px 14px rgba(0,0,0,.3) !important;}
+.tab-btn{background:rgba(255,255,255,.06) !important;color:var(--brown-mid) !important;border-color:rgba(212,185,120,.28) !important;}
+.tab-btn.active{background:linear-gradient(145deg,#D4B978 0%,#EAD79A 50%,#C9A98E 100%) !important;color:#2A1E12 !important;border-color:transparent !important;}
 .nav-bar{background:rgba(26,18,36,.94) !important;border-top-color:rgba(212,185,120,.2) !important;}
 .date-nav{border-bottom-color:rgba(212,185,120,.16) !important;}
 
@@ -4064,5 +4065,15 @@ body{
 
 /* reading font on event + agenda titles */
 .ae-title,.eb-title,.agenda-evt,.ag-num,.week-num-label{font-family:'Fraunces',serif !important;}
+
+/* briefing card → lavender iridescent, stands out */
+#jeBrief{background:
+  radial-gradient(70% 90% at 12% 8%, rgba(232,169,206,.28), transparent 60%),
+  radial-gradient(80% 90% at 92% 20%, rgba(159,180,232,.26), transparent 62%),
+  radial-gradient(90% 90% at 60% 100%, rgba(143,216,196,.22), transparent 60%),
+  linear-gradient(160deg,#4A3A66 0%,#54427A 55%,#453765 100%) !important;
+  border:1px solid rgba(199,159,212,.35) !important;
+  box-shadow:0 10px 30px rgba(120,90,160,.35) !important;}
+
 </style>
 </html>
