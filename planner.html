@@ -1907,7 +1907,9 @@ function buildEventSheet(){
 }
 
 function buildEditEventSheet(id){
-  const ev=events.find(e=>String(e.id)===String(id));if(!ev)return;
+  let ev=events.find(e=>String(e.id)===String(id));
+  if(!ev && window._monthByDay){ for(const _k in window._monthByDay){ const _f=(window._monthByDay[_k]||[]).find(e=>String(e.id)===String(id)); if(_f){ev=_f;break;} } }
+  if(!ev)return;
   buildEventSheet();
   document.getElementById('sheetSub').textContent='✦ Update or delete this event';
   document.getElementById('evTitle').value=ev.title||'';
@@ -2062,7 +2064,7 @@ async function saveEvent(){
       await saveEventObj(rObj,rdKey);
     }
   }
-  closeSheet();renderSplitPanel();renderBanner();buildWeekStrip();
+  closeSheet();renderSplitPanel();renderBanner();buildWeekStrip();if(currentView==='month'){renderMonth();}
   showToast('Event added ✦');
 }
 
@@ -2121,7 +2123,7 @@ async function updateEvent(id){
   if(ev) Object.assign(ev,patch);
   lsSet('je_evts_'+dk(currentDate),events);
   await sbFetch('planner_events','PATCH',patch,`?id=eq.${id}`);
-  closeSheet();renderSplitPanel();renderBanner();buildWeekStrip();
+  closeSheet();renderSplitPanel();renderBanner();buildWeekStrip();if(currentView==='month'){renderMonth();}
   showToast('Updated ✦');
 }
 
@@ -2147,7 +2149,7 @@ async function deleteEvent(id,scope){
         lsSet('je_evts_'+dk(currentDate),events);
         await sbFetch('planner_events','DELETE',null,`?id=eq.${id}`);
       }
-      closeSheet();renderSplitPanel();renderBanner();buildWeekStrip();
+      closeSheet();renderSplitPanel();renderBanner();buildWeekStrip();if(currentView==='month'){renderMonth();}
       showToast(scope==='all'?'Series deleted ✦':'Event deleted ✦');
     }
   );
