@@ -128,7 +128,8 @@ button{font-family:inherit;cursor:pointer;}
 .pbody{position:relative;z-index:3;}
 .subject{position:relative;z-index:3;}
 .draw{position:absolute;inset:0;z-index:2;pointer-events:none;touch-action:none;}
-.page.drawing .draw{pointer-events:auto;cursor:crosshair;}
+.drawlive{position:absolute;inset:0;z-index:2;pointer-events:none;touch-action:none;}
+.page.drawing .drawlive{pointer-events:auto;cursor:crosshair;}
 .page.drawing .pbody,.page.drawing .subject{pointer-events:none;}
 .drawbar{position:absolute;left:50%;bottom:70px;transform:translateX(-50%);z-index:45;display:none;align-items:center;flex-wrap:wrap;justify-content:center;gap:8px;max-width:94%;background:rgba(30,22,42,.96);border:1px solid var(--gold-hair);border-radius:22px;padding:10px 14px;box-shadow:0 10px 28px rgba(0,0,0,.45);}
 .dcolors,.dtools{display:flex;align-items:center;gap:7px;}
@@ -234,6 +235,7 @@ button{font-family:inherit;cursor:pointer;}
       <div class="page lined" id="page">
         <input class="subject" id="subject" placeholder="Subject — e.g. Lash techs to try" oninput="onEdit()">
         <canvas class="draw" id="draw"></canvas>
+        <canvas class="drawlive" id="drawLive"></canvas>
         <div class="pbody" id="pbody" contenteditable="true" oninput="onEdit()"></div>
         <div class="pfoot">
           <div class="pnav">
@@ -246,13 +248,21 @@ button{font-family:inherit;cursor:pointer;}
         </div>
       </div>
       <div class="drawbar" id="drawbar">
-        <div class="dcolors">
+        <div class="dcolors" id="dcolorsInk">
           <span class="dcolor on" data-c="#3A2E52" style="background:#3A2E52"></span>
           <span class="dcolor" data-c="#C4714F" style="background:#C4714F"></span>
           <span class="dcolor" data-c="#7A4FB0" style="background:#7A4FB0"></span>
           <span class="dcolor" data-c="#9FB4E8" style="background:#9FB4E8"></span>
           <span class="dcolor" data-c="#D4B978" style="background:#D4B978"></span>
           <span class="dcolor" data-c="#E8A9CE" style="background:#E8A9CE"></span>
+        </div>
+        <div class="dcolors" id="dcolorsHl" style="display:none">
+          <span class="dcolor on" data-c="#FFEB3B" style="background:#FFEB3B"></span>
+          <span class="dcolor" data-c="#7CE85A" style="background:#7CE85A"></span>
+          <span class="dcolor" data-c="#FF6FB0" style="background:#FF6FB0"></span>
+          <span class="dcolor" data-c="#FF9F40" style="background:#FF9F40"></span>
+          <span class="dcolor" data-c="#4FC8FF" style="background:#4FC8FF"></span>
+          <span class="dcolor" data-c="#FF5C5C" style="background:#FF5C5C"></span>
         </div>
         <div class="dsep"></div>
         <div class="dtools">
@@ -642,12 +652,17 @@ function wireSticker(el,st){
 }
 
 /* ===== draw mode (Apple Pencil / finger) ===== */
-var draw=document.getElementById('draw'), dctx=null, drawing=false, penC='#3A2E52', erasing=false;
+var draw=document.getElementById('draw'), drawLive=document.getElementById('drawLive'), dctx=null, lctx=null, drawing=false, erasing=false;
+var tool='pen', penW=3, toolDefaults={pen:3,pencil:2.5,hl:16};
+var toolAlpha={pen:1,pencil:0.55,hl:0.42};
+var inkColor='#3A2E52', hlColor='#FFEB3B';
 function initCanvas(){
   var pageEl=document.getElementById('page');
   if(!pageEl.clientWidth)return;
   draw.width=pageEl.clientWidth; draw.height=pageEl.clientHeight;
+  drawLive.width=pageEl.clientWidth; drawLive.height=pageEl.clientHeight;
   dctx=draw.getContext('2d'); dctx.lineCap='round'; dctx.lineJoin='round';
+  lctx=drawLive.getContext('2d'); lctx.lineCap='round'; lctx.lineJoin='round';
   var p=curPageObj();
   if(p && p.drawing){ var img=new Image(); img.onload=function(){dctx.drawImage(img,0,0,draw.width,draw.height);}; img.src=p.drawing; }
 }
@@ -659,47 +674,72 @@ function applyDrawMode(){
   var db=document.getElementById('drawBtn'); if(db)db.textContent=on?'⌨️ Type':'✏️ Draw';
 }
 function toggleDraw(){ var p=curPageObj(); p.drawMode=!(p.drawMode===true); save(); applyDrawMode(); }
-var tool='pen', penW=3, toolDefaults={pen:3,pencil:2.5,hl:20};
-function setDrawColor(c){ penC=c; erasing=false; document.getElementById('eraseBtn').classList.remove('on'); document.querySelectorAll('.dcolor').forEach(function(d){d.classList.toggle('on',d.dataset.c===c);}); }
-function setTool(t){ tool=t; erasing=false; document.getElementById('eraseBtn').classList.remove('on'); document.querySelectorAll('.dtool[data-tool]').forEach(function(b){b.classList.toggle('ton',b.dataset.tool===t);}); penW=toolDefaults[t]; document.getElementById('dsize').value=penW; }
+function penC(){ return tool==='hl'?hlColor:inkColor; }
+function setDrawColor(c){
+  erasing=false; document.getElementById('eraseBtn').classList.remove('on');
+  if(tool==='hl'){ hlColor=c; } else { inkColor=c; }
+  var row=(tool==='hl')?document.getElementById('dcolorsHl'):document.getElementById('dcolorsInk');
+  row.querySelectorAll('.dcolor').forEach(function(d){d.classList.toggle('on',d.dataset.c===c);});
+}
+function setTool(t){
+  tool=t; erasing=false; document.getElementById('eraseBtn').classList.remove('on');
+  document.querySelectorAll('.dtool[data-tool]').forEach(function(b){b.classList.toggle('ton',b.dataset.tool===t);});
+  penW=toolDefaults[t]; document.getElementById('dsize').value=penW;
+  document.getElementById('dcolorsInk').style.display=(t==='hl')?'none':'flex';
+  document.getElementById('dcolorsHl').style.display=(t==='hl')?'flex':'none';
+}
 function setSize(v){ penW=+v; }
 function toggleErase(){ erasing=!erasing; document.getElementById('eraseBtn').classList.toggle('on',erasing); if(erasing)document.querySelectorAll('.dtool[data-tool]').forEach(function(b){b.classList.remove('ton');}); }
 function clearDraw(){ if(!dctx)return; dctx.clearRect(0,0,draw.width,draw.height); var p=curPageObj(); if(p)p.drawing=''; save(); toast('Drawing cleared'); }
 function saveDraw(){ var p=curPageObj(); if(!p)return; try{p.drawing=draw.toDataURL('image/png');}catch(e){} clearTimeout(window._dsv); window._dsv=setTimeout(save,300); }
-document.querySelector('.drawbar').addEventListener('click',function(e){ if(e.target.classList.contains('dcolor'))setDrawColor(e.target.dataset.c); });
+document.getElementById('dcolorsInk').addEventListener('click',function(e){ if(e.target.classList.contains('dcolor'))setDrawColor(e.target.dataset.c); });
+document.getElementById('dcolorsHl').addEventListener('click',function(e){ if(e.target.classList.contains('dcolor'))setDrawColor(e.target.dataset.c); });
 var lastX=0,lastY=0;
-function applyTipStyle(){
-  dctx.strokeStyle=penC; dctx.fillStyle=penC;
-  if(tool==='pencil'){ dctx.globalAlpha=0.55; }
-  else if(tool==='hl'){ dctx.globalAlpha=0.35; }
-  else { dctx.globalAlpha=1; }
-}
-draw.addEventListener('pointerdown',function(e){
+drawLive.addEventListener('pointerdown',function(e){
   if(!document.getElementById('page').classList.contains('drawing'))return;
   drawing=true;
-  try{draw.setPointerCapture(e.pointerId);}catch(_){}
-  var r=draw.getBoundingClientRect();
+  try{drawLive.setPointerCapture(e.pointerId);}catch(_){}
+  var r=drawLive.getBoundingClientRect();
   lastX=e.clientX-r.left; lastY=e.clientY-r.top;
-  applyTipStyle();
-  dctx.lineWidth=erasing?22:penW;
-  dctx.globalCompositeOperation=erasing?'destination-out':(tool==='hl'?'multiply':'source-over');
-  // dot on tap
-  dctx.beginPath(); dctx.arc(lastX,lastY,(erasing?11:penW/2),0,Math.PI*2); dctx.fill();
-  dctx.beginPath(); dctx.moveTo(lastX,lastY);
+  if(erasing){
+    dctx.globalCompositeOperation='destination-out';
+    dctx.beginPath(); dctx.arc(lastX,lastY,11,0,Math.PI*2); dctx.fill();
+    dctx.lineWidth=22; dctx.beginPath(); dctx.moveTo(lastX,lastY);
+  }else{
+    lctx.clearRect(0,0,drawLive.width,drawLive.height);
+    lctx.globalAlpha=1; lctx.strokeStyle=penC(); lctx.fillStyle=penC(); lctx.lineWidth=penW;
+    lctx.beginPath(); lctx.arc(lastX,lastY,penW/2,0,Math.PI*2); lctx.fill();
+    lctx.beginPath(); lctx.moveTo(lastX,lastY);
+  }
   e.preventDefault();
 },{passive:false});
-draw.addEventListener('pointermove',function(e){
-  if(!drawing)return; var r=draw.getBoundingClientRect();
+drawLive.addEventListener('pointermove',function(e){
+  if(!drawing)return; var r=drawLive.getBoundingClientRect();
   var x=e.clientX-r.left, y=e.clientY-r.top;
-  dctx.lineTo(x,y); dctx.stroke();
-  dctx.beginPath(); dctx.moveTo(x,y);
+  if(erasing){
+    dctx.lineTo(x,y); dctx.stroke(); dctx.beginPath(); dctx.moveTo(x,y);
+  }else{
+    lctx.lineTo(x,y); lctx.stroke(); lctx.beginPath(); lctx.moveTo(x,y);
+  }
   lastX=x; lastY=y;
   e.preventDefault();
 },{passive:false});
-function endStroke(e){ if(!drawing)return; drawing=false; dctx.globalCompositeOperation='source-over'; dctx.globalAlpha=1; try{if(e)draw.releasePointerCapture(e.pointerId);}catch(_){}
-  saveDraw(); }
-draw.addEventListener('pointerup',endStroke);
-draw.addEventListener('pointercancel',endStroke);
+function endStroke(e){
+  if(!drawing)return; drawing=false;
+  try{if(e)drawLive.releasePointerCapture(e.pointerId);}catch(_){}
+  if(erasing){
+    dctx.globalCompositeOperation='source-over';
+  }else{
+    dctx.globalAlpha=toolAlpha[tool];
+    dctx.globalCompositeOperation=(tool==='hl')?'multiply':'source-over';
+    dctx.drawImage(drawLive,0,0);
+    dctx.globalAlpha=1; dctx.globalCompositeOperation='source-over';
+    lctx.clearRect(0,0,drawLive.width,drawLive.height);
+  }
+  saveDraw();
+}
+drawLive.addEventListener('pointerup',endStroke);
+drawLive.addEventListener('pointercancel',endStroke);
 
 /* boot */
 load();renderGrid();
