@@ -931,6 +931,7 @@ body{font-family:'Inter',sans-serif;background:#F0ECE8;color:var(--brown-dark);m
   </div>
   <div style="padding:8px 12px 80px;">
     <div class="month-title-big" id="monthTitleBig">—</div>
+    <div class="je-today-row"><button class="je-today-btn" onclick="currentDate=new Date();renderMonth();">✦ Today</button></div>
     <div class="legend" style="padding:0 0 8px;border:none;margin-bottom:6px;">
       <div class="legend-item"><div class="ldot" style="background:var(--lane-finance)"></div>Finance</div>
       <div class="legend-item"><div class="ldot" style="background:var(--lane-gig)"></div>Gig</div>
@@ -943,6 +944,16 @@ body{font-family:'Inter',sans-serif;background:#F0ECE8;color:var(--brown-dark);m
     <div class="m-dow"><div class="m-dow-lbl">Su</div><div class="m-dow-lbl">Mo</div><div class="m-dow-lbl">Tu</div><div class="m-dow-lbl">We</div><div class="m-dow-lbl">Th</div><div class="m-dow-lbl">Fr</div><div class="m-dow-lbl">Sa</div></div>
     <div class="m-grid" id="monthGrid"></div>
     </div><div id="ipadDayPanel"></div></div>
+    <div class="m-legend-boxes">
+      <span class="m-legbox" style="background:var(--lane-finance)">Finance</span>
+      <span class="m-legbox" style="background:var(--lane-gig)">Gig</span>
+      <span class="m-legbox lb-kids" style="background:var(--lane-kids)">Kids</span>
+      <span class="m-legbox" style="background:var(--lane-legal)">Legal</span>
+      <span class="m-legbox" style="background:var(--lane-personal)">Personal</span>
+      <span class="m-legbox" style="background:var(--lane-appt)">Appt</span>
+      <span class="m-legbox" style="background:var(--lane-school)">School</span>
+      <span class="m-legbox" style="background:var(--lane-football)">🏈 Football</span>
+    </div>
   </div>
 </div>
 
@@ -3480,10 +3491,15 @@ window.renderBanner = function(){
       const isPay=isPayday(key), isPinned=pinnedDays.includes(key), dayEvts=byDay[key]||[], stickers=dayStickers[key]||[];
       const div=document.createElement('div');
       div.className='mc'+(key===todKey?' today-mc':'')+(key===selKey?' active-mc':'')+(isPay?' payday-mc':'')+(isPinned?' pinned-mc':'');
-      const lbls=[]; if(isPay) lbls.push({text:'💰 Pay',cls:'lbl-payday'});
-      dayEvts.slice(0,2).forEach(ev=>lbls.push({text:jeEmoji(ev)+' '+(ev.title||'').slice(0,8),cls:'lbl-'+jeCls(ev)}));
-      const stk=stickers.slice(0,2).map(s=>`<div class="mc-sticker ${s.cls}">${s.label}</div>`).join('');
-      div.innerHTML=`<button class="pin-btn ${isPinned?'pinned':''}" onclick="togglePin('${key}',event)">${isPinned?'📌':'·'}</button><div class="mc-num">${d}</div><div class="mc-labels">${lbls.map(l=>`<div class="mc-lbl ${l.cls}">${l.text}</div>`).join('')}${stk}</div>`;
+      const LANEC={finance:'var(--lane-finance)',gig:'var(--lane-gig)',kids:'var(--lane-kids)',legal:'var(--lane-legal)',personal:'var(--lane-personal)',appt:'var(--lane-appt)',school:'var(--lane-school)',football:'var(--lane-football)'};
+      const STKC={'mcs-payday':'var(--lane-finance)','mcs-bill':'var(--terra)','mcs-dayoff':'var(--rose-gold)','mcs-appt':'var(--lane-appt)','mcs-gig':'var(--lane-gig)','mcs-win':'var(--gold)','mcs-mom':'var(--lane-personal)','mcs-legal':'var(--lane-legal)','mcs-school':'var(--lane-school)','mcs-travel':'var(--lane-finance)','mcs-football':'var(--lane-football)'};
+      const marks=[];
+      if(isPay) marks.push({txt:'Payday',color:'var(--lane-finance)',lbl:'lbl-payday',emoji:'💰'});
+      dayEvts.slice(0,3).forEach(ev=>{const cl=jeCls(ev);marks.push({txt:(ev.title||'').slice(0,16),color:LANEC[cl]||'var(--lane-personal)',lbl:'lbl-'+cl,emoji:jeEmoji(ev)});});
+      stickers.slice(0,2).forEach(s=>marks.push({txt:s.label,color:STKC[s.cls]||'var(--gold)',sticker:s.cls}));
+      const barsHtml=marks.map(m=>`<span class="mc-bar" style="background:${m.color}"></span>`).join('');
+      const stampsHtml=marks.map(m=>m.sticker?`<span class="mc-stamp mc-sticker ${m.sticker}">${m.txt}</span>`:`<span class="mc-stamp mc-lbl ${m.lbl}">${m.emoji} ${m.txt}</span>`).join('');
+      div.innerHTML=`<button class="pin-btn ${isPinned?'pinned':''}" onclick="togglePin('${key}',event)">${isPinned?'📌':'·'}</button><div class="mc-num">${d}</div><div class="mc-labels"><div class="mc-bars">${barsHtml}</div><div class="mc-stamps">${stampsHtml}</div></div>`;
       div.onclick=(e)=>{if(e.target.classList.contains('pin-btn'))return;if(selectedStickerMonth){stampStickerOnDate(key);return;}currentDate=new Date(year,month,d);switchView('week');};
       grid.appendChild(div);
     }
@@ -4134,6 +4150,21 @@ body.je-deep .je-mode-toggle{background:linear-gradient(135deg,#3E3358,#2A2340);
   .bottom-sheet.open{transform:translate(-50%,-50%) scale(1) !important;opacity:1;pointer-events:auto;}
   .tab-bar{max-width:880px;margin-left:auto;margin-right:auto;}
 }
+
+/* ── 2A: month bars(iPhone) + word-stamps(iPad) + bottom legend ── */
+.mc-labels{justify-content:flex-end !important;margin-top:2px !important;}
+.mc-bars{display:flex;flex-direction:column;gap:2.5px;}
+.mc-bar{height:4px;border-radius:3px;width:100%;}
+.mc-stamps{display:none;flex-direction:column;gap:3px;}
+.mc-stamp{font-size:9px;font-weight:800;padding:2px 6px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4;}
+@media(min-width:700px){ .mc-bars{display:none;} .mc-stamps{display:flex;} .mc-stamp{font-size:11px;padding:3px 8px;} }
+#monthView .legend{display:none !important;}
+.m-legend-boxes{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin:22px auto 0;max-width:760px;}
+.m-legbox{border-radius:11px;padding:8px 15px;font-weight:800;font-size:13px;color:#fff;box-shadow:0 3px 9px rgba(60,40,90,.13);}
+body.je-deep .m-legbox{color:#2A2036;}
+.m-legbox.lb-kids{color:#3A2A08;}
+.je-today-row{text-align:center;margin:-2px 0 10px;}
+.je-today-btn{background:linear-gradient(135deg,#E8C25A,#C39A2E);color:#3A2A08;border:none;border-radius:18px;padding:8px 18px;font-family:'Inter',sans-serif;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 4px 12px rgba(200,160,60,.3);}
 </style>
 <script id="je-theme-toggle">
 (function(){
