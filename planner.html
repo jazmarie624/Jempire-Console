@@ -4260,6 +4260,43 @@ body.je-deep .jl-cb.on::after{color:#241C33;}
 .t3row.done .tx{text-decoration:line-through;color:var(--brown-muted);}
 .t3row .add{flex:1;font-size:13px;color:var(--brown-muted);font-style:italic;cursor:pointer;}
 .t3row .x{color:var(--lane-personal);cursor:pointer;opacity:.7;font-size:14px;}
+/* ── bigger, eye-friendly type (applies in Light + Deep) ── */
+.banner-lbl,.ws-title{font-size:16px !important;}
+.bstat-num,.ws-num{font-size:30px !important;}
+.bstat-lbl,.ws-lbl{font-size:13px !important;letter-spacing:.08em !important;}
+.banner-empty,#bannerNext{font-size:16px !important;}
+.section-label{font-size:15px !important;}
+.eb-title{font-size:18px !important;} .eb-time{font-size:14.5px !important;} .eb-note{font-size:14px !important;}
+.eb-tag,.eb-status{font-size:11px !important;} .empty-slot{font-size:16px !important;}
+.wdn{font-size:21px !important;} .wdl{font-size:13px !important;}
+.week-num-label{font-size:16px !important;}
+.legend-item,.m-legend-item{font-size:13px !important;}
+.allday-lbl{font-size:13px !important;} .allday-chip{font-size:15px !important;}
+.day-note-input{font-size:16px !important;} .mini-label{font-size:13px !important;}
+.pcd-text{font-size:16px !important;} .pcd-sub{font-size:13px !important;}
+.winddown-title{font-size:16px !important;} .winddown-sub{font-size:14px !important;}
+.je-top3-h{font-size:14px !important;}
+.t3row .tx{font-size:16.5px !important;} .t3row .add{font-size:15px !important;} .t3row .rk{font-size:17px !important;}
+.t3row .cb{width:22px !important;height:22px !important;}
+.je-lists-title{font-size:24px !important;}
+.jl-name{font-size:15px !important;} .jl-t{font-size:16px !important;} .jl-empty{font-size:15px !important;}
+.jl-ic{width:27px !important;height:27px !important;font-size:15px !important;}
+.jl-cb{width:23px !important;height:23px !important;} .jl-addbtn{width:30px !important;height:30px !important;font-size:18px !important;}
+.jl-x{font-size:17px !important;}
+
+/* ── Week in Review as full-width footer ── */
+.je-dash-foot{margin-top:14px;}
+.je-dash-foot .weekly-summary{display:block !important;max-width:none;}
+
+/* ── shrink the month so it fits without scrolling ── */
+.month-title-big{font-size:30px !important;}
+@media (min-width:700px){
+  .m-grid{grid-auto-rows:104px !important;gap:6px !important;}
+  .mc{height:104px !important;}
+  .mc-num{font-size:19px !important;}
+  .month-title-big{font-size:34px !important;}
+  .m-dow-lbl{font-size:11px !important;}
+}
 </style>
 <script id="je-theme-toggle">
 (function(){
@@ -4408,10 +4445,13 @@ body.je-deep .jl-cb.on::after{color:#241C33;}
     ['.week-strip-wrap','.legend','.banner'].forEach(function(s){mv(s,top);});
     ['.allday-strip','.panel-wrap'].forEach(function(s){mv(s,c1);});
     var t3=document.createElement('div'); t3.className='je-top3-card'; t3.id='jeTop3'; c2.appendChild(t3);
-    ['#apptPrepWrap','.day-note-wrap','#billAlertBanner','#reminderAlertBanner','.payday-countdown','#brainDumpNudge','.winddown-banner','.weekly-summary','#stickerNudge'].forEach(function(s){mv(s,c2);});
+    ['#apptPrepWrap','.day-note-wrap','#billAlertBanner','#reminderAlertBanner','.payday-countdown','#brainDumpNudge','.winddown-banner','#stickerNudge'].forEach(function(s){mv(s,c2);});
     ['.sticker-bar','.sticker-tray','.je-lists-title','#jeListsWrap','.school-module','#completedWrap'].forEach(function(s){mv(s,c3);});
     grid.appendChild(c1); grid.appendChild(c2); grid.appendChild(c3);
     wv.appendChild(top); wv.appendChild(grid);
+    var foot=document.createElement('div'); foot.className='je-dash-foot';
+    var ws=wv.querySelector('.weekly-summary'); if(ws) foot.appendChild(ws);
+    wv.appendChild(foot);
     wv.setAttribute('data-dashed','1');
     jeTop3Render();
   };
