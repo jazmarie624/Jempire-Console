@@ -4297,6 +4297,47 @@ body.je-deep .jl-cb.on::after{color:#241C33;}
   .month-title-big{font-size:34px !important;}
   .m-dow-lbl{font-size:11px !important;}
 }
+/* ── #3: slim, Next-Up-led glance banner ── */
+.banner{display:flex !important;flex-direction:column;gap:9px;padding:13px 16px !important;}
+.banner-lbl{order:3;font-size:10px !important;letter-spacing:.14em !important;opacity:.7;margin:0 !important;}
+#bannerNext,.banner-next,.banner-empty{order:1;}
+.banner-stats{order:2;display:flex !important;gap:22px;justify-content:flex-start;}
+.banner-stats .bstat{flex:0 0 auto;background:transparent !important;padding:0 !important;text-align:left;}
+.bstat-num{font-size:21px !important;}
+.bstat-lbl{font-size:11px !important;}
+.banner-next{background:linear-gradient(135deg,rgba(188,142,28,.12),rgba(110,81,166,.08)) !important;border:1px solid var(--line) !important;border-radius:13px !important;padding:12px 14px !important;display:flex !important;gap:11px;align-items:center;cursor:pointer;}
+.bnext-title{font-size:17px !important;font-weight:700;font-family:'Playfair Display',serif;color:var(--brown-dark);}
+.bnext-sub{font-size:13px !important;color:var(--brown-mid);}
+.bnext-icon{font-size:22px;}
+.banner-empty{font-size:15px !important;padding:12px 14px !important;border:1px dashed var(--line);border-radius:13px;cursor:pointer;}
+
+/* ── clean event blocks (no empty hour grid) ── */
+.time-col{display:none !important;}
+.split-panel{display:block !important;background:transparent !important;border:none !important;padding:0 !important;box-shadow:none !important;min-height:0 !important;}
+.events-col{min-height:0 !important;position:static !important;}
+.cev{display:flex;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:11px 13px;margin-bottom:8px;align-items:stretch;cursor:pointer;}
+.cev-bar{width:5px;border-radius:4px;flex-shrink:0;}
+.cev-body{flex:1;min-width:0;}
+.cev-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:3px;}
+.cev-meta .eb-tag{color:#fff;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;}
+.cev-meta .eb-time{font-size:14px;font-weight:700;color:var(--gold);}
+.cev-meta .eb-status{font-size:10px;color:var(--brown-muted);text-transform:uppercase;font-weight:700;}
+.cev .eb-title{font-size:18px;font-weight:700;font-family:'Playfair Display',serif;color:var(--brown-dark);line-height:1.15;}
+.cev .eb-note{font-size:13.5px;color:var(--brown-mid);margin-top:2px;}
+.cev.cev-done .eb-title{text-decoration:line-through;opacity:.55;}
+.cev-empty{color:var(--brown-muted);font-style:italic;font-size:15px;padding:14px;text-align:center;border:1px dashed var(--line);border-radius:12px;cursor:pointer;margin-bottom:4px;}
+/* ── School Life dashboard card ── */
+.je-school-card{background:var(--white-warm);border:1px solid var(--line);border-left:4px solid var(--school-sc);border-radius:16px;padding:14px 15px;}
+body.je-deep .je-school-card{border-left-color:var(--gold);}
+.jsc-h{font-weight:800;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--school-sc);margin-bottom:10px;}
+body.je-deep .jsc-h{color:var(--gold-light);}
+.jsc-row{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px dashed var(--line);}
+.jsc-row:first-of-type{border-top:none;}
+.jsc-ic{font-size:18px;flex-shrink:0;line-height:1.25;}
+.jsc-tx{display:flex;flex-direction:column;}
+.jsc-tx b{font-family:'Playfair Display',serif;font-size:15.5px;font-weight:700;color:var(--brown-dark);line-height:1.2;}
+.jsc-when{font-size:12.5px;color:var(--brown-mid);font-weight:600;}
+.jsc-empty,.jsc-loading{font-size:14px;color:var(--brown-muted);font-style:italic;padding:4px 0;}
 </style>
 <script id="je-theme-toggle">
 (function(){
@@ -4434,6 +4475,31 @@ body.je-deep .jl-cb.on::after{color:#241C33;}
   window.jeT3toggle=function(i){if(JT3[i]){JT3[i].d=!JT3[i].d;t3save();jeTop3Render();}};
   window.jeT3remove=function(i){if(JT3[i]){JT3.splice(i,1);t3save();jeTop3Render();}};
 
+  window.jeSchoolCard=async function(){
+    var el=document.getElementById('jeSchoolCard'); if(!el) return;
+    el.innerHTML='<div class="jsc-h">📚 School Life · This Week</div><div class="jsc-loading">Checking the kids\' calendars…</div>';
+    var rows=[];
+    try{
+      var res=await sbFetch('planner_events','GET',null,'?school=not.is.null&order=date_key.asc&limit=500');
+      if(res&&res.length){
+        var today=new Date(); today.setHours(0,0,0,0);
+        var end=new Date(today); end.setDate(end.getDate()+14);
+        res.forEach(function(e){ if(!e.date_key) return; var d=new Date(e.date_key+'T12:00:00'); if(d>=today&&d<=end) rows.push({d:d,e:e}); });
+      }
+    }catch(err){}
+    var head='<div class="jsc-h">📚 School Life · This Week</div>';
+    if(!rows.length){ el.innerHTML=head+'<div class="jsc-empty">✦ Nothing school-related coming up — enjoy the calm.</div>'; return; }
+    rows.sort(function(a,b){return a.d-b.d;});
+    var DAY=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var SCH={osc:'Osceola',sc:'Osceola',hg:'Hansel & Gretel',lv:''};
+    function icon(t){t=(t||'').toLowerCase(); if(/no school|closed|holiday|off|break|out/.test(t))return '🚌'; if(/report|progress|grade/.test(t))return '📊'; if(/early|release|dismiss/.test(t))return '⏰'; if(/picture|photo/.test(t))return '📸'; if(/conference|meeting/.test(t))return '🧑‍🏫'; if(/spirit|dress|theme|color/.test(t))return '🎨'; if(/field|trip/.test(t))return '🚌'; if(/test|exam|fsa|assess|quiz/.test(t))return '📝'; if(/lunch|money|fee|pay/.test(t))return '💵'; return '📚';}
+    var html=head+rows.slice(0,6).map(function(r){
+      var d=r.d, when=DAY[d.getDay()]+' '+MON[d.getMonth()]+' '+d.getDate();
+      var sch=SCH[r.e.school]||''; var who=sch?(' · '+sch):'';
+      return '<div class="jsc-row"><span class="jsc-ic">'+icon(r.e.title)+'</span><div class="jsc-tx"><b>'+(r.e.title||'School event')+'</b><span class="jsc-when">'+when+who+'</span></div></div>';
+    }).join('');
+    el.innerHTML=html;
+  };
   window.jeBuildDashboard=function(){
     var wv=document.getElementById('weekView'); if(!wv||wv.getAttribute('data-dashed')==='1') return;
     var top=document.createElement('div'); top.className='je-dash-top';
@@ -4444,6 +4510,7 @@ body.je-deep .jl-cb.on::after{color:#241C33;}
     function mv(sel,dest){ var el=wv.querySelector(sel); if(el) dest.appendChild(el); }
     ['.week-strip-wrap','.legend','.banner'].forEach(function(s){mv(s,top);});
     ['.allday-strip','.panel-wrap'].forEach(function(s){mv(s,c1);});
+    var sc=document.createElement('div'); sc.className='je-school-card'; sc.id='jeSchoolCard'; c2.appendChild(sc);
     var t3=document.createElement('div'); t3.className='je-top3-card'; t3.id='jeTop3'; c2.appendChild(t3);
     ['#apptPrepWrap','.day-note-wrap','#billAlertBanner','#reminderAlertBanner','.payday-countdown','#brainDumpNudge','.winddown-banner','#stickerNudge'].forEach(function(s){mv(s,c2);});
     ['.sticker-bar','.sticker-tray','.je-lists-title','#jeListsWrap','.school-module','#completedWrap'].forEach(function(s){mv(s,c3);});
@@ -4454,10 +4521,37 @@ body.je-deep .jl-cb.on::after{color:#241C33;}
     wv.appendChild(foot);
     wv.setAttribute('data-dashed','1');
     jeTop3Render();
+    try{ if(window.jeSchoolCard) jeSchoolCard(); }catch(e){}
   };
   function boot(){ try{ jeBuildDashboard(); }catch(e){ console.warn('dash',e); } }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,600);});
   else setTimeout(boot,600);
+})();
+</script>
+<script id="je-clean-blocks">
+(function(){
+  window.buildTimeCol=function(hours,colId){ var c=document.getElementById(colId); if(c) c.innerHTML=''; };
+  window.buildEventsCol=function(hours,evs,colId,bgClass,onEmpty){
+    var col=document.getElementById(colId); if(!col) return;
+    col.style.position='static'; col.style.minHeight='0';
+    if(!evs||!evs.length){ col.innerHTML='<div class="cev-empty" onclick="openSheet(\'event\')">'+(onEmpty||'✦ Add an event')+'</div>'; return; }
+    var s=evs.slice().sort(function(a,b){return (a.hour||0)-(b.hour||0);});
+    col.innerHTML=s.map(function(ev){
+      var cfg=(typeof CAT_CONFIG!=='undefined'&&CAT_CONFIG[ev.category||'personal'])||{cls:'personal',label:'Personal'};
+      var h=ev.hour||0, h12=h%12||12, ampm=h<12?'AM':'PM';
+      var tm=ev.all_day?'All day':(h12+':00 '+ampm+(ev.duration_hours?' · '+ev.duration_hours+'hr':''));
+      return '<div class="cev '+cfg.cls+(ev.done?' cev-done':'')+'" onclick="openEditEvent('+ev.id+')">'+
+        '<div class="cev-bar" style="background:var(--lane-'+cfg.cls+')"></div>'+
+        '<div class="cev-body"><div class="eb-title">'+(ev.title||'')+'</div>'+
+        '<div class="cev-meta"><span class="eb-time">'+tm+'</span>'+
+        '<span class="eb-tag" style="background:var(--lane-'+cfg.cls+')">'+cfg.label+'</span>'+
+        (ev.reminder?'<span>🔔</span>':'')+
+        ((ev.status&&ev.status!=='confirmed')?'<span class="eb-status">'+ev.status+'</span>':'')+
+        '</div>'+(ev.note?'<div class="eb-note">'+ev.note+'</div>':'')+'</div></div>';
+    }).join('');
+  };
+  function apply(){ try{ if(typeof currentView!=='undefined'&&currentView==='week'&&typeof renderSplitPanel==='function') renderSplitPanel(); }catch(e){} }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){setTimeout(apply,700);}); else setTimeout(apply,700);
 })();
 </script>
 </html>
