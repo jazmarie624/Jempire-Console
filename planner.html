@@ -4199,6 +4199,20 @@ body.je-deep .allday-lbl{color:var(--gold-light) !important;}
 .split-panel{border-radius:14px !important;}
 .weekly-summary .ws-title,.winddown-title,.pcd-text{font-family:'Playfair Display',serif !important;}
 .weekly-summary .ws-title{color:var(--gold) !important;}
+
+/* ── iPad side day panel ── */
+.idp-date{font-family:'Playfair Display',serif;font-size:25px;font-weight:700;color:var(--brown-dark);line-height:1.12;}
+.idp-sub{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--brown-muted);font-weight:800;margin:6px 0 15px;}
+.idp-ev{display:flex;background:var(--white-warm);border:1px solid var(--line);border-radius:13px;overflow:hidden;margin-bottom:10px;box-shadow:0 6px 16px rgba(120,90,160,.12);transition:transform .12s,border-color .12s;}
+.idp-ev:hover{transform:translateY(-1px);border-color:var(--gold);}
+.idp-stripe{width:5px;flex:0 0 5px;}
+.idp-body{padding:12px 14px;flex:1;}
+.idp-cat{font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin-bottom:2px;}
+.idp-nm{font-family:'Playfair Display',serif;font-size:19px;font-weight:600;color:var(--brown-dark);line-height:1.2;}
+.idp-tm{font-size:13px;color:var(--brown-mid);margin-top:2px;font-weight:600;}
+.idp-empty{background:var(--lav-soft);border:1px dashed var(--line);border-radius:13px;padding:24px;text-align:center;color:var(--brown-muted);font-family:'Playfair Display',serif;font-style:italic;font-size:16px;}
+.idp-empty b{color:var(--gold);font-style:normal;}
+.idp-add{width:100%;margin-top:6px;padding:14px;border:none;border-radius:13px;background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#3A2A08;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 5px 16px rgba(200,160,60,.35);}
 </style>
 <script id="je-theme-toggle">
 (function(){
@@ -4256,7 +4270,7 @@ body.je-deep .allday-lbl{color:var(--gold-light) !important;}
 </script>
 <script id="je-ipad-daypanel">
 (function(){
-  var CATS={finance:{l:'Finance',c:'#7FC98A'},gig:{l:'Gig',c:'#E39B7E'},kids:{l:'Kids',c:'#E6C766'},legal:{l:'Legal',c:'#9FB4E8'},personal:{l:'Personal',c:'#DDA0C8'},appt:{l:'Appt',c:'#FF6B5E'}};
+  var CATS={finance:{l:'Finance',c:'#4E8A5A'},gig:{l:'Gig',c:'#B07C55'},kids:{l:'Kids',c:'#D6A93E'},legal:{l:'Legal',c:'#5E7898'},personal:{l:'Personal',c:'#B87C92'},appt:{l:'Appt',c:'#B4674A'},football:{l:'Football',c:'#2F8F86'},support:{l:'Child Support',c:'#1F7A5E'},holiday:{l:'Holiday',c:'#9B5E86'},office:{l:'Office Closed',c:'#5E6B78'},schoolclosed:{l:'School Closed',c:'#7A8B4E'},school:{l:'School',c:'#3E6E8E'}};
   function ord(n){var s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
   function fmtHour(h){if(h==null||h==='')return 'All day';h=parseInt(h);if(isNaN(h))return 'All day';var ap=h>=12?'PM':'AM';var h12=((h+11)%12)+1;return h12+':00 '+ap;}
   window.renderIpadDay=function(){
@@ -4270,7 +4284,7 @@ body.je-deep .allday-lbl{color:var(--gold-light) !important;}
     var html='<div class="idp-date">'+wd+', '+mo+' '+ord(dn)+'</div>';
     html+='<div class="idp-sub">'+(count?count+(count>1?' events':' event'):'Open — nothing booked')+'</div>';
     var rows='';
-    if(isPay){ rows+='<div class="idp-ev"><div class="idp-stripe" style="background:#7FC98A"></div><div class="idp-body"><div class="idp-cat" style="color:#7FC98A">Finance</div><div class="idp-nm">💰 Payday</div><div class="idp-tm">All day</div></div></div>'; }
+    if(isPay){ rows+='<div class="idp-ev"><div class="idp-stripe" style="background:#4E8A5A"></div><div class="idp-body"><div class="idp-cat" style="color:#4E8A5A">Finance</div><div class="idp-nm">💰 Payday</div><div class="idp-tm">All day</div></div></div>'; }
     evts.forEach(function(ev){
       var cat=(ev.category&&CATS[ev.category])?ev.category:'personal';
       var c=CATS[cat];
