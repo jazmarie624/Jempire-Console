@@ -837,6 +837,10 @@ body{font-family:'Inter',sans-serif;background:#F0ECE8;color:var(--brown-dark);m
     <div class="ws-quote" id="wsQuote"></div>
   </div>
 
+  <!-- 2C: Four action lists -->
+  <div class="je-lists-title">✦ My Lists</div>
+  <div class="je-lists" id="jeListsWrap"></div>
+
   <!-- Appointment Prep Checklist -->
   <div id="apptPrepWrap" style="display:none;"></div>
 
@@ -4220,6 +4224,26 @@ body.je-deep .allday-lbl{color:var(--gold-light) !important;}
 .idp-stk-lbl{flex:1;font-size:11px !important;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:6px 11px !important;border-radius:8px;border:1px solid;}
 .idp-stk-x{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--lav-soft);color:var(--brown-mid);font-size:13px;font-weight:800;cursor:pointer;flex-shrink:0;}
 .idp-stk-x:hover{background:rgba(219,110,160,.16);color:#B24A78;border-color:rgba(219,110,160,.4);}
+/* ── 2C: four action lists (walled-off storage: je_lists) ── */
+.je-lists-title{text-align:center;font-family:'Playfair Display',serif;font-weight:700;font-size:21px;color:var(--gold);margin:22px 0 4px;}
+.je-lists{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:6px 13px 0;}
+@media(max-width:640px){.je-lists{grid-template-columns:1fr;}}
+.jl-card{background:var(--white-warm);border:1px solid var(--line);border-radius:16px;padding:14px 15px;}
+.jl-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
+.jl-name{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;letter-spacing:.05em;text-transform:uppercase;}
+.jl-ic{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;}
+.jl-todo .jl-ic{background:var(--lav);} .jl-buy .jl-ic{background:var(--gold);} .jl-call .jl-ic{background:var(--lane-finance);} .jl-pay .jl-ic{background:var(--lane-personal);}
+.jl-addbtn{background:transparent;border:1.5px solid var(--line);color:var(--brown-muted);border-radius:8px;width:27px;height:27px;font-size:16px;font-weight:700;cursor:pointer;line-height:1;}
+.jl-item{display:flex;align-items:center;gap:10px;padding:6px 0;}
+.jl-cb{width:20px;height:20px;border-radius:6px;border:2.5px solid currentColor;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;}
+.jl-cb.on{background:currentColor;}
+.jl-cb.on::after{content:'✓';color:#fff;}
+body.je-deep .jl-cb.on::after{color:#241C33;}
+.jl-t{flex:1;font-size:14px;font-weight:600;color:var(--brown-dark);}
+.jl-item.done .jl-t{text-decoration:line-through;color:var(--brown-muted);}
+.jl-x{color:var(--lane-personal);font-size:16px;cursor:pointer;opacity:.7;padding:0 2px;}
+.jl-empty{color:var(--brown-muted);font-style:italic;font-size:13px;padding:3px 0;}
+.jl-todo{color:var(--lav);}.jl-buy{color:var(--gold);}.jl-call{color:var(--lane-finance);}.jl-pay{color:var(--lane-personal);}
 </style>
 <script id="je-theme-toggle">
 (function(){
@@ -4309,6 +4333,33 @@ body.je-deep .allday-lbl{color:var(--gold-light) !important;}
     html+='<button class="idp-add" onclick="currentDate=new Date(\''+key+'T12:00:00\');openSheet(\'event\')">＋ Add Event</button>';
     panel.innerHTML=html;
   };
+})();
+</script>
+<script id="je-lists-2c">
+(function(){
+  var META={todo:{name:'To-Do',ic:'✓',cls:'jl-todo'},buy:{name:'To Buy',ic:'🛍',cls:'jl-buy'},call:{name:'To Call',ic:'☎',cls:'jl-call'},pay:{name:'To Pay',ic:'$',cls:'jl-pay'}};
+  function load(){try{var raw=localStorage.getItem('je_lists');return raw?JSON.parse(raw):{todo:[],buy:[],call:[],pay:[]};}catch(e){return {todo:[],buy:[],call:[],pay:[]};}}
+  var JL=load();
+  function save(){try{localStorage.setItem('je_lists',JSON.stringify(JL));}catch(e){}}
+  function esc(s){return (s+'').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  window.jeListsRender=function(){
+    var w=document.getElementById('jeListsWrap'); if(!w) return;
+    var html='';
+    Object.keys(META).forEach(function(k){
+      var m=META[k], items=JL[k]||[];
+      html+='<div class="jl-card"><div class="jl-h"><div class="jl-name '+m.cls+'"><span class="jl-ic">'+m.ic+'</span>'+m.name+'</div><button class="jl-addbtn" onclick="jeListAdd(\''+k+'\')">+</button></div>';
+      if(!items.length) html+='<div class="jl-empty">Nothing yet — tap + to add.</div>';
+      items.forEach(function(it,i){
+        html+='<div class="jl-item '+(it.done?'done':'')+' '+m.cls+'"><div class="jl-cb '+(it.done?'on':'')+'" onclick="jeListToggle(\''+k+'\','+i+')"></div><div class="jl-t">'+esc(it.t)+'</div><span class="jl-x" onclick="jeListRemove(\''+k+'\','+i+')">✕</span></div>';
+      });
+      html+='</div>';
+    });
+    w.innerHTML=html;
+  };
+  window.jeListAdd=function(k){var t=prompt('Add to '+META[k].name+':');if(t&&t.trim()){JL[k]=JL[k]||[];JL[k].push({t:t.trim(),done:false});save();jeListsRender();}};
+  window.jeListToggle=function(k,i){if(JL[k]&&JL[k][i]){JL[k][i].done=!JL[k][i].done;save();jeListsRender();}};
+  window.jeListRemove=function(k,i){if(JL[k]){JL[k].splice(i,1);save();jeListsRender();}};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',window.jeListsRender);else window.jeListsRender();
 })();
 </script>
 </html>
