@@ -4213,6 +4213,13 @@ body.je-deep .allday-lbl{color:var(--gold-light) !important;}
 .idp-empty{background:var(--lav-soft);border:1px dashed var(--line);border-radius:13px;padding:24px;text-align:center;color:var(--brown-muted);font-family:'Playfair Display',serif;font-style:italic;font-size:16px;}
 .idp-empty b{color:var(--gold);font-style:normal;}
 .idp-add{width:100%;margin-top:6px;padding:14px;border:none;border-radius:13px;background:linear-gradient(135deg,var(--gold-light),var(--gold));color:#3A2A08;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif;box-shadow:0 5px 16px rgba(200,160,60,.35);}
+
+/* ── sticker removal in day panel ── */
+.idp-stk-h{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--brown-muted);margin:15px 0 8px;}
+.idp-stk{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.idp-stk-lbl{flex:1;font-size:11px !important;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:6px 11px !important;border-radius:8px;border:1px solid;}
+.idp-stk-x{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--lav-soft);color:var(--brown-mid);font-size:13px;font-weight:800;cursor:pointer;flex-shrink:0;}
+.idp-stk-x:hover{background:rgba(219,110,160,.16);color:#B24A78;border-color:rgba(219,110,160,.4);}
 </style>
 <script id="je-theme-toggle">
 (function(){
@@ -4273,6 +4280,11 @@ body.je-deep .allday-lbl{color:var(--gold-light) !important;}
   var CATS={finance:{l:'Finance',c:'#4E8A5A'},gig:{l:'Gig',c:'#B07C55'},kids:{l:'Kids',c:'#D6A93E'},legal:{l:'Legal',c:'#5E7898'},personal:{l:'Personal',c:'#B87C92'},appt:{l:'Appt',c:'#B4674A'},football:{l:'Football',c:'#2F8F86'},support:{l:'Child Support',c:'#1F7A5E'},holiday:{l:'Holiday',c:'#9B5E86'},office:{l:'Office Closed',c:'#5E6B78'},schoolclosed:{l:'School Closed',c:'#7A8B4E'},school:{l:'School',c:'#3E6E8E'}};
   function ord(n){var s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
   function fmtHour(h){if(h==null||h==='')return 'All day';h=parseInt(h);if(isNaN(h))return 'All day';var ap=h>=12?'PM':'AM';var h12=((h+11)%12)+1;return h12+':00 '+ap;}
+  window.removeSticker=function(key,id){
+    try{ if(dayStickers[key]){ dayStickers[key]=dayStickers[key].filter(function(s){return String(s.id)!==String(id);}); if(!dayStickers[key].length) delete dayStickers[key]; if(typeof lsSet==='function') lsSet('je_stickers',dayStickers); else localStorage.setItem('je_stickers',JSON.stringify(dayStickers)); } }catch(e){}
+    try{ renderMonth(); }catch(e){}
+    try{ renderIpadDay(); }catch(e){}
+  };
   window.renderIpadDay=function(){
     var panel=document.getElementById('ipadDayPanel'); if(!panel) return;
     var key=dk(currentDate);
@@ -4292,6 +4304,8 @@ body.je-deep .allday-lbl{color:var(--gold-light) !important;}
     });
     if(!rows) rows='<div class="idp-empty">This day is <b>open</b>.<br>A good one to book into.</div>';
     html+=rows;
+    var _stks=(typeof dayStickers!=='undefined'&&dayStickers[key])?dayStickers[key]:[];
+    if(_stks.length){ html+='<div class="idp-stk-h">Stickers on this day</div>'; _stks.forEach(function(s){ html+='<div class="idp-stk"><span class="idp-stk-lbl '+(s.cls||'')+'">'+(s.label||'')+'</span><button class="idp-stk-x" onclick="removeSticker(\''+key+'\',\''+s.id+'\')" title="Remove sticker">✕</button></div>'; }); }
     html+='<button class="idp-add" onclick="currentDate=new Date(\''+key+'T12:00:00\');openSheet(\'event\')">＋ Add Event</button>';
     panel.innerHTML=html;
   };
