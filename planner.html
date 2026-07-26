@@ -4244,6 +4244,22 @@ body.je-deep .jl-cb.on::after{color:#241C33;}
 .jl-x{color:var(--lane-personal);font-size:16px;cursor:pointer;opacity:.7;padding:0 2px;}
 .jl-empty{color:var(--brown-muted);font-style:italic;font-size:13px;padding:3px 0;}
 .jl-todo{color:var(--lav);}.jl-buy{color:var(--gold);}.jl-call{color:var(--lane-finance);}.jl-pay{color:var(--lane-personal);}
+/* ── Command Center dashboard (3-column week) ── */
+.je-dash-top{margin-bottom:6px;}
+.je-col{display:flex;flex-direction:column;gap:12px;min-width:0;}
+.je-dash-grid{display:flex;flex-direction:column;gap:12px;}
+@media(min-width:900px){ .je-dash-grid{display:grid;grid-template-columns:1.18fr 1fr 1fr;gap:14px;align-items:start;} }
+.todo-wrap{display:none !important;}
+.je-top3-card{background:var(--white-warm);border:1px solid var(--line);border-radius:16px;padding:14px 15px;}
+.je-top3-h{font-weight:800;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:9px;}
+.t3row{display:flex;align-items:center;gap:9px;padding:5px 0;}
+.t3row .rk{font-family:'Playfair Display',serif;font-weight:800;color:var(--gold);width:15px;}
+.t3row .cb{width:19px;height:19px;border-radius:6px;border:2.5px solid var(--gold);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;}
+.t3row .cb.on{background:var(--gold);}
+.t3row .tx{flex:1;font-size:14px;font-weight:600;color:var(--brown-dark);cursor:pointer;}
+.t3row.done .tx{text-decoration:line-through;color:var(--brown-muted);}
+.t3row .add{flex:1;font-size:13px;color:var(--brown-muted);font-style:italic;cursor:pointer;}
+.t3row .x{color:var(--lane-personal);cursor:pointer;opacity:.7;font-size:14px;}
 </style>
 <script id="je-theme-toggle">
 (function(){
@@ -4360,6 +4376,48 @@ body.je-deep .jl-cb.on::after{color:#241C33;}
   window.jeListToggle=function(k,i){if(JL[k]&&JL[k][i]){JL[k][i].done=!JL[k][i].done;save();jeListsRender();}};
   window.jeListRemove=function(k,i){if(JL[k]){JL[k].splice(i,1);save();jeListsRender();}};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',window.jeListsRender);else window.jeListsRender();
+})();
+</script>
+<script id="je-command-center">
+(function(){
+  function esc(s){return (s+'').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function t3load(){try{var r=localStorage.getItem('je_top3');return r?JSON.parse(r):[];}catch(e){return [];}}
+  var JT3=t3load();
+  function t3save(){try{localStorage.setItem('je_top3',JSON.stringify(JT3));}catch(e){}}
+  window.jeTop3Render=function(){
+    var el=document.getElementById('jeTop3'); if(!el) return;
+    var h='<div class="je-top3-h">👑 Top 3 Today</div>';
+    for(var i=0;i<3;i++){ var it=JT3[i];
+      if(it){ h+='<div class="t3row '+(it.d?'done':'')+'"><span class="rk">'+(i+1)+'</span><div class="cb '+(it.d?'on':'')+'" onclick="jeT3toggle('+i+')">'+(it.d?'✓':'')+'</div><div class="tx" onclick="jeT3toggle('+i+')">'+esc(it.t)+'</div><span class="x" onclick="jeT3remove('+i+')">✕</span></div>'; }
+      else { h+='<div class="t3row"><span class="rk">'+(i+1)+'</span><div class="add" onclick="jeT3add()">＋ Add a priority</div></div>'; }
+    }
+    el.innerHTML=h;
+  };
+  window.jeT3add=function(){var t=prompt('Top priority for today:');if(t&&t.trim()){JT3.push({t:t.trim(),d:false});if(JT3.length>3)JT3=JT3.slice(0,3);t3save();jeTop3Render();}};
+  window.jeT3toggle=function(i){if(JT3[i]){JT3[i].d=!JT3[i].d;t3save();jeTop3Render();}};
+  window.jeT3remove=function(i){if(JT3[i]){JT3.splice(i,1);t3save();jeTop3Render();}};
+
+  window.jeBuildDashboard=function(){
+    var wv=document.getElementById('weekView'); if(!wv||wv.getAttribute('data-dashed')==='1') return;
+    var top=document.createElement('div'); top.className='je-dash-top';
+    var grid=document.createElement('div'); grid.className='je-dash-grid';
+    var c1=document.createElement('div'); c1.className='je-col';
+    var c2=document.createElement('div'); c2.className='je-col';
+    var c3=document.createElement('div'); c3.className='je-col';
+    function mv(sel,dest){ var el=wv.querySelector(sel); if(el) dest.appendChild(el); }
+    ['.week-strip-wrap','.legend','.banner'].forEach(function(s){mv(s,top);});
+    ['.allday-strip','.panel-wrap'].forEach(function(s){mv(s,c1);});
+    var t3=document.createElement('div'); t3.className='je-top3-card'; t3.id='jeTop3'; c2.appendChild(t3);
+    ['#apptPrepWrap','.day-note-wrap','#billAlertBanner','#reminderAlertBanner','.payday-countdown','#brainDumpNudge','.winddown-banner','.weekly-summary','#stickerNudge'].forEach(function(s){mv(s,c2);});
+    ['.sticker-bar','.sticker-tray','.je-lists-title','#jeListsWrap','.school-module','#completedWrap'].forEach(function(s){mv(s,c3);});
+    grid.appendChild(c1); grid.appendChild(c2); grid.appendChild(c3);
+    wv.appendChild(top); wv.appendChild(grid);
+    wv.setAttribute('data-dashed','1');
+    jeTop3Render();
+  };
+  function boot(){ try{ jeBuildDashboard(); }catch(e){ console.warn('dash',e); } }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,600);});
+  else setTimeout(boot,600);
 })();
 </script>
 </html>
