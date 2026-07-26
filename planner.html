@@ -794,7 +794,6 @@ body{font-family:'Inter',sans-serif;background:#F0ECE8;color:var(--brown-dark);m
       <div class="stk stk-win" onclick="selectSticker('win','✨ Win','mcs-win')"><div class="stk-dot"></div>✨ Win</div>
       <div class="stk stk-mom" onclick="selectSticker('mom','💕 Mom Time','mcs-mom')"><div class="stk-dot"></div>Mom Time</div>
       <div class="stk stk-legal" onclick="selectSticker('legal','⚖️ Legal','mcs-legal')"><div class="stk-dot"></div>⚖️ Legal</div>
-      <div class="stk stk-football" onclick="selectSticker('football','🏈 Football','mcs-football')"><div class="stk-dot"></div>🏈 Football</div>
       <div class="stk stk-school" onclick="selectSticker('school','📚 Class','mcs-school')"><div class="stk-dot"></div>📚 Class</div>
       <div class="stk stk-travel" onclick="selectSticker('travel','✈️ Travel','mcs-travel')"><div class="stk-dot"></div>✈️ Travel</div>
     </div>
@@ -1092,6 +1091,11 @@ const CAT_CONFIG={
   legal:{label:'Legal',emoji:'⚖️',cls:'legal',lbl:'lbl-legal'},
   personal:{label:'Personal',emoji:'🧘',cls:'personal',lbl:'lbl-personal'},
   appt:{label:'Appt',emoji:'📋',cls:'appt',lbl:'lbl-appt'},
+  football:{label:'Football',emoji:'🏈',cls:'football',lbl:'lbl-football'},
+  support:{label:'Child Support',emoji:'💵',cls:'support',lbl:'lbl-support'},
+  holiday:{label:'Holiday',emoji:'🎉',cls:'holiday',lbl:'lbl-holiday'},
+  office:{label:'Office Closed',emoji:'🏢',cls:'office',lbl:'lbl-office'},
+  schoolclosed:{label:'School Closed',emoji:'🚌',cls:'schoolclosed',lbl:'lbl-schoolclosed'},
   other:{label:'Other',emoji:'📌',cls:'personal',lbl:'lbl-personal'},
 };
 
@@ -1101,6 +1105,10 @@ const TEMPLATES=[
   {id:'football-practice',name:'Football Practice',emoji:'🏈',desc:'Kids · 5:30 PM',cat:'kids',allDay:false,status:'confirmed',title:'🏈 Football Practice',time:'17:30'},
   {id:'bill',name:'Bill Due',emoji:'🧾',desc:'Finance · All Day',cat:'finance',allDay:true,status:'confirmed',title:'Bill Due'},
   {id:'appt',name:'Appointment',emoji:'📅',desc:'Appt · Timed',cat:'appt',allDay:false,status:'confirmed',title:''},
+  {id:'holiday',name:'Holiday',emoji:'🎉',desc:'Holiday · All Day',cat:'holiday',allDay:true,status:'confirmed',title:'🎉 Holiday'},
+  {id:'office-closed',name:'Office Closed',emoji:'🏢',desc:'Work · All Day',cat:'office',allDay:true,status:'confirmed',title:'🏢 Office Closed'},
+  {id:'school-closed',name:'School Closed',emoji:'🚌',desc:'School · All Day',cat:'schoolclosed',allDay:true,status:'confirmed',title:'🚌 School Closed'},
+  {id:'child-support',name:'Child Support',emoji:'💵',desc:'Finance · All Day',cat:'support',allDay:true,status:'confirmed',title:'💵 Child Support'},
   {id:'custom',name:'Custom',emoji:'✦',desc:'Start from scratch',cat:'personal',allDay:false,status:'confirmed',title:''},
 ];
 
@@ -1878,6 +1886,11 @@ function buildEventSheet(){
         <button class="cat-btn cat-legal" data-cat="legal" onclick="selectCat('legal',this)">⚖️ Legal</button>
         <button class="cat-btn cat-personal" data-cat="personal" onclick="selectCat('personal',this)">🧘 Personal</button>
         <button class="cat-btn cat-appt" data-cat="appt" onclick="selectCat('appt',this)">📋 Appt</button>
+        <button class="cat-btn cat-football" data-cat="football" onclick="selectCat('football',this)">🏈 Football</button>
+        <button class="cat-btn cat-support" data-cat="support" onclick="selectCat('support',this)">💵 Child Support</button>
+        <button class="cat-btn cat-holiday" data-cat="holiday" onclick="selectCat('holiday',this)">🎉 Holiday</button>
+        <button class="cat-btn cat-office" data-cat="office" onclick="selectCat('office',this)">🏢 Office Closed</button>
+        <button class="cat-btn cat-schoolclosed" data-cat="schoolclosed" onclick="selectCat('schoolclosed',this)">🚌 School Closed</button>
       </div>
     </div>
     <div class="field">
@@ -3491,7 +3504,7 @@ window.renderBanner = function(){
       const isPay=isPayday(key), isPinned=pinnedDays.includes(key), dayEvts=byDay[key]||[], stickers=dayStickers[key]||[];
       const div=document.createElement('div');
       div.className='mc'+(key===todKey?' today-mc':'')+(key===selKey?' active-mc':'')+(isPay?' payday-mc':'')+(isPinned?' pinned-mc':'');
-      const LANEC={finance:'var(--lane-finance)',gig:'var(--lane-gig)',kids:'var(--lane-kids)',legal:'var(--lane-legal)',personal:'var(--lane-personal)',appt:'var(--lane-appt)',school:'var(--lane-school)',football:'var(--lane-football)'};
+      const LANEC={finance:'var(--lane-finance)',gig:'var(--lane-gig)',kids:'var(--lane-kids)',legal:'var(--lane-legal)',personal:'var(--lane-personal)',appt:'var(--lane-appt)',school:'var(--lane-school)',football:'var(--lane-football)',support:'var(--lane-support)',holiday:'var(--lane-holiday)',office:'var(--lane-office)',schoolclosed:'var(--lane-schoolclosed)'};
       const STKC={'mcs-payday':'var(--lane-finance)','mcs-bill':'var(--terra)','mcs-dayoff':'var(--rose-gold)','mcs-appt':'var(--lane-appt)','mcs-gig':'var(--lane-gig)','mcs-win':'var(--gold)','mcs-mom':'var(--lane-personal)','mcs-legal':'var(--lane-legal)','mcs-school':'var(--lane-school)','mcs-travel':'var(--lane-finance)','mcs-football':'var(--lane-football)'};
       const marks=[];
       if(isPay) marks.push({txt:'Payday',color:'var(--lane-finance)',lbl:'lbl-payday',emoji:'💰'});
@@ -4041,6 +4054,7 @@ window.addEventListener('load',function(){
   --lane-legal:#5E7898;   --lane-legal-bg:rgba(94,120,152,0.12);
   --lane-appt:#B4674A;    --lane-appt-bg:rgba(180,103,74,0.12);
   --lane-football:#2F8F86;--lane-football-bg:rgba(47,143,134,0.14);
+  --lane-support:#1F7A5E; --lane-holiday:#9B5E86; --lane-office:#5E6B78; --lane-schoolclosed:#7A8B4E;
   --school-hg:#6E9080; --school-hg-bg:rgba(110,144,128,0.12);
   --school-sc:#3E6E8E; --school-sc-bg:rgba(62,110,142,0.12);
   --school-lv:#B87C92; --school-lv-bg:rgba(184,124,146,0.12);
@@ -4053,7 +4067,7 @@ body.je-deep{
   --rose-gold:#D9B48C; --rose-light:#E8C9A6;
   --gold:#E8C25A; --gold-light:#F3D77E;
   --lav:#C3AEEC; --lav-soft:#3E3358;
-  --lane-finance:#6FB483; --lane-kids:#E4BC54; --lane-gig:#CFA585; --lane-personal:#DB9FB1; --lane-legal:#8FA9CE; --lane-appt:#D6957A; --lane-football:#4FC0B4;
+  --lane-finance:#6FB483; --lane-kids:#E4BC54; --lane-gig:#CFA585; --lane-personal:#DB9FB1; --lane-legal:#8FA9CE; --lane-appt:#D6957A; --lane-football:#4FC0B4; --lane-support:#5FB48E; --lane-holiday:#C688AC; --lane-office:#9AA6B4; --lane-schoolclosed:#B0C07E;
   --school-hg:#6FB4AA; --school-sc:#8FA9CE; --school-lv:#DB9FB1;
 }
 
@@ -4122,6 +4136,16 @@ body.je-deep .bstat{background:rgba(60,50,85,.5) !important;}
 /* NEW: Football sticker — teal 🏈 */
 .stk-football{background:rgba(47,143,134,0.14);border-color:var(--lane-football);color:var(--lane-football);}
 .mcs-football{background:rgba(47,143,134,0.16);border-color:var(--lane-football);color:var(--lane-football);}
+.mc-lbl.lbl-football{background:rgba(47,143,134,.16);color:var(--lane-football);}
+.mc-lbl.lbl-support{background:rgba(31,122,94,.16);color:var(--lane-support);}
+.mc-lbl.lbl-holiday{background:rgba(155,94,134,.16);color:var(--lane-holiday);}
+.mc-lbl.lbl-office{background:rgba(94,107,120,.16);color:var(--lane-office);}
+.mc-lbl.lbl-schoolclosed{background:rgba(122,139,78,.16);color:var(--lane-schoolclosed);}
+.cat-btn.cat-football.active-cat{background:var(--lane-football)!important;border-color:var(--lane-football)!important;}
+.cat-btn.cat-support.active-cat{background:var(--lane-support)!important;border-color:var(--lane-support)!important;}
+.cat-btn.cat-holiday.active-cat{background:var(--lane-holiday)!important;border-color:var(--lane-holiday)!important;}
+.cat-btn.cat-office.active-cat{background:var(--lane-office)!important;border-color:var(--lane-office)!important;}
+.cat-btn.cat-schoolclosed.active-cat{background:var(--lane-schoolclosed)!important;border-color:var(--lane-schoolclosed)!important;}
 
 /* Light/Deep toggle button */
 .je-mode-toggle{position:fixed;top:12px;left:12px;z-index:900;background:linear-gradient(135deg,#E8C25A,#C39A2E);color:#3A2A08;border:none;border-radius:20px;padding:8px 14px;font-family:'Inter',sans-serif;font-weight:800;font-size:12px;letter-spacing:.03em;box-shadow:0 4px 14px rgba(120,90,160,.3);cursor:pointer;}
@@ -4165,6 +4189,16 @@ body.je-deep .m-legbox{color:#2A2036;}
 .m-legbox.lb-kids{color:#3A2A08;}
 .je-today-row{text-align:center;margin:-2px 0 10px;}
 .je-today-btn{background:linear-gradient(135deg,#E8C25A,#C39A2E);color:#3A2A08;border:none;border-radius:18px;padding:8px 18px;font-family:'Inter',sans-serif;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 4px 12px rgba(200,160,60,.3);}
+
+/* ── 2B: week polish — bold Morning/Afternoon/Evening + clean headers ── */
+.section-label{font-family:'Inter',sans-serif !important;font-weight:800 !important;font-size:12.5px !important;letter-spacing:.12em !important;text-transform:uppercase !important;color:var(--gold) !important;display:flex !important;align-items:center;gap:9px;margin:18px 13px 9px !important;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--line);}
+.allday-strip{background:var(--lav-soft) !important;border:1px solid var(--line) !important;border-radius:13px !important;margin:12px 13px 4px !important;padding:10px 12px !important;}
+.allday-lbl{font-weight:800 !important;letter-spacing:.12em !important;color:var(--lav) !important;}
+body.je-deep .allday-lbl{color:var(--gold-light) !important;}
+.split-panel{border-radius:14px !important;}
+.weekly-summary .ws-title,.winddown-title,.pcd-text{font-family:'Playfair Display',serif !important;}
+.weekly-summary .ws-title{color:var(--gold) !important;}
 </style>
 <script id="je-theme-toggle">
 (function(){
