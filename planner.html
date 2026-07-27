@@ -4557,7 +4557,7 @@ body.je-deep .jsc-h{color:var(--gold-light);}
       var cfg=(typeof CAT_CONFIG!=='undefined'&&CAT_CONFIG[ev.category||'personal'])||{cls:'personal',label:'Personal'};
       var h=ev.hour||0, h12=h%12||12, ampm=h<12?'AM':'PM';
       var tm=ev.all_day?'All day':(h12+':00 '+ampm+(ev.duration_hours?' · '+ev.duration_hours+'hr':''));
-      return '<div class="cev '+cfg.cls+(ev.done?' cev-done':'')+'" onclick="openEditEvent('+ev.id+')">'+
+      return '<div class="cev '+cfg.cls+(ev.done?' cev-done':'')+'" onclick="openEditEvent(\''+ev.id+'\')">'+
         '<div class="cev-bar" style="background:var(--lane-'+cfg.cls+')"></div>'+
         '<div class="cev-body"><div class="eb-title">'+(ev.title||'')+'</div>'+
         '<div class="cev-meta"><span class="eb-time">'+tm+'</span>'+
