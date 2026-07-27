@@ -3945,19 +3945,13 @@ window.addEventListener('load',function(){
       var isPay=isPayday(key), isPinned=pinnedDays.includes(key), dayEvts=byDay[key]||[], stickers=dayStickers[key]||[];
       var div=document.createElement('div');
       div.className='mc'+(key===todKey?' today-mc':'')+(key===selKey?' active-mc':'')+(isPay?' payday-mc':'')+(isPinned?' pinned-mc':'');
-      var PRIO=['kids','appt','personal','finance','legal','gig'];
-      var cset={}; if(isPay) cset['finance']=1;
-      dayEvts.forEach(function(ev){var c=(window.jeCls?jeCls(ev):(ev.category||'personal'));if(PRIO.indexOf(c)<0)c='personal';cset[c]=1;});
-      var cats=PRIO.filter(function(c){return cset[c];});
-      var bar='';
-      if(cats.length){
-        var segs;
-        if(cats.length<=3){segs=cats.map(function(c){return '<span class="mc-seg seg-'+c+'"></span>';});}
-        else{segs=cats.slice(0,2).map(function(c){return '<span class="mc-seg seg-'+c+'"></span>';});segs.push('<span class="mc-seg mc-more">+</span>');}
-        bar='<div class="mc-bar">'+segs.join('')+'</div>';
-      }
+      function laneOf(ev){var c=(window.jeCls?jeCls(ev):(ev.category||'personal'));var K=['finance','gig','kids','legal','personal','appt','football','support','holiday','office','schoolclosed','school'];return K.indexOf(c)>=0?c:'personal';}
+      var evChips='';
+      if(isPay){evChips+='<div class="mc-elbl" style="border-left-color:var(--lane-finance);color:var(--lane-finance)">\ud83d\udcb0 Payday</div>';}
+      dayEvts.slice(0,3).forEach(function(ev){var c=laneOf(ev);var nm=(ev.title||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');evChips+='<div class="mc-elbl" style="border-left-color:var(--lane-'+c+');color:var(--lane-'+c+')">'+nm+'</div>';});
+      if(dayEvts.length>3){evChips+='<div class="mc-elbl mc-more2">+'+(dayEvts.length-3)+' more</div>';}
       var stk=stickers.slice(0,2).map(function(s){return '<div class="mc-sticker '+s.cls+'">'+s.label+'</div>';}).join('');
-      div.innerHTML='<button class="pin-btn '+(isPinned?'pinned':'')+'" onclick="togglePin(\''+key+'\',event)">'+(isPinned?'📌':'·')+'</button><div class="mc-num">'+d+'</div><div class="mc-labels">'+stk+'</div>'+bar;
+      div.innerHTML='<button class="pin-btn '+(isPinned?'pinned':'')+'" onclick="togglePin(\''+key+'\',event)">'+(isPinned?'📌':'·')+'</button><div class="mc-num">'+d+'</div><div class="mc-labels">'+evChips+stk+'</div>';
       (function(k,dd){div.onclick=function(e){if(e.target.classList.contains('pin-btn'))return;if(selectedStickerMonth){stampStickerOnDate(k);return;}currentDate=new Date(year,month,dd);if(window.innerWidth>=900){renderMonth();}else{switchView('week');}};})(key,d);
       grid.appendChild(div);
     }
@@ -4182,7 +4176,6 @@ body.je-deep .je-mode-toggle{background:linear-gradient(135deg,#3E3358,#2A2340);
 /* ── 2A: month bars(iPhone) + word-stamps(iPad) + bottom legend ── */
 .mc-labels{justify-content:flex-end !important;margin-top:2px !important;}
 .mc-bars{display:flex;flex-direction:column;gap:2.5px;}
-.mc-bar{height:4px;border-radius:3px;width:100%;}
 .mc-stamps{display:none;flex-direction:column;gap:3px;}
 .mc-stamp{font-size:9px;font-weight:800;padding:2px 6px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4;}
 @media(min-width:700px){ .mc-bars{display:none;} .mc-stamps{display:flex;} .mc-stamp{font-size:11px;padding:3px 8px;} }
@@ -4355,6 +4348,13 @@ body.je-deep .jsc-h{color:var(--gold-light);}
 /* 7) prep checklist = compact box (only shows when day has an appt already) */
 .prep-checklist{padding:9px 12px !important;margin:0 !important;}
 .prep-title{font-size:11px !important;}
+
+/* month event name chips */
+:root{--lane-school:#3E6E8E;} body.je-deep{--lane-school:#8FA9CE;}
+.mc-elbl{font-size:9px;font-weight:800;padding:2px 6px;border-radius:5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:rgba(120,100,165,.10);border-left:3px solid var(--lav);line-height:1.4;max-width:100%;}
+body.je-deep .mc-elbl{background:rgba(190,170,230,.12);}
+.mc-elbl.mc-more2{color:var(--brown-muted);border-left-color:transparent;background:transparent;font-weight:700;}
+@media(min-width:700px){.mc-elbl{font-size:10.5px;padding:2px 7px;}}
 </style>
 <script id="je-theme-toggle">
 (function(){
@@ -4499,8 +4499,8 @@ body.je-deep .jsc-h{color:var(--gold-light);}
     try{
       var res=await sbFetch('planner_events','GET',null,'?school=not.is.null&order=date_key.asc&limit=500');
       if(res&&res.length){
-        var today=new Date(); today.setHours(0,0,0,0);
-        var start=new Date(today); start.setDate(today.getDate()-today.getDay());
+        var base=(typeof currentDate!=='undefined'&&currentDate)?new Date(currentDate):new Date(); base.setHours(0,0,0,0);
+        var start=new Date(base); start.setDate(base.getDate()-base.getDay());
         var end=new Date(start); end.setDate(start.getDate()+6); end.setHours(23,59,59,999);
         res.forEach(function(e){ if(!e.date_key) return; var d=new Date(e.date_key+'T12:00:00'); if(d>=start&&d<=end) rows.push({d:d,e:e}); });
       }
@@ -4570,5 +4570,8 @@ body.je-deep .jsc-h{color:var(--gold-light);}
   function apply(){ try{ if(typeof currentView!=='undefined'&&currentView==='week'&&typeof renderSplitPanel==='function') renderSplitPanel(); }catch(e){} }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){setTimeout(apply,700);}); else setTimeout(apply,700);
 })();
+</script>
+<script id="je-school-refresh">
+(function(){ if(window.renderSplitPanel){ var _o=window.renderSplitPanel; window.renderSplitPanel=function(){ var r=_o.apply(this,arguments); try{ if(window.jeSchoolCard) jeSchoolCard(); }catch(e){} return r; }; } })();
 </script>
 </html>
