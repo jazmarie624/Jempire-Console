@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J Empire · Money</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  :root{
+    --card:#FFFFFF;--ink:#2E2440;--mid:#5E5273;--muted:#8B7EA5;
+    --lav:#6E51A6;--lav-soft:#EFE9F8;--gold:#BC8E1C;--gold-lt:#E8C25A;--line:rgba(120,100,165,.15);
+    --green:#4E8A5A;--green-soft:rgba(78,138,90,.12);--amber:#C08A2E;--amber-soft:rgba(214,168,74,.16);--rose:#B4674A;--rose-soft:rgba(180,103,74,.12);
+    --pay:#6E51A6;--pay-s:rgba(110,81,166,.14);--agu:#4E8A5A;--agu-s:rgba(78,138,90,.14);--car:#C08A2E;--car-s:rgba(192,138,46,.16);--gig:#B4674A;--gig-s:rgba(180,103,74,.14);
+  }
+  body.deep{--card:#332B4C;--ink:#F1ECFA;--mid:#C7BEE0;--muted:#A99CC4;--lav:#C3AEEC;--lav-soft:#3E3358;--gold:#E8C25A;--gold-lt:#F3D77E;--line:rgba(190,170,230,.22);--green:#6FB483;--green-soft:rgba(111,180,131,.16);--amber:#E8C25A;--amber-soft:rgba(232,194,90,.16);--rose:#D6957A;--rose-soft:rgba(214,149,122,.16);--pay:#C3AEEC;--pay-s:rgba(160,140,220,.2);--agu:#6FB483;--agu-s:rgba(111,180,131,.18);--car:#E8C25A;--car-s:rgba(232,194,90,.18);--gig:#D6957A;--gig-s:rgba(214,149,122,.18);}
+  body{font-family:'Inter',sans-serif;color:var(--ink);min-height:100vh;padding:16px 13px 44px;background:radial-gradient(60% 40% at 82% 2%,rgba(232,194,90,.12),transparent 60%),linear-gradient(170deg,#F1ECF8,#E7DEF3);background-attachment:fixed;transition:background .3s;}
+  body.deep{background:radial-gradient(40% 30% at 15% 10%,rgba(232,180,220,.16),transparent 70%),linear-gradient(168deg,#2B2444,#1E1930);}
+  .wrap{max-width:560px;margin:0 auto;}
+  .top{display:flex;align-items:center;justify-content:space-between;}
+  .brand{font-size:9px;font-weight:800;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);}
+  .title{font-family:'Pinyon Script',cursive;font-size:34px;line-height:.9;background:linear-gradient(135deg,var(--gold),var(--gold-lt),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+  .mode{border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:800;font-size:11px;padding:7px 11px;border-radius:18px;cursor:pointer;}
+  .monthnav{display:flex;align-items:center;justify-content:center;gap:14px;margin:6px 0 14px;}
+  .monthnav button{border:1px solid var(--line);background:var(--card);color:var(--lav);width:32px;height:32px;border-radius:50%;font-size:15px;cursor:pointer;font-weight:800;}
+  .monthnav .mlabel{font-family:'Playfair Display',serif;font-weight:800;font-size:21px;min-width:140px;text-align:center;}
+
+  .light{position:relative;border-radius:22px;padding:24px 20px;margin-bottom:12px;overflow:hidden;text-align:center;border:1px solid var(--line);}
+  .light.ok{background:linear-gradient(160deg,var(--green-soft),transparent 72%),var(--card);}
+  .light.short{background:linear-gradient(160deg,var(--amber-soft),transparent 72%),var(--card);}
+  .light::before{content:'';position:absolute;top:-45%;left:50%;transform:translateX(-50%);width:66%;height:80%;border-radius:50%;filter:blur(42px);opacity:.5;z-index:0;}
+  .light.ok::before{background:radial-gradient(circle,rgba(78,138,90,.5),transparent 70%);}
+  .light.short::before{background:radial-gradient(circle,rgba(214,168,74,.6),transparent 70%);}
+  .light>*{position:relative;z-index:1;}
+  .beam{font-size:30px;margin-bottom:4px;}
+  .verdict{font-family:'Playfair Display',serif;font-weight:800;font-size:28px;line-height:1.1;}
+  .light.ok .verdict{color:var(--green);} .light.short .verdict{color:var(--amber);}
+  body.deep .light.short .verdict{color:var(--gold-lt);}
+  .vsub{font-size:14px;color:var(--mid);margin-top:7px;font-weight:600;}
+  .duesoon{margin-top:12px;background:var(--rose-soft);border:1px solid var(--line);border-radius:11px;padding:9px 12px;font-size:12.5px;font-weight:700;color:var(--rose);}
+
+  .tallies{display:flex;gap:8px;margin-bottom:12px;}
+  .tally{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 6px;text-align:center;}
+  .tally .tn{font-family:'Playfair Display',serif;font-weight:800;font-size:18px;}
+  .tally .tl{font-size:9px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+  .tally.in .tn{color:var(--green);} .tally.due .tn{color:var(--rose);} .tally.set .tn{color:var(--lav);}
+
+  .calcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 12px 14px;margin-bottom:14px;}
+  .cal-h{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:flex;justify-content:space-between;}
+  .cal-legend{font-size:10px;color:var(--muted);font-weight:700;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+  .cal-dow{font-size:8.5px;font-weight:800;text-transform:uppercase;color:var(--muted);text-align:center;padding-bottom:2px;}
+  .cal-day{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--mid);background:rgba(127,110,160,.04);}
+  .cal-day.today{outline:2px solid var(--gold);}
+  .cal-day .dots{display:flex;gap:2px;margin-top:1px;height:5px;}
+  .cal-day .dot{width:5px;height:5px;border-radius:50%;}
+  .dot.din{background:var(--green);} .dot.ddue{background:var(--rose);} .dot.dpaid{background:var(--lav);}
+  .cal-empty{background:transparent;}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px rgba(120,90,160,.1);overflow:hidden;margin-bottom:14px;}
+  .sec-h{display:flex;justify-content:space-between;align-items:center;padding:14px 15px 4px;}
+  .sec-h .t{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);}
+  .sec-h .add{background:var(--lav-soft);color:var(--lav);border:1px solid var(--line);border-radius:9px;padding:6px 12px;font-weight:800;font-size:12.5px;cursor:pointer;}
+  .empty{padding:14px 16px;color:var(--muted);font-style:italic;font-size:13.5px;}
+
+  .inc{display:flex;align-items:center;gap:11px;padding:12px 15px;border-top:1px solid var(--line);cursor:pointer;}
+  .inc .swatch{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+  .inc .who{flex:1;min-width:0;} .inc .who .nm{font-weight:700;font-size:15px;} .inc .who .meta{font-size:11.5px;color:var(--muted);font-weight:600;}
+  .inc .left{text-align:right;} .inc .left .lv{font-family:'Playfair Display',serif;font-weight:800;font-size:16px;} .inc .left .ll{font-size:9px;color:var(--muted);font-weight:800;text-transform:uppercase;}
+  .inc.done .left .lv{color:var(--green);}
+  .sw-pay{background:var(--pay);}.sw-agu{background:var(--agu);}.sw-car{background:var(--car);}.sw-gig{background:var(--gig);}.sw-other{background:var(--muted);}
+
+  .bill{padding:11px 15px;border-top:1px solid var(--line);cursor:pointer;}
+  .bill.paid{opacity:.62;}
+  .bill-top{display:flex;align-items:center;gap:9px;}
+  .bill-top .bn{flex:1;font-weight:700;font-size:15px;}
+  .bill-top .bd{font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap;}
+  .bill-top .bstat{font-size:10.5px;font-weight:800;text-transform:uppercase;}
+  .bill.full .bstat{color:var(--green);} .bill.part .bstat{color:var(--amber);} .bill.none .bstat{color:var(--muted);} .bill.paid .bstat{color:var(--lav);}
+  .barwrap{height:7px;border-radius:5px;background:rgba(120,100,165,.12);margin:8px 0 7px;overflow:hidden;display:flex;}
+  .barwrap span{height:100%;}
+  .b-pay{background:var(--pay);}.b-agu{background:var(--agu);}.b-car{background:var(--car);}.b-gig{background:var(--gig);}.b-other{background:var(--muted);}
+  .brow2{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+  .funds{display:flex;flex-wrap:wrap;gap:6px;}
+  .fund{font-size:11px;font-weight:700;padding:3px 8px;border-radius:7px;display:flex;align-items:center;gap:5px;}
+  .fund .fd{width:8px;height:8px;border-radius:50%;}
+  .f-pay{background:var(--pay-s);color:var(--pay);}.f-pay .fd{background:var(--pay);}
+  .f-agu{background:var(--agu-s);color:var(--agu);}.f-agu .fd{background:var(--agu);}
+  .f-car{background:var(--car-s);color:var(--car);}.f-car .fd{background:var(--car);}
+  .f-gig{background:var(--gig-s);color:var(--gig);}.f-gig .fd{background:var(--gig);}
+  .f-other{background:rgba(139,126,165,.14);color:var(--muted);}.f-other .fd{background:var(--muted);}
+  .fund.need{background:var(--amber-soft);color:var(--amber);}
+  .paidfrom{font-size:10.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;}
+  .paidfrom b{color:var(--lav);}
+
+  .leftover{padding:14px 16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:var(--lav-soft);}
+  .leftover .ll{font-weight:800;font-size:13px;color:var(--lav);} .leftover .lv{font-family:'Playfair Display',serif;font-weight:800;font-size:20px;color:var(--lav);}
+  .gig .drop{display:flex;justify-content:space-between;font-size:13.5px;padding:8px 15px;border-top:1px solid var(--line);color:var(--mid);}
+  .gig .drop .v{font-weight:700;color:var(--gig);font-family:'Playfair Display',serif;}
+
+  .sheetbg{position:fixed;inset:0;background:rgba(30,20,45,.5);display:none;align-items:flex-end;justify-content:center;z-index:60;}
+  .sheetbg.open{display:flex;}
+  .sheet{background:var(--card);width:100%;max-width:560px;border-radius:22px 22px 0 0;padding:20px 18px 26px;animation:up .28s ease;max-height:92vh;overflow:auto;}
+  @keyframes up{from{transform:translateY(100%)}to{transform:none}}
+  .sheet h3{font-family:'Playfair Display',serif;font-size:21px;margin-bottom:3px;}
+  .sheet .sh-sub{font-size:13px;color:var(--mid);margin-bottom:15px;}
+  .fld{margin-bottom:12px;} .fld label{display:block;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+  .fld input,.fld select{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:12px;font-size:16px;font-family:inherit;color:var(--ink);background:rgba(127,110,160,.05);}
+  .pill-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+  .apill{border:1.5px solid var(--line);background:rgba(127,110,160,.05);border-radius:11px;padding:9px 12px;font-weight:700;font-size:13px;cursor:pointer;display:flex;flex-direction:column;gap:1px;min-width:72px;}
+  .apill small{font-size:10.5px;color:var(--muted);font-weight:700;}
+  .apill.sel{border-color:var(--gold);background:var(--amber-soft);}
+  .doit{width:100%;background:linear-gradient(135deg,var(--gold-lt),var(--gold));color:#3A2A08;border:none;border-radius:13px;padding:14px;font-weight:800;font-size:14px;cursor:pointer;margin-top:4px;}
+  .doit.green{background:linear-gradient(135deg,var(--green),#3d6e47);color:#fff;}
+  .cancel{width:100%;background:none;border:none;color:var(--muted);font-weight:700;font-size:13px;margin-top:8px;cursor:pointer;}
+  .del{width:100%;background:var(--gig-s);color:var(--gig);border:none;border-radius:11px;padding:11px;font-weight:800;font-size:12.5px;cursor:pointer;margin-top:8px;}
+  .row2{display:flex;gap:8px;} .row2 .fld{flex:1;}
+  .assign-list .arow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px;}
+  .assign-list .unbtn{color:var(--gig);font-weight:800;font-size:11px;cursor:pointer;border:1px solid var(--line);border-radius:7px;padding:4px 8px;background:none;}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--green);color:#fff;padding:12px 20px;border-radius:14px;font-weight:800;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .35s;z-index:80;text-align:center;}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+  .foot{text-align:center;font-size:11.5px;color:var(--muted);font-style:italic;margin-top:4px;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div><div class="brand">J Empire · Money</div><div class="title">The Headlight</div></div><button class="mode" id="modeBtn" onclick="toggleMode()">☾ Deep</button></div>
+  <div class="monthnav"><button onclick="shiftMonth(-1)">‹</button><div class="mlabel" id="mLabel">—</div><button onclick="shiftMonth(1)">›</button></div>
+  <div id="view"></div>
+  <div class="foot">Every dollar gets a name. Your numbers stay on this device only.</div>
+</div>
+<div class="sheetbg" id="sheetbg"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast">Saved</div>
+
+<script>
+const KEY='je_money_v2';
+const SRC={pay:{name:'Paycheck',cls:'pay'},agu:{name:'Aguayo',cls:'agu'},car:{name:'Cartagena',cls:'car'},gig:{name:'Gig',cls:'gig'},other:{name:'Other',cls:'other'}};
+const BANKS={pnc:'PNC · Rent',navy:'Navy Federal · Hub',td:'TD · Everyday'};
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DOW=['S','M','T','W','T','F','S'];
+/* rotating verdict lines — spicy-tough + warm-coach, picked fresh each render */
+const SHORT_LINES=[
+  "You've closed bigger gaps than this. Move.",
+  "Not covered yet — but you're not a 'not yet' kind of woman.",
+  "Time to move, girl. Hustle it up.",
+  "This gap doesn't stand a chance against you.",
+  "Okay — game time. Go get it.",
+  "You've got hands and hustle. Use both.",
+  "Breathe, then handle it. You always do.",
+  "One good push and this is covered.",
+  "Short today, not defeated. Let's go.",
+  "You didn't come this far to come this far."
+];
+const OK_LINES=[
+  "Every bill's got a job. Queen behavior.",
+  "Covered. Now go run your day like you own it.",
+  "Every dollar named. Go be great.",
+  "You did that. On to the next win.",
+  "Handled. Rest is part of the plan too.",
+  "This is what in-control looks like. 👑",
+  "Smooth. You're building something real.",
+  "All set — go live your life, mama.",
+  "Money's where it belongs. So are you.",
+  "Look at you, ahead of it for once. Love that."
+];
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function id(){return Math.random().toString(36).slice(2,9);}
+function fresh(){
+  const now=new Date();const mk=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  return {viewMonth:mk,
+    income:[{id:id(),src:'pay',name:'Paycheck',amt:1100,date:mk+'-11'}],
+    bills:[
+      {id:id(),name:'Rent',amt:2200,day:1,bank:'pnc',recur:true},
+      {id:id(),name:'Car loan',amt:250,day:3,bank:'td',recur:true},
+      {id:id(),name:'Car insurance',amt:220,day:3,bank:'td',recur:true},
+      {id:id(),name:'Light bill',amt:200,day:6,bank:'td',recur:true},
+      {id:id(),name:'Gas (car)',amt:150,day:6,bank:'td',recur:true},
+      {id:id(),name:'Amscott',amt:120,day:17,bank:'td',recur:true},
+      {id:id(),name:'Cell phone',amt:110,day:17,bank:'td',recur:true},
+      {id:id(),name:'Car storage',amt:100,day:17,bank:'td',recur:true},
+      {id:id(),name:'Credit card — Navy',amt:25,day:17,bank:'navy',recur:true},
+      {id:id(),name:'Credit card — Capital One',amt:25,day:17,bank:'navy',recur:true}
+    ],
+    assigns:[], paid:{}
+  };
+}
+let S=load();
+function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):fresh();}catch(e){return fresh();}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function money(n){return '$'+Math.round(n).toLocaleString();}
+function shortDate(iso){if(!iso)return '';const p=iso.split('-').map(Number);return MONTHS[p[1]-1].slice(0,3)+' '+p[2];}
+function shiftMonth(n){const p=S.viewMonth.split('-').map(Number);const d=new Date(p[0],p[1]-1+n,1);S.viewMonth=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');save();render();}
+function incomeThisMonth(){return S.income.filter(i=>(i.date||'').slice(0,7)===S.viewMonth);}
+function assignedFrom(incId){return S.assigns.filter(a=>a.incomeId===incId).reduce((s,a)=>s+a.amt,0);}
+function assignedTo(billId){return S.assigns.filter(a=>a.billId===billId);}
+function billFunded(billId){return assignedTo(billId).reduce((s,a)=>s+a.amt,0);}
+function paidKey(billId){return billId+'@'+S.viewMonth;}
+function isPaid(billId){return !!S.paid[paidKey(billId)];}
+
+function render(){
+  const p=S.viewMonth.split('-').map(Number);const y=p[0],m=p[1];
+  document.getElementById('mLabel').textContent=MONTHS[m-1]+' '+y;
+  const inc=incomeThisMonth();
+  const totalIn=inc.reduce((s,i)=>s+i.amt,0);
+  const totalDue=S.bills.reduce((s,b)=>s+b.amt,0);
+  const totalSettled=S.bills.reduce((s,b)=>s+Math.min(b.amt,billFunded(b.id)),0);
+  const unmet=S.bills.reduce((s,b)=>s+Math.max(0,b.amt-billFunded(b.id)),0);
+  const assignedTotal=S.assigns.reduce((s,a)=>s+a.amt,0);
+  const leftover=Math.max(0,totalIn-assignedTotal);
+  const short=unmet>0;
+
+  let dueSoon='';const now=new Date();const curMk=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  if(S.viewMonth===curMk){const dim=new Date(y,m,0).getDate();
+    S.bills.forEach(b=>{if(isPaid(b.id))return;const dd=Math.min(b.day,dim);const diff=dd-now.getDate();if(diff>=0&&diff<=3)dueSoon+=(dueSoon?' · ':'')+b.name+(diff===0?' today':(diff===1?' tomorrow':' in '+diff+'d'));});}
+
+  let h='';
+  h+=`<div class="light ${short?'short':'ok'}"><div class="beam">${short?'🟡':'🟢'}</div>`;
+  h+= short ? `<div class="verdict">Short ${money(unmet)} this month</div><div class="vsub">${pick(SHORT_LINES)}</div>`
+            : `<div class="verdict">You're covered 👑</div><div class="vsub">${pick(OK_LINES)}</div>`;
+  if(dueSoon)h+=`<div class="duesoon">⚠ Due soon &amp; not paid: ${dueSoon}</div>`;
+  h+=`</div>`;
+  h+=`<div class="tallies"><div class="tally in"><div class="tn">${money(totalIn)}</div><div class="tl">Money in</div></div><div class="tally due"><div class="tn">${money(totalDue)}</div><div class="tl">Bills due</div></div><div class="tally set"><div class="tn">${money(totalSettled)}</div><div class="tl">Settled</div></div></div>`;
+  h+=calendarHTML(y,m);
+
+  h+=`<div class="card"><div class="sec-h"><span class="t">💵 Money in — tap to assign</span><span class="add" onclick="openIncome()">＋ Add</span></div>`;
+  if(!inc.length)h+=`<div class="empty">No income logged this month. Tap ＋ Add.</div>`;
+  inc.forEach(i=>{const left=i.amt-assignedFrom(i.id);const s=SRC[i.src]||SRC.other;
+    h+=`<div class="inc ${left<=0?'done':''}" onclick="openDeal('${i.id}')"><span class="swatch sw-${s.cls}"></span><div class="who"><div class="nm">${i.name||s.name}</div><div class="meta">${money(i.amt)} · dropped ${shortDate(i.date)}</div></div><div class="left"><div class="lv">${money(left)}</div><div class="ll">${left<=0?'assigned':'to assign'}</div></div></div>`;});
+  h+=`</div>`;
+
+  h+=`<div class="card"><div class="sec-h"><span class="t">📍 Bills — tap to fund</span><span class="add" onclick="openBill()">＋ Add</span></div>`;
+  S.bills.forEach(b=>{const funded=billFunded(b.id);const need=Math.max(0,b.amt-funded);const paid=isPaid(b.id);
+    const cls=paid?'paid':(need<=0?'full':(funded>0?'part':'none'));
+    const stat=paid?'✓ Paid':(need<=0?'✓ Funded':(funded>0?'⚠ '+money(need)+' short':'○ unfunded'));
+    let segs='',funds='';const byId=assignedTo(b.id);
+    byId.forEach(a=>{const iv=S.income.find(x=>x.id===a.incomeId);const sc=iv?(SRC[iv.src]||SRC.other).cls:'other';segs+=`<span class="b-${sc}" style="width:${Math.min(100,a.amt/b.amt*100)}%"></span>`;});
+    byId.forEach(a=>{const iv=S.income.find(x=>x.id===a.incomeId);const s=iv?(SRC[iv.src]||SRC.other):SRC.other;const nm=iv?(iv.name||s.name):'?';funds+=`<span class="fund f-${s.cls}"><span class="fd"></span>${money(a.amt)} ${nm}</span>`;});
+    if(need>0&&!paid)funds+=`<span class="fund need">needs ${money(need)} more</span>`;
+    h+=`<div class="bill ${cls}" onclick="openPull('${b.id}')"><div class="bill-top"><span class="bn">${b.name}${b.recur?' ↻':''}</span><span class="bd">due day ${b.day}</span><span class="bstat">${stat}</span></div><div class="barwrap">${segs}</div><div class="brow2"><div class="funds">${funds}</div><div class="paidfrom">from <b>${(BANKS[b.bank]||'—').split(' · ')[0]}</b></div></div></div>`;});
+  h+=`<div class="leftover"><span class="ll">Left over (day-to-day)</span><span class="lv">${money(leftover)}</span></div></div>`;
+
+  const gigs=inc.filter(i=>i.src==='gig');let gigTot=0;
+  h+=`<div class="card gig"><div class="sec-h"><span class="t">🔥 Your hustle — gig money</span><span class="add" onclick="openIncome('gig')">＋ Log gig</span></div>`;
+  if(!gigs.length)h+=`<div class="empty">No gig money yet this month. Every drop stacks here — and shows what you really make.</div>`;
+  gigs.forEach(g=>{gigTot+=g.amt;h+=`<div class="drop"><span>${shortDate(g.date)} · ${g.name||'Gig'}</span><span class="v">+${money(g.amt)}</span></div>`;});
+  if(gigs.length)h+=`<div class="drop" style="font-weight:800;color:var(--ink)"><span><b>This month's hustle</b></span><span class="v">${money(gigTot)}</span></div>`;
+  h+=`</div>`;
+
+  document.getElementById('view').innerHTML=h;save();
+}
+function calendarHTML(y,m){
+  const dim=new Date(y,m,0).getDate();const first=new Date(y,m-1,1).getDay();
+  const now=new Date();const isCur=(now.getFullYear()===y&&now.getMonth()===m-1);
+  const inDays={},dueDays={},paidDays={};
+  incomeThisMonth().forEach(i=>{const d=+((i.date||'').split('-')[2]);if(d)inDays[d]=1;});
+  S.bills.forEach(b=>{const dd=Math.min(b.day,dim);if(isPaid(b.id))paidDays[dd]=1;else dueDays[dd]=1;});
+  let h=`<div class="calcard"><div class="cal-h"><span>${MONTHS[m-1]} at a glance</span><span class="cal-legend">🟢 in · 🔴 due · 🟣 paid</span></div><div class="cal-grid">`;
+  DOW.forEach(d=>h+=`<div class="cal-dow">${d}</div>`);
+  for(let i=0;i<first;i++)h+=`<div class="cal-day cal-empty"></div>`;
+  for(let d=1;d<=dim;d++){let dots='';if(inDays[d])dots+='<span class="dot din"></span>';if(dueDays[d])dots+='<span class="dot ddue"></span>';if(paidDays[d])dots+='<span class="dot dpaid"></span>';
+    h+=`<div class="cal-day ${isCur&&now.getDate()===d?'today':''}">${d}<div class="dots">${dots}</div></div>`;}
+  h+=`</div></div>`;return h;
+}
+
+const bg=document.getElementById('sheetbg'),sheet=document.getElementById('sheet');
+function closeSheet(){bg.classList.remove('open');}
+bg.addEventListener('click',e=>{if(e.target===bg)closeSheet();});
+let selVal=null;
+function openIncome(forceSrc){const mk=S.viewMonth;
+  sheet.innerHTML=`<h3>${forceSrc==='gig'?'Log gig money':'Add money in'}</h3><div class="sh-sub">Where's it from, how much, what day did it drop?</div>
+    <div class="fld"><label>Source</label><select id="iSrc">${Object.keys(SRC).map(k=>`<option value="${k}" ${((forceSrc||'pay')===k)?'selected':''}>${SRC[k].name}</option>`).join('')}</select></div>
+    <div class="fld"><label>Nickname (optional)</label><input id="iName" placeholder="Paycheck, Aguayo, Cartagena…"></div>
+    <div class="row2"><div class="fld"><label>Amount</label><input id="iAmt" type="number" inputmode="decimal" placeholder="$"></div><div class="fld"><label>Date dropped</label><input id="iDate" type="date" value="${mk}-15"></div></div>
+    <button class="doit" onclick="saveIncome()">Add it →</button><button class="cancel" onclick="closeSheet()">Not now</button>`;
+  bg.classList.add('open');}
+function saveIncome(){const src=document.getElementById('iSrc').value;const amt=+document.getElementById('iAmt').value;const name=document.getElementById('iName').value.trim()||SRC[src].name;const date=document.getElementById('iDate').value||(S.viewMonth+'-15');if(!amt||amt<=0){toast('Enter an amount');return;}S.income.push({id:id(),src,name,amt,date});closeSheet();render();toast('Added '+name+' '+money(amt));}
+
+function openBill(editId){const b=editId?S.bills.find(x=>x.id===editId):null;
+  sheet.innerHTML=`<h3>${b?'Edit bill':'Add a bill'}</h3><div class="sh-sub">Name, amount, due day, and which account pays it.</div>
+    <div class="fld"><label>Bill name</label><input id="bName" value="${b?b.name:''}" placeholder="e.g. Light bill"></div>
+    <div class="row2"><div class="fld"><label>Amount</label><input id="bAmt" type="number" inputmode="decimal" value="${b?b.amt:''}" placeholder="$"></div><div class="fld"><label>Due day</label><input id="bDay" type="number" inputmode="numeric" value="${b?b.day:1}"></div></div>
+    <div class="fld"><label>Paid from</label><select id="bBank">${Object.keys(BANKS).map(k=>`<option value="${k}" ${b&&b.bank===k?'selected':''}>${BANKS[k]}</option>`).join('')}</select></div>
+    <div class="fld"><label><input type="checkbox" id="bRecur" ${(!b||b.recur)?'checked':''} style="width:auto;margin-right:6px">Comes every month</label></div>
+    <button class="doit" onclick="saveBill('${editId||''}')">${b?'Save changes':'Add it →'}</button>
+    ${b?`<button class="del" onclick="delBill('${editId}')">Delete this bill</button>`:''}
+    <button class="cancel" onclick="closeSheet()">Not now</button>`;
+  bg.classList.add('open');}
+function saveBill(editId){const name=document.getElementById('bName').value.trim();const amt=+document.getElementById('bAmt').value;const day=+document.getElementById('bDay').value||1;const bank=document.getElementById('bBank').value;const recur=document.getElementById('bRecur').checked;if(!name){toast('Name the bill');return;}if(!amt||amt<=0){toast('Enter an amount');return;}
+  if(editId){Object.assign(S.bills.find(x=>x.id===editId),{name,amt,day,bank,recur});}else{S.bills.push({id:id(),name,amt,day,bank,recur});}
+  closeSheet();render();toast(editId?'Saved':'Added '+name);}
+
+function openDeal(incId){const inc=S.income.find(i=>i.id===incId);if(!inc)return;const left=inc.amt-assignedFrom(incId);selVal=null;
+  const unmetBills=S.bills.filter(b=>billFunded(b.id)<b.amt&&!isPaid(b.id));
+  sheet.innerHTML=`<h3>Hand out ${inc.name}</h3><div class="sh-sub">${money(left)} left (dropped ${shortDate(inc.date)}). Where's it going?</div>
+    <div class="pill-row">${unmetBills.map(b=>`<div class="apill" onclick="selPill(this,'${b.id}')">${b.name}<small>needs ${money(b.amt-billFunded(b.id))}</small></div>`).join('')||'<div class="sh-sub">All bills funded 👑</div>'}</div>
+    <div class="fld"><label>Amount to assign</label><input id="aAmt" type="number" inputmode="decimal" placeholder="$"></div>
+    <button class="doit" onclick="doAssign('${incId}')">Assign it →</button>
+    ${assignedFrom(incId)>0?`<div class="assign-list"><div class="sh-sub" style="margin-top:14px">Already handed out:</div>${S.assigns.filter(a=>a.incomeId===incId).map(a=>{const b=S.bills.find(x=>x.id===a.billId);return `<div class="arow"><span>${money(a.amt)} → ${b?b.name:'?'}</span><button class="unbtn" onclick="unassign('${a.id}')">pull back</button></div>`;}).join('')}</div>`:''}
+    <button class="del" onclick="delIncome('${incId}')">Delete this deposit</button><button class="cancel" onclick="closeSheet()">Done</button>`;
+  bg.classList.add('open');}
+function openPull(billId){const b=S.bills.find(x=>x.id===billId);if(!b)return;const need=Math.max(0,b.amt-billFunded(billId));selVal=null;const paid=isPaid(billId);
+  const avail=incomeThisMonth().filter(i=>i.amt-assignedFrom(i.id)>0);
+  sheet.innerHTML=`<h3>${b.name}</h3><div class="sh-sub">${money(b.amt)} · due day ${b.day} · from ${BANKS[b.bank]||'—'}</div>
+    <div style="display:flex;gap:8px;margin-bottom:14px"><button class="doit ${paid?'':'green'}" style="margin:0;flex:1" onclick="togglePaid('${billId}')">${paid?'↺ Mark unpaid':'✓ Mark as paid'}</button><button class="doit" style="margin:0;flex:1;background:var(--lav-soft);color:var(--lav)" onclick="openBill('${billId}')">✎ Edit / move date</button></div>
+    ${(need>0&&!paid)?`<div class="sh-sub">${money(need)} still needed — pull from where?</div>
+    <div class="pill-row">${avail.map(i=>`<div class="apill" onclick="selPill(this,'${i.id}')">${i.name}<small>${money(i.amt-assignedFrom(i.id))} left</small></div>`).join('')||'<div class="sh-sub">No income left to assign. Add some 💵</div>'}</div>
+    <div class="fld"><label>Amount to pull</label><input id="aAmt" type="number" inputmode="decimal" value="${need}"></div>
+    <button class="doit" onclick="doPull('${billId}')">Pull it in →</button>`:''}
+    ${billFunded(billId)>0?`<div class="assign-list"><div class="sh-sub" style="margin-top:14px">Funded by:</div>${assignedTo(billId).map(a=>{const i=S.income.find(x=>x.id===a.incomeId);return `<div class="arow"><span>${money(a.amt)} · ${i?i.name:'?'}</span><button class="unbtn" onclick="unassign('${a.id}')">pull back</button></div>`;}).join('')}</div>`:''}
+    <button class="cancel" onclick="closeSheet()">Done</button>`;
+  bg.classList.add('open');}
+function selPill(el,val){el.parentElement.querySelectorAll('.apill').forEach(p=>p.classList.remove('sel'));el.classList.add('sel');selVal=val;}
+function doAssign(incId){const inc=S.income.find(i=>i.id===incId);const left=inc.amt-assignedFrom(incId);const amt=+document.getElementById('aAmt').value;if(!selVal){toast('Pick a bill');return;}if(!amt||amt<=0){toast('Enter an amount');return;}if(amt>left){toast('Only '+money(left)+' left');return;}S.assigns.push({id:id(),billId:selVal,incomeId:incId,amt});closeSheet();render();toast('Assigned '+money(amt)+' 👑');}
+function doPull(billId){const amt=+document.getElementById('aAmt').value;if(!selVal){toast('Pick an income');return;}if(!amt||amt<=0){toast('Enter an amount');return;}const inc=S.income.find(i=>i.id===selVal);const left=inc.amt-assignedFrom(selVal);if(amt>left){toast(inc.name+' only has '+money(left));return;}S.assigns.push({id:id(),billId,incomeId:selVal,amt});closeSheet();render();toast('Funded '+money(amt)+' 👑');}
+function togglePaid(billId){const k=paidKey(billId);if(S.paid[k])delete S.paid[k];else S.paid[k]=true;closeSheet();render();toast(S.paid[k]?'Marked paid ✓':'Marked unpaid');}
+function unassign(aId){S.assigns=S.assigns.filter(a=>a.id!==aId);closeSheet();render();toast('Pulled back');}
+function delIncome(incId){S.income=S.income.filter(i=>i.id!==incId);S.assigns=S.assigns.filter(a=>a.incomeId!==incId);closeSheet();render();toast('Deposit deleted');}
+function delBill(billId){S.bills=S.bills.filter(b=>b.id!==billId);S.assigns=S.assigns.filter(a=>a.billId!==billId);delete S.paid[paidKey(billId)];closeSheet();render();toast('Bill deleted');}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+function toggleMode(){const d=document.body.classList.toggle('deep');document.getElementById('modeBtn').textContent=d?'☀ Light':'☾ Deep';try{localStorage.setItem('je_money_mode',d?'deep':'light');}catch(e){}}
+(function(){let m='light';try{m=localStorage.getItem('je_money_mode')||'light';}catch(e){}if(m==='deep'){document.body.classList.add('deep');document.getElementById('modeBtn').textContent='☀ Light';}})();
+render();
+</script>
+</body>
+</html>
