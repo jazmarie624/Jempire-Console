@@ -52,9 +52,9 @@
   .cal-dow{font-size:8.5px;font-weight:800;text-transform:uppercase;color:var(--muted);text-align:center;padding-bottom:2px;}
   .cal-day{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--mid);background:rgba(127,110,160,.04);}
   .cal-day.today{outline:2px solid var(--gold);}
-  .cal-day .dots{display:flex;gap:2px;margin-top:1px;height:5px;}
-  .cal-day .dot{width:5px;height:5px;border-radius:50%;}
-  .dot.din{background:var(--green);} .dot.ddue{background:var(--rose);} .dot.dpaid{background:var(--lav);}
+  .cal-day .dots{display:flex;gap:3px;margin-top:2px;height:10px;}
+  .cal-day .dot{width:9px;height:9px;border-radius:50%;box-shadow:0 1px 2px rgba(0,0,0,.15);}
+  .dot.din{background:#3DA35D;} .dot.ddue{background:#D64545;}
   .cal-empty{background:transparent;}
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 30px rgba(120,90,160,.1);overflow:hidden;margin-bottom:14px;}
@@ -120,6 +120,22 @@
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--green);color:#fff;padding:12px 20px;border-radius:14px;font-weight:800;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .35s;z-index:80;text-align:center;}
   .toast.show{transform:translateX(-50%) translateY(0);}
   .foot{text-align:center;font-size:11.5px;color:var(--muted);font-style:italic;margin-top:4px;line-height:1.5;}
+  .cal-day.tapday{cursor:pointer;transition:background .15s;}
+  .cal-day.tapday:active{background:var(--lav-soft);}
+  .dayh{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:14px 0 4px;}
+  .dayrow{display:flex;align-items:center;gap:10px;padding:11px 2px;border-top:1px solid var(--line);font-size:14.5px;font-weight:600;cursor:pointer;}
+  .dayrow .dn{flex:1;} .dayrow b{font-family:'Playfair Display',serif;}
+  .daydot{width:11px;height:11px;border-radius:50%;flex-shrink:0;box-shadow:0 1px 2px rgba(0,0,0,.15);}
+  .dot.doverdue{background:#A81616 !important;animation:pulseDot 1.5s infinite;}
+  .dot.dpaid{width:13px !important;height:13px !important;background:rgba(214,69,69,.22) !important;color:#B84A44;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;line-height:1;box-shadow:none !important;}
+  @keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(168,22,22,.5);}50%{box-shadow:0 0 0 5px rgba(168,22,22,0);}}
+  .nextdue{margin-top:12px;border-radius:12px;padding:11px 13px;font-size:13px;font-weight:800;text-align:center;line-height:1.35;}
+  .nextdue.soon{background:var(--amber-soft);color:var(--amber);}
+  .nextdue.late{background:rgba(168,22,22,.14);color:#B01E1E;}
+  .nextdue.ok{background:var(--green-soft);color:var(--green);}
+  body.deep .nextdue.late{color:#F3A0A0;}
+  .daypaid{border:1px solid var(--line);background:var(--card);color:var(--green);font-weight:900;font-size:13px;border-radius:8px;padding:5px 11px;cursor:pointer;margin-left:6px;flex-shrink:0;}
+  .daypaid.on{background:var(--green);color:#fff;border-color:transparent;}
 </style>
 </head>
 <body>
@@ -250,16 +266,41 @@ function render(){
 }
 function calendarHTML(y,m){
   const dim=new Date(y,m,0).getDate();const first=new Date(y,m-1,1).getDay();
-  const now=new Date();const isCur=(now.getFullYear()===y&&now.getMonth()===m-1);
-  const inDays={},dueDays={},paidDays={};
+  const now=new Date();now.setHours(0,0,0,0);
+  const isCur=(now.getFullYear()===y&&now.getMonth()===m-1);
+  const isPast=(y<now.getFullYear())||(y===now.getFullYear()&&(m-1)<now.getMonth());
+  const inDays={};const dayBills={};
   incomeThisMonth().forEach(i=>{const d=+((i.date||'').split('-')[2]);if(d)inDays[d]=1;});
-  S.bills.forEach(b=>{const dd=Math.min(b.day,dim);if(isPaid(b.id))paidDays[dd]=1;else dueDays[dd]=1;});
-  let h=`<div class="calcard"><div class="cal-h"><span>${MONTHS[m-1]} at a glance</span><span class="cal-legend">🟢 in · 🔴 due · 🟣 paid</span></div><div class="cal-grid">`;
+  S.bills.forEach(b=>{const dd=Math.min(b.day,dim);(dayBills[dd]=dayBills[dd]||[]).push(b);});
+  let h=`<div class="calcard"><div class="cal-h"><span>${MONTHS[m-1]} at a glance</span><span class="cal-legend">\ud83d\udfe2 in \u00b7 \ud83d\udd34 due \u00b7 \u2713 paid</span></div><div class="cal-grid">`;
   DOW.forEach(d=>h+=`<div class="cal-dow">${d}</div>`);
   for(let i=0;i<first;i++)h+=`<div class="cal-day cal-empty"></div>`;
-  for(let d=1;d<=dim;d++){let dots='';if(inDays[d])dots+='<span class="dot din"></span>';if(dueDays[d])dots+='<span class="dot ddue"></span>';if(paidDays[d])dots+='<span class="dot dpaid"></span>';
-    h+=`<div class="cal-day ${isCur&&now.getDate()===d?'today':''}">${d}<div class="dots">${dots}</div></div>`;}
-  h+=`</div></div>`;return h;
+  for(let d=1;d<=dim;d++){let dots='';
+    if(inDays[d])dots+='<span class="dot din"></span>';
+    const bs=dayBills[d]||[];
+    if(bs.length){
+      const anyUnpaid=bs.some(b=>!isPaid(b.id));
+      if(anyUnpaid){const overdue=isPast||(isCur&&d<now.getDate());dots+=overdue?'<span class="dot doverdue"></span>':'<span class="dot ddue"></span>';}
+      else{dots+='<span class="dot dpaid">\u2713</span>';}
+    }
+    h+=`<div class="cal-day tapday ${isCur&&now.getDate()===d?'today':''}" onclick="openDay(${d})">${d}<div class="dots">${dots}</div></div>`;}
+  h+=`</div>`;
+  h+=nextDueLine(y,m,dim,now,isCur,isPast);
+  h+=`</div>`;return h;
+}
+function nextDueLine(y,m,dim,now,isCur,isPast){
+  const unpaid=S.bills.filter(b=>!isPaid(b.id)).map(b=>({b:b,dd:Math.min(b.day,dim)}));
+  if(!unpaid.length)return `<div class="nextdue ok">\u2713 Every bill this month is handled. Queen behavior. \ud83d\udc51</div>`;
+  if(isCur){
+    const today=now.getDate();
+    const over=unpaid.filter(x=>x.dd<today).sort((a,b)=>a.dd-b.dd);
+    if(over.length){const o=over[0];const late=today-o.dd;return `<div class="nextdue late">\u26a0 ${o.b.name} was due ${late} day${late===1?'':'s'} ago \u2014 pay it, girl. \ud83d\udca2</div>`;}
+    const up=unpaid.filter(x=>x.dd>=today).sort((a,b)=>a.dd-b.dd);
+    if(up.length){const u=up[0];const inD=u.dd-today;const when=inD===0?'today':(inD===1?'tomorrow':'in '+inD+' days');return `<div class="nextdue soon">\ud83d\udd14 Next up: ${u.b.name} (${money(u.b.amt)}) \u2014 due ${when}. Get it, queen.</div>`;}
+  }
+  const tot=unpaid.reduce((s,x)=>s+x.b.amt,0);
+  if(isPast)return `<div class="nextdue late">\u26a0 ${unpaid.length} bill${unpaid.length===1?'':'s'} from this month never got marked paid \u2014 ${money(tot)}.</div>`;
+  return `<div class="nextdue soon">\ud83d\udd14 ${unpaid.length} bill${unpaid.length===1?'':'s'} to fund this month \u2014 ${money(tot)}.</div>`;
 }
 
 const bg=document.getElementById('sheetbg'),sheet=document.getElementById('sheet');
@@ -309,6 +350,20 @@ function openPull(billId){const b=S.bills.find(x=>x.id===billId);if(!b)return;co
     ${billFunded(billId)>0?`<div class="assign-list"><div class="sh-sub" style="margin-top:14px">Funded by:</div>${assignedTo(billId).map(a=>{const i=S.income.find(x=>x.id===a.incomeId);return `<div class="arow"><span>${money(a.amt)} · ${i?i.name:'?'}</span><button class="unbtn" onclick="unassign('${a.id}')">pull back</button></div>`;}).join('')}</div>`:''}
     <button class="cancel" onclick="closeSheet()">Done</button>`;
   bg.classList.add('open');}
+function openDay(dayNum){
+  window._openDay=dayNum;
+  const p=S.viewMonth.split('-').map(Number); const dim=new Date(p[0],p[1],0).getDate();
+  const dateStr=S.viewMonth+'-'+String(dayNum).padStart(2,'0');
+  const inc=incomeThisMonth().filter(i=>(i.date||'')===dateStr);
+  const bills=S.bills.filter(b=>Math.min(b.day,dim)===dayNum);
+  let h=`<h3>${MONTHS[p[1]-1]} ${dayNum}</h3><div class="sh-sub">What\u2019s on this day \u2014 tap a name to edit, or \u2713 to mark paid.</div>`;
+  if(!inc.length&&!bills.length){h+=`<div class="sh-sub" style="margin-bottom:12px">Nothing on this day yet.</div>`;}
+  if(inc.length){h+=`<div class="dayh">\ud83d\udcb5 Money in</div>`;inc.forEach(i=>{const sc=(SRC[i.src]||SRC.other).cls;const nm=(i.name||(SRC[i.src]||SRC.other).name);h+=`<div class="dayrow"><span class="daydot" style="background:var(--${sc})"></span><span class="dn" onclick="closeSheet();openDeal('${i.id}')">${nm}</span><b>${money(i.amt)}</b></div>`;});}
+  if(bills.length){h+=`<div class="dayh">\ud83d\udccd Bills due</div>`;bills.forEach(b=>{const paid=isPaid(b.id);h+=`<div class="dayrow"><span class="daydot" style="background:${paid?'rgba(214,69,69,.3)':'#D64545'}"></span><span class="dn" onclick="closeSheet();openPull('${b.id}')">${b.name}${paid?' \u00b7 paid':''}</span><b>${money(b.amt)}</b><button class="daypaid ${paid?'on':''}" onclick="quickPaid('${b.id}')">${paid?'\u21ba':'\u2713'}</button></div>`;});}
+  h+=`<button class="doit" style="margin-top:14px" onclick="closeSheet();openIncome()">\uff0b Log money in</button><button class="cancel" onclick="closeSheet()">Done</button>`;
+  sheet.innerHTML=h; bg.classList.add('open');
+}
+function quickPaid(billId){const k=paidKey(billId);if(S.paid[k])delete S.paid[k];else S.paid[k]=true;save();render();if(window._openDay!=null)openDay(window._openDay);toast(S.paid[k]?'Paid \u2713 \u2014 nice work!':'Marked unpaid');}
 function selPill(el,val){el.parentElement.querySelectorAll('.apill').forEach(p=>p.classList.remove('sel'));el.classList.add('sel');selVal=val;}
 function doAssign(incId){const inc=S.income.find(i=>i.id===incId);const left=inc.amt-assignedFrom(incId);const amt=+document.getElementById('aAmt').value;if(!selVal){toast('Pick a bill');return;}if(!amt||amt<=0){toast('Enter an amount');return;}if(amt>left){toast('Only '+money(left)+' left');return;}S.assigns.push({id:id(),billId:selVal,incomeId:incId,amt});closeSheet();render();toast('Assigned '+money(amt)+' 👑');}
 function doPull(billId){const amt=+document.getElementById('aAmt').value;if(!selVal){toast('Pick an income');return;}if(!amt||amt<=0){toast('Enter an amount');return;}const inc=S.income.find(i=>i.id===selVal);const left=inc.amt-assignedFrom(selVal);if(amt>left){toast(inc.name+' only has '+money(left));return;}S.assigns.push({id:id(),billId,incomeId:selVal,amt});closeSheet();render();toast('Funded '+money(amt)+' 👑');}
