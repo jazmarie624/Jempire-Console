@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J Empire · Money Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Pinyon+Script&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--pinkwhite:#FFF7FB;--blush:#FBE7F0;--rose:#EBB8CF;--rosedeep:#C05F86;--plum:#4A2740;--soft:#8A6A7C;
+    --gold:#C99A3E;--goldsoft:#E6C87E;--goldbg:#FBEFD6;--rosebg:#FBE3EE;--roset:#B84A72;--lav:#ECE2F5;--lavt:#7E58A3;
+    --peri:#E6E9F7;--perit:#5A67A3;--mint:#E2F1E9;--mintt:#3E8B5E;--alert:#E24A6E;--alertbg:#FCE4EA;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:radial-gradient(circle at 15% 0%,#FDEBF3 0%,transparent 42%),radial-gradient(circle at 92% 6%,#F7EEDD 0%,transparent 36%),var(--pinkwhite);color:var(--plum);font-family:'Inter',-apple-system,system-ui,sans-serif;font-size:15px;line-height:1.45;}
+  .wrap{max-width:520px;margin:0 auto;padding:0 0 50px;}
+  .serif{font-family:'Cormorant Garamond',Georgia,serif;}
+  /* HERO + TABS (sticky) */
+  .top{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#5A2E48,#8A3E63 60%,#C05F86);box-shadow:0 4px 16px rgba(90,46,72,.35);padding:14px 16px 0;}
+  .top .script{font-family:'Pinyon Script',cursive;font-size:30px;color:#F7D9E6;line-height:1;}
+  .top h1{font-family:'Cormorant Garamond',serif;color:#fff;font-size:19px;margin:0 0 9px;font-weight:700;}
+  .top h1 span{font-size:12px;opacity:.85;font-family:'Inter';font-weight:600;}
+  .tabs{display:flex;gap:5px;overflow-x:auto;padding-bottom:0;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tabs button{flex:0 0 auto;background:rgba(255,255,255,.14);color:#F7D9E6;border:none;border-radius:11px 11px 0 0;padding:9px 13px;font-family:'Inter';font-weight:800;font-size:12px;cursor:pointer;white-space:nowrap;}
+  .tabs button.on{background:var(--pinkwhite);color:var(--rosedeep);}
+  .panel{display:none;padding:16px 15px;} .panel.on{display:block;}
+  .h2{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:700;color:var(--rosedeep);margin:4px 2px 3px;display:flex;align-items:center;gap:8px;}
+  .sub{font-size:12.5px;color:var(--soft);margin:0 2px 12px;}
+  .card{background:#fff;border:2px solid var(--rose);border-radius:16px;padding:14px 16px;margin-bottom:12px;box-shadow:0 4px 14px rgba(192,95,134,.12);}
+  .card.gold{border-color:var(--goldsoft);} .card.mintc{border-color:var(--mintt);background:linear-gradient(135deg,#fff,#F1F9F4);}
+  .card.alertc{border-color:var(--alert);background:linear-gradient(135deg,#fff,#FDEEF2);}
+  .card h3{margin:0 0 7px;font-size:16px;color:var(--plum);font-family:'Cormorant Garamond',serif;}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
+  .tile{background:#fff;border:2px solid var(--rose);border-radius:14px;padding:11px;text-align:center;}
+  .tile .k{font-size:9.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--soft);font-weight:800;}
+  .tile .v{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:700;color:var(--plum);}
+  .tile.gold{border-color:var(--goldsoft);} .tile.gold .v{color:var(--gold);} .tile.mint .v{color:var(--mintt);} .tile.pink .v{color:var(--rosedeep);}
+  .rule{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px dotted var(--blush);}
+  .rule:last-child{border-bottom:none;}
+  .rule .n{flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#C05F86,#8A3E63);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:12px;}
+  .rule b{color:var(--plum);} .rule .s{color:var(--soft);font-size:12px;}
+  /* month rows */
+  .mrow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dotted var(--blush);}
+  .mrow:last-child{border-bottom:none;}
+  .mrow .mn{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700;}
+  .mrow .info{font-size:11.5px;color:var(--soft);}
+  .mrow .rd{font-weight:800;font-size:12px;color:#A67C1E;background:var(--goldbg);padding:3px 9px;border-radius:20px;white-space:nowrap;}
+  .mrow .rd.ot{color:var(--mintt);background:var(--mint);}
+  .saveline{background:linear-gradient(135deg,#5A2E48,#8A3E63);color:#F7D9E6;border-radius:11px;padding:9px 14px;display:flex;justify-content:space-between;font-weight:800;font-size:13px;margin-top:6px;}
+  .saveline b{color:#F7D9E6;}
+  /* emergency table */
+  .etable{width:100%;border-collapse:collapse;}
+  .etable th{font-size:9.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--soft);text-align:left;padding:7px 8px;border-bottom:2px solid var(--blush);}
+  .etable td{padding:9px 8px;border-bottom:1px solid var(--blush);font-size:12.5px;vertical-align:top;}
+  .etable .miss{font-weight:800;color:var(--roset);} .etable .do b{color:var(--alert);}
+  .prio{counter-reset:p;list-style:none;padding:0;margin:0;}
+  .prio li{counter-increment:p;display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dotted var(--blush);font-size:13px;}
+  .prio li:last-child{border-bottom:none;}
+  .prio li::before{content:counter(p);flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--goldbg);color:#A67C1E;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:12px;}
+  .ladder{width:100%;border-collapse:collapse;margin-top:4px;}
+  .ladder th{font-size:9.5px;text-transform:uppercase;color:var(--soft);text-align:left;padding:6px 8px;border-bottom:2px solid var(--goldbg);}
+  .ladder td{padding:8px;border-bottom:1px solid var(--blush);font-size:13px;}
+  .ladder .best td{background:var(--goldbg);} .ladder .g{font-weight:800;color:var(--gold);} .ladder .d{font-weight:800;color:var(--rosedeep);}
+  /* calculator */
+  .calc{background:#fff;border:2px solid var(--alert);border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(226,74,110,.15);}
+  .calc label{font-size:12px;font-weight:800;color:var(--rosedeep);text-transform:uppercase;letter-spacing:.5px;}
+  .calc .inrow{display:flex;align-items:center;gap:8px;margin:6px 0 12px;}
+  .calc .inrow .dol{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--plum);}
+  .calc input{flex:1;padding:11px 13px;border:2px solid var(--rose);border-radius:11px;font-size:20px;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--plum);width:100%;}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+  .chips button{background:var(--blush);border:1.5px solid var(--rose);color:var(--rosedeep);border-radius:20px;padding:6px 11px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:'Inter';}
+  .chips button:active{background:var(--rose);color:#fff;}
+  .goBtn{width:100%;background:linear-gradient(135deg,#C05F86,#8A3E63);color:#fff;border:none;border-radius:12px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Inter';}
+  .result{margin-top:14px;background:linear-gradient(135deg,#FCE4EA,#FBD9E4);border:2px solid var(--alert);border-radius:14px;padding:14px 16px;display:none;}
+  .result.show{display:block;}
+  .result .big{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:var(--alert);}
+  .result .lines{font-size:13px;margin-top:6px;} .result .lines div{padding:3px 0;} .result b{color:var(--plum);}
+  .result .msg{margin-top:9px;font-size:12.5px;color:#7A2E45;font-style:italic;font-weight:600;}
+  /* apps */
+  .app{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px dotted var(--blush);}
+  .app:last-child{border-bottom:none;}
+  .app .ic{flex:0 0 auto;width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--goldbg);}
+  .app .nm{font-weight:800;color:var(--plum);font-size:14px;} .app .ds{font-size:12px;color:var(--soft);}
+  .tipline{background:var(--peri);border-left:4px solid var(--perit);border-radius:0 10px 10px 0;padding:10px 13px;font-size:12.5px;color:#3A4675;margin-top:10px;} .tipline b{color:var(--perit);}
+  .warn{background:var(--alertbg);border-left:4px solid var(--alert);border-radius:0 10px 10px 0;padding:10px 13px;font-size:12.5px;color:#7A2E45;margin-top:10px;} .warn b{color:var(--alert);}
+  .foott{text-align:center;padding:10px;} .foott .script{font-family:'Pinyon Script',cursive;font-size:24px;color:var(--rosedeep);display:block;} .foott .k{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--rose);}
+  ul.clean{margin:6px 0;padding-left:18px;} ul.clean li{margin:5px 0;font-size:13px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="script">J Empire</div>
+    <h1>Money Coach <span>· your pocket money team 💕</span></h1>
+    <div class="tabs">
+      <button class="on" data-t="home">👑 Start</button>
+      <button data-t="plan">💸 The Plan</button>
+      <button data-t="rescue">🚨 Rent Rescue</button>
+      <button data-t="calc">⚡ Dash Calc</button>
+      <button data-t="save">💰 Save &amp; Spend</button>
+      <button data-t="apps">🛠️ Apps</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div class="panel on" id="home">
+    <div class="h2">👑 Here's the whole game</div>
+    <div class="sub">Six tabs. This one's your map. Tap through the rest as you need them.</div>
+    <div class="stats">
+      <div class="tile pink"><div class="k">Rent</div><div class="v">$2,200</div></div>
+      <div class="tile gold"><div class="k">Weekly money</div><div class="v">$150</div></div>
+      <div class="tile mint"><div class="k">On-time by</div><div class="v serif">Nov 1</div></div>
+      <div class="tile"><div class="k">Saved by Dec</div><div class="v">$4,577</div></div>
+    </div>
+    <div class="card">
+      <h3>The 4 rules that run everything</h3>
+      <div class="rule"><span class="n">1</span><span><b>Child support builds rent.</b> <span class="s">Every $320 &amp; $500 fills the rent fund first, until $2,200 is safe.</span></span></div>
+      <div class="rule"><span class="n">2</span><span><b>$150 a week to live.</b> <span class="s">Groceries + gas + essentials. When it's gone, it's gone.</span></span></div>
+      <div class="rule"><span class="n">3</span><span><b>DoorDash is the engine.</b> <span class="s">When you're short, you dash the exact number — the Dash Calc tab tells you how much &amp; how long.</span></span></div>
+      <div class="rule"><span class="n">4</span><span><b>No advances. Ever again.</b> <span class="s">Tilt was the last one. You out-earn the gap now.</span></span></div>
+    </div>
+    <div class="card mintc">
+      <h3>✨ The climb</h3>
+      <p style="margin:0;font-size:13px;">Aug tight ($195 saved) → Sep $635 → Oct $2,407 → <b>Nov: rent ON TIME</b> 🎉 → Dec $4,577. That's you, one full month ahead, in about 90 days — no advances.</p>
+    </div>
+    <div class="tipline"><b>How to use this:</b> each payday, open <b>The Plan</b> and do the card for today's date. Feeling short? Open <b>Dash Calc</b>. Deposit didn't land? Open <b>Rent Rescue</b>. That's it. 💕</div>
+  </div>
+
+  <!-- PLAN -->
+  <div class="panel" id="plan">
+    <div class="h2">💸 The plan, month by month</div>
+    <div class="sub">The quick view. Your full card-by-card breakdown lives in the <b>Full Blueprint</b> doc — this is the summary to glance at.</div>
+    <div class="card">
+      <div class="mrow"><div><div class="mn">August</div><div class="info">In $4,800 · Tilt bite · tightest month</div></div><div class="rd">Rent ~Aug 21</div></div>
+      <div class="mrow"><div><div class="mn">September</div><div class="info">In $4,480 · Amscott clears ✓</div></div><div class="rd">Rent ~Sep 18</div></div>
+      <div class="mrow"><div><div class="mn">October</div><div class="info">In $5,580 · 3 paychecks · Klarna ends</div></div><div class="rd">Rent ~Oct 7</div></div>
+      <div class="mrow"><div><div class="mn">November</div><div class="info">In $4,800 · THE FLIP 🎉</div></div><div class="rd ot">ON TIME · Nov 1</div></div>
+      <div class="mrow"><div><div class="mn">December</div><div class="info">In $4,980 · holidays covered</div></div><div class="rd ot">ON TIME · Dec 1</div></div>
+    </div>
+    <div class="saveline"><span>💰 Running savings by New Year's</span><b>$4,577</b></div>
+    <div class="card" style="margin-top:12px;">
+      <h3>Savings climb</h3>
+      <ul class="clean">
+        <li>End Aug — <b>$195</b></li>
+        <li>End Sep — <b>$635</b></li>
+        <li>End Oct — <b>$2,407</b> (you cross a full month of rent 👑)</li>
+        <li>End Nov — <b>$3,327</b></li>
+        <li>End Dec — <b>$4,577</b> (almost 2 months banked)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- RENT RESCUE -->
+  <div class="panel" id="rescue">
+    <div class="h2">🚨 Rent rescue &amp; short-deposit coverage</div>
+    <div class="sub">This is your safety net. If a paycheck or child-support drop doesn't land, come <i>here first</i> — don't panic, and don't borrow.</div>
+
+    <div class="card alertc">
+      <h3>⚡ If a deposit falls short</h3>
+      <table class="etable">
+        <thead><tr><th>What's missing</th><th>Gap</th><th>Do this</th></tr></thead>
+        <tbody>
+          <tr><td class="miss">A weekly $320 support</td><td>$320</td><td class="do"><b>Dash $320</b> that same week (~1 weekend). Your rent fund is waiting on it — fill the hole.</td></tr>
+          <tr><td class="miss">A $500 support drop</td><td>$500</td><td class="do">Pull <b>$500 from savings</b> if you have it &amp; rebuild next check — OR <b>dash $500</b> (~2 weekends).</td></tr>
+          <tr><td class="miss">Paycheck late / short</td><td>up to $1,100</td><td class="do">Biggest gap. <b>Savings first, then dash the rest.</b> Protect rent + car insurance above all else.</td></tr>
+          <tr><td class="miss">Rent still short on the 1st</td><td>varies</td><td class="do">Pay <b>partial + call the office</b> for a pay-by date, then <b>dash the remainder</b> before any 3-day notice.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card gold">
+      <h3>👑 When money's tight — pay in THIS order</h3>
+      <ol class="prio">
+        <li><b>Rent</b> — the roof. Always first.</li>
+        <li><b>Car insurance</b> — you must legally drive to work; your income depends on it.</li>
+        <li><b>Cell phone</b> — job &amp; kids reach you. Has grace, so it can wait a few days if it must.</li>
+        <li><b>Light bill</b> — usually has grace before anything happens.</li>
+        <li><b>Cards, storage, Amscott</b> — lowest risk if a few days late.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>💪 August rent-rescue ladder</h3>
+      <div class="sub" style="margin:0 0 6px;">Starting at $0 + the Tilt bite, rent lands ~Aug 21 on its own. DoorDash decides how much sooner.</div>
+      <table class="ladder">
+        <thead><tr><th>Dash this</th><th>By</th><th>Rent paid</th></tr></thead>
+        <tbody>
+          <tr><td class="g">$0</td><td>—</td><td class="d">~Aug 21</td></tr>
+          <tr><td class="g">~$565</td><td>Aug 17</td><td class="d">Aug 17</td></tr>
+          <tr class="best"><td class="g">~$715 ⭐</td><td>Aug 12</td><td class="d">Aug 12</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tipline"><b>Your 1-week heads-up habit:</b> every <b>Friday</b>, look at the next 7 days in The Plan. If a deposit you're counting on looks shaky, claim a dash weekend <b>now</b> — not after it's already missing. That's how you're never caught flat.</div>
+    <div class="warn"><b>Rent is never the bill you skip.</b> If everything hits the fan, a card or storage payment being 4 days late is survivable. Rent is not. Protect it first, every time.</div>
+  </div>
+
+  <!-- DASH CALC -->
+  <div class="panel" id="calc">
+    <div class="h2">⚡ Dash calculator</div>
+    <div class="sub">Tell it how short you are. It tells you exactly how much to DoorDash, how many hours, and by when. 💪</div>
+    <div class="calc">
+      <label>How short are you?</label>
+      <div class="inrow"><span class="dol">$</span><input id="amt" type="number" inputmode="numeric" placeholder="200" /></div>
+      <label style="font-size:11px;">Or tap a common one:</label>
+      <div class="chips">
+        <button onclick="setAmt(100)">Weekly money +$100</button>
+        <button onclick="setAmt(320)">Support $320 missed</button>
+        <button onclick="setAmt(500)">Support $500 missed</button>
+        <button onclick="setAmt(565)">Rent by Aug 17</button>
+        <button onclick="setAmt(715)">Rent by Aug 12</button>
+        <button onclick="setAmt(1100)">Paycheck short</button>
+      </div>
+      <button class="goBtn" onclick="calc()">Show me the dash plan ⚡</button>
+      <div class="result" id="res">
+        <div class="big" id="rbig"></div>
+        <div class="lines" id="rlines"></div>
+        <div class="msg" id="rmsg"></div>
+      </div>
+    </div>
+    <div class="tipline"><b>How the math works:</b> DoorDash pays roughly <b>$18–22/hr</b> after gas in most areas. This uses $20/hr to estimate. A slow night ≈ 2–3 hrs, a full weekend ≈ 12–16 hrs. Your real numbers will tell you fast.</div>
+  </div>
+
+  <!-- SAVE & SPEND -->
+  <div class="panel" id="save">
+    <div class="h2">💰 Save &amp; spend like a queen</div>
+    <div class="sub">The habits that make $150/week actually hold — and the money moves that keep you out of the hole.</div>
+
+    <div class="card gold">
+      <h3>💵 How to pull your $150 a week</h3>
+      <ul class="clean">
+        <li><b>The envelope way:</b> the day money lands, pull $150 cash. When the envelope's empty, you're done till next week. Hardest to overspend.</li>
+        <li><b>The 2nd-card way:</b> keep a separate debit/prepaid card, move $150 to it weekly, and <b>only</b> spend from that card for groceries + gas.</li>
+        <li><b>The auto-transfer way:</b> set a recurring $150 transfer (Navy Federal lets you schedule) into a "Weekly" account every payday. Spend only from there.</li>
+      </ul>
+      <div class="tipline" style="margin-top:8px;"><b>Pick ONE and stick to it.</b> The method matters less than the wall between "weekly money" and "everything else."</div>
+    </div>
+
+    <div class="card">
+      <h3>✂️ Where to save (biggest wins first)</h3>
+      <ul class="clean">
+        <li><b>Gas:</b> use a cashback gas app (see Apps tab), fill at Sam's/warehouse pumps, combine trips into one loop.</li>
+        <li><b>Groceries:</b> plan the week's meals before you shop, buy store brands, lean on your Aldi + Sam's bulk system. A list = no impulse buys.</li>
+        <li><b>Subscriptions:</b> audit every auto-charge once. Cancel anything you forgot you had — that's free money back every month.</li>
+        <li><b>Eating out:</b> the tight-week rule — <b>cook, don't order.</b> $25 saved on takeout is $25 toward rent.</li>
+      </ul>
+    </div>
+
+    <div class="card mintc">
+      <h3>👑 Where your money should go (in order)</h3>
+      <ol class="prio">
+        <li><b>Rent fund</b> — before anything fun.</li>
+        <li><b>Bills</b> — in the order on the Rent Rescue tab.</li>
+        <li><b>$150 weekly</b> — your living.</li>
+        <li><b>Savings</b> — every leftover dollar. This is the buffer that ends the late-rent cycle for good.</li>
+      </ol>
+    </div>
+    <div class="warn"><b>The mindset shift:</b> you're not "broke till payday" anymore — you're <b>building a cushion.</b> Every $20 you don't spend is a brick in the wall between you and another late notice.</div>
+  </div>
+
+  <!-- APPS -->
+  <div class="panel" id="apps">
+    <div class="h2">🛠️ Apps that pay you back</div>
+    <div class="sub">Free tools to stretch the $150 and squeeze more from every dash. Double-check current terms in the app store before you lean on any of them.</div>
+
+    <div class="card">
+      <h3>⛽ Gas &amp; driving</h3>
+      <div class="app"><div class="ic">⛽</div><div><div class="nm">Upside</div><div class="ds">Cash back on gas &amp; groceries — claim the offer before you fill up.</div></div></div>
+      <div class="app"><div class="ic">🗺️</div><div><div class="nm">GasBuddy</div><div class="ds">Finds the cheapest gas near you — worth it on a tight tank.</div></div></div>
+      <div class="app"><div class="ic">🚗</div><div><div class="nm">Gridwise</div><div class="ds">Tracks your DoorDash/Uber earnings &amp; shows the busy hours so your dash weekends pay more.</div></div></div>
+    </div>
+
+    <div class="card">
+      <h3>🛒 Groceries &amp; cash back</h3>
+      <div class="app"><div class="ic">🧾</div><div><div class="nm">Ibotta</div><div class="ds">Cash back on groceries — scan your receipt after shopping.</div></div></div>
+      <div class="app"><div class="ic">📸</div><div><div class="nm">Fetch</div><div class="ds">Snap any receipt, earn points toward gift cards. Zero effort.</div></div></div>
+      <div class="app"><div class="ic">🛍️</div><div><div class="nm">Rakuten</div><div class="ds">Cash back on online orders — turn it on before back-to-school shopping.</div></div></div>
+    </div>
+
+    <div class="card gold">
+      <h3>👑 Already in your toolkit</h3>
+      <ul class="clean">
+        <li><b>Navy Federal</b> — set up the separate RENT account (no card) + scheduled transfers here.</li>
+        <li><b>Your J Empire Console</b> — where this whole plan lives. This is your command center.</li>
+        <li><b>DoorDash / Uber Eats</b> — your engine. The Dash Calc tab tells you when to fire it up.</li>
+      </ul>
+    </div>
+    <div class="warn"><b>One honest caution:</b> cashback apps are a nice bonus, not a plan. Don't spend an extra dollar just to "earn" cents back. They work when you were buying it anyway.</div>
+  </div>
+
+  <div class="foott"><span class="script">You've got this 💕</span><span class="k">♛ J Empire · #rubiaxolinda ♛</span></div>
+</div>
+
+<script>
+  document.querySelectorAll('.tabs button').forEach(b=>{
+    b.addEventListener('click',()=>{
+      document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+      b.classList.add('on');
+      document.getElementById(b.dataset.t).classList.add('on');
+      window.scrollTo(0,0);
+    });
+  });
+  function setAmt(v){document.getElementById('amt').value=v;calc();}
+  function calc(){
+    var a=parseFloat(document.getElementById('amt').value);
+    var res=document.getElementById('res');
+    if(!a||a<=0){res.classList.remove('show');return;}
+    var rate=20;
+    var hrs=Math.ceil(a/rate);
+    var time, weekends=a/300;
+    if(a<=120) time="a couple of evenings this week";
+    else if(a<=350) time="one solid weekend";
+    else if(a<=700) time="two weekends (or a weekend + a few evenings)";
+    else time="spread across this week + both weekend days";
+    var lo=Math.ceil(a/22), hi=Math.ceil(a/18);
+    document.getElementById('rbig').textContent='Dash $'+a.toLocaleString();
+    document.getElementById('rlines').innerHTML=
+      '<div>⏱️ About <b>'+lo+'–'+hi+' hours</b> of dashing</div>'+
+      '<div>📅 Plan for <b>'+time+'</b></div>'+
+      '<div>💡 Claim it <b>before</b> the shortfall hits — schedule it now</div>';
+    var msg;
+    if(a<=120) msg="Small gap — one good evening and it's gone. You've got this. 💕";
+    else if(a<=350) msg="One weekend closes this. Keep your full-time job untouched. 👑";
+    else if(a<=700) msg="Two focused weekends. Line them up now and it never becomes a crisis.";
+    else msg="Big gap — lean on savings first, then dash the rest. Rent stays protected no matter what.";
+    document.getElementById('rmsg').textContent=msg;
+    res.classList.add('show');
+  }
+</script>
+</body>
+</html>
