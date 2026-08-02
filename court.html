@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Court">
+<title>J Empire · Court</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--l1:#F8F4FC;--l2:#EFE7F5;--l3:#DCCEE8;--l4:#B9A5C9;--l5:#7E6890;--l6:#54445F;
+--g1:#F5EDDC;--g2:#E0CFA6;--g3:#C9AE72;--g4:#A0834A;--bg:#FCFAFD;--card:#FFF;--ink:#2B2233;--soft:#6E6079;--line:#E8DFEF;
+--good:#5C8A6B;--warn:#BE8836;--bad:#A85757;--sh:0 1px 3px rgba(84,68,95,.05),0 8px 28px rgba(84,68,95,.08);
+--shl:0 2px 6px rgba(84,68,95,.07),0 16px 44px rgba(84,68,95,.12)}
+body.deep{--l1:#251D2E;--l2:#2F2539;--l3:#42354E;--l4:#7A6690;--l5:#C7B5D6;--l6:#E9DFF2;
+--g1:#463A26;--g2:#8C7645;--g3:#D0B67D;--g4:#E8D5A2;--bg:#171220;--card:#241C2E;--ink:#F1EAF6;--soft:#B5A6C2;--line:#3B2F49;
+--sh:0 1px 3px rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.4);--shl:0 2px 6px rgba(0,0,0,.5),0 16px 44px rgba(0,0,0,.5)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.55;padding-bottom:80px}
+.wrap{max-width:880px;margin:0 auto;padding:0 15px}
+header{position:relative;text-align:center;padding:28px 16px 20px;overflow:hidden;background:radial-gradient(120% 90% at 50% 0%,var(--l3),var(--l2) 45%,var(--bg) 100%)}
+.cr{font-size:17px;color:var(--g3);letter-spacing:.35em;margin-bottom:2px}
+h1{font-family:'Pinyon Script',cursive;font-size:56px;font-weight:400;margin:0;line-height:.95;
+background:linear-gradient(100deg,var(--l6) 10%,var(--g4) 50%,var(--l6) 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.vs{font-family:Fraunces,serif;font-size:13.5px;color:var(--soft);margin-top:5px;font-style:italic}
+.bg{display:inline-block;margin-top:9px;font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:800;color:var(--g4);border:1px solid var(--g2);background:var(--card);border-radius:99px;padding:6px 13px}
+#tg{position:absolute;top:14px;right:14px;background:var(--card);border:1px solid var(--line);color:var(--soft);border-radius:99px;padding:6px 12px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:Inter;z-index:5}
+nav{display:flex;gap:6px;overflow-x:auto;padding:13px 15px;max-width:880px;margin:0 auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{white-space:nowrap;background:var(--card);border:1px solid var(--line);color:var(--soft);padding:9px 15px;border-radius:99px;font-size:13px;font-weight:700;cursor:pointer;font-family:Inter;transition:.2s}
+nav button.on{background:linear-gradient(135deg,var(--l5),var(--l4));border-color:transparent;color:#fff;box-shadow:var(--sh)}
+body.deep nav button.on{color:#171220}
+section{display:none;animation:in .3s ease}section.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.phase{margin:18px 0 14px;padding:18px 20px;border-radius:18px;background:linear-gradient(135deg,var(--l5),var(--l4));color:#fff;box-shadow:var(--shl)}
+body.deep .phase{color:#171220}
+.phase .k{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:800;opacity:.85}
+.phase h2{font-family:Fraunces,serif;font-size:24px;font-weight:700;margin:3px 0 4px}
+.phase p{font-size:13px;margin:0;opacity:.93;line-height:1.5}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:17px;margin-bottom:12px;box-shadow:var(--sh)}
+.card h3{font-family:Fraunces,serif;font-size:17px;font-weight:600;margin:0 0 2px}
+.card p{font-size:13.5px;color:var(--soft);margin:8px 0 0;line-height:1.6}
+.card p b,.pg p b{color:var(--ink)}
+.warn{background:linear-gradient(140deg,var(--g1),var(--card));border:1px solid var(--g2);border-radius:16px;padding:16px;margin-bottom:12px}
+.warn .lbl{font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:800;color:var(--g4)}
+.warn h3{font-family:Fraunces,serif;font-size:17px;margin:4px 0 0}
+.warn p{font-size:13.5px;margin:8px 0 0;line-height:1.6;color:var(--ink)}
+.tl{position:relative;padding-left:26px}
+.tl:before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--l3)}
+.ev{position:relative;padding:11px 0}
+.ev:before{content:'';position:absolute;left:-26px;top:17px;width:13px;height:13px;border-radius:50%;background:var(--card);border:3px solid var(--l4)}
+.ev.gold:before{background:var(--g3);border-color:var(--g3)}
+.ev.now:before{background:var(--g3);border-color:var(--g3);box-shadow:0 0 0 5px var(--g1)}
+.ev .d{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--g4)}
+.ev .h{font-family:Fraunces,serif;font-size:15.5px;font-weight:600;margin-top:1px}
+.ev .b{font-size:13px;color:var(--soft);margin-top:3px;line-height:1.55}
+.addrow{display:grid;grid-template-columns:110px 1fr;gap:7px;margin-top:9px}
+.pg{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:10px;box-shadow:var(--sh)}
+.pg .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.pg .pn{font-family:Fraunces,serif;font-size:12px;font-weight:700;color:var(--g4);letter-spacing:.05em}
+.pg p{font-size:14px;line-height:1.65;margin:7px 0 0}
+.src{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);font-size:11.5px;color:var(--soft)}
+.src b{color:var(--g4);font-weight:700}
+.cp{background:var(--l2);border:1px solid var(--line);color:var(--l5);border-radius:8px;padding:5px 11px;font-size:11px;font-weight:800;cursor:pointer;font-family:Inter;white-space:nowrap;letter-spacing:.04em}
+.cp.ok{background:var(--g3);border-color:var(--g3);color:#fff}
+body.deep .cp.ok{color:#171220}
+.cpall{display:block;width:100%;padding:13px;border:none;border-radius:13px;cursor:pointer;font-family:Inter;font-size:14px;font-weight:800;background:linear-gradient(135deg,var(--l5),var(--l4));color:#fff;margin-bottom:13px}
+body.deep .cpall{color:#171220}
+.cpall.ok{background:linear-gradient(135deg,var(--g4),var(--g3))}
+.tg{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:11px;box-shadow:var(--sh);overflow:hidden;transition:.25s}
+.tg.open{box-shadow:var(--shl);border-color:var(--l3)}
+.th{display:flex;gap:12px;align-items:center;padding:15px 16px;cursor:pointer}
+.ic{width:40px;height:40px;flex:0 0 40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;background:var(--l1);border:1px solid var(--line)}
+.th .t{flex:1;min-width:0}
+.th h3{font-family:Fraunces,serif;font-size:16px;font-weight:600;margin:0;line-height:1.3}
+.rk{font-size:11px;color:var(--soft);margin-top:2px;font-weight:600}
+.cv{color:var(--l4);font-size:12px;transition:.3s}
+.tg.open .cv{transform:rotate(180deg)}
+.tb{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.tg.open .tb{max-height:3000px}
+.tbi{padding:0 16px 16px;border-top:1px solid var(--line)}
+.fld{margin-top:13px}
+.fld .lbl{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--g4);display:block;margin-bottom:3px}
+.fld p{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}
+.mb{background:var(--l1);border:1px solid var(--line);border-radius:11px;padding:9px 11px}
+.mb .lbl{font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;color:var(--soft);display:block}
+.mb .v{font-size:12.5px;font-weight:700;margin-top:2px}
+.rec{display:flex;gap:7px;overflow-x:auto;padding:3px 0 10px;scrollbar-width:none}
+.rec::-webkit-scrollbar{display:none}
+.rec div{flex:0 0 auto;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:8px 12px;font-size:11.5px;font-weight:700;color:var(--soft)}
+.rec div span{color:var(--g4);font-weight:800}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+th,td{text-align:left;padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);font-weight:800}
+.tot{font-family:Fraunces,serif;font-weight:700;color:var(--g4)}
+a{color:var(--l5);font-weight:600}
+body.deep a{color:var(--g4)}
+textarea,input{width:100%;background:var(--l1);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 11px;font-size:14px;font-family:Inter}
+textarea{min-height:62px;resize:vertical;margin-top:6px}
+.mrow{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.mrow:last-child{border:none}
+.mrow .mo{flex:0 0 84px;font-weight:700;font-size:12.5px}
+.mrow input{padding:7px 9px;font-size:13px;min-width:0}
+.chk{display:flex;gap:10px;align-items:flex-start;cursor:pointer;padding:11px 0;border-top:1px solid var(--line);margin-top:12px}
+.cb{width:21px;height:21px;flex:0 0 21px;border:2px solid var(--l4);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff}
+.tg.done .cb{background:var(--g3);border-color:var(--g3)}
+.tg.done .ic{background:var(--g1);border-color:var(--g2)}
+.ct{font-size:12.5px;font-weight:700}
+footer{text-align:center;font-size:11px;color:var(--soft);padding:26px 20px;line-height:1.8}
+@media print{body{background:#fff;color:#000;padding:0}nav,#tg,.cp,.cpall{display:none!important}
+section{display:block!important;page-break-before:always}section:first-of-type{page-break-before:auto}
+.tb{max-height:none!important;overflow:visible!important}.card,.tg,.pg{box-shadow:none;border:1px solid #aaa;page-break-inside:avoid}
+.phase{background:#eee!important;color:#000!important}h1{color:#000;-webkit-text-fill-color:#000}}
+</style>
+</head>
+<body>
+<button id="tg">Deep</button>
+<header>
+  <div class="cr">✦ ✦ ✦</div>
+  <h1>The Case</h1>
+  <div class="vs">Aguayo v. Molina Cruz</div>
+  <div class="bg">2026 SC 004578 SP · Judge Peters · Div 60</div>
+</header>
+
+<nav>
+  <button class="on" data-t="log">Case Log</button>
+  <button data-t="win">Win the Default</button>
+  <button data-t="col">Collect</button>
+  <button data-t="frm">Forms</button>
+  <button data-t="mny">Money</button>
+</nav>
+
+<div class="wrap">
+
+<section id="log" class="on">
+  <div class="phase">
+    <div class="k">Permanent record</div>
+    <h2>Case Log</h2>
+    <p>Every date, locked in. Add new entries as they happen — this becomes your evidence trail.</p>
+  </div>
+  <div class="card"><div class="tl" id="tl"></div></div>
+  <div class="card">
+    <h3>Add an entry</h3>
+    <div class="addrow"><input type="date" id="ed"><input id="eh" placeholder="What happened"></div>
+    <textarea id="eb" placeholder="Details — who, what, document name, outcome"></textarea>
+    <button class="cpall" style="margin-top:11px" id="eadd">Add to the log</button>
+  </div>
+</section>
+
+<section id="win">
+  <div class="phase">
+    <div class="k">Step one</div>
+    <h2>Win the Default</h2>
+    <p>Type this on plain paper with the caption at top. Tap any paragraph to copy it.</p>
+  </div>
+
+  <div class="warn">
+    <div class="lbl">Read this first</div>
+    <h3>The clerk has no form for this</h3>
+    <p>I checked every civil form Osceola posts. Their Small Claims Packet holds a Statement of Claim, an Explanation Sheet, a Statement of Responsibility, and a Military Affidavit — the <b>starting a case</b> packet you already used in May.</p>
+    <p>There is <b>no default motion form</b> anywhere in their library. That is why they told you to file a motion: you type it yourself. Below is exactly what to type.</p>
+  </div>
+
+  <button class="cpall" id="all">Copy the entire motion</button>
+  <div id="vb"></div>
+
+  <div class="card">
+    <h3>After you type it</h3>
+    <p><b>1.</b> Print it. Sign by hand above your name. Do <b>not</b> notarize — motions are not sworn.</p>
+    <p><b>2.</b> E-file at <a href="https://myflcourtaccess.com">myflcourtaccess.com</a>, or walk it into the Civil Division, 2nd floor, 2 Courthouse Square.</p>
+    <p><b>3.</b> Mail a copy to him at 2438 Pine Chase Circle. Add a courtesy copy to 1166 E Vine Street.</p>
+    <p><b>4.</b> Wait until it shows on Benchmark. <b>Then</b> email your two proposed orders as Word files to Division 60.</p>
+    <p><b>5.</b> You do <b>not</b> refile your 31 pages. The clerk confirmed that, and paragraph 12 points the judge back to what is already in the file.</p>
+  </div>
+</section>
+
+<section id="col">
+  <div class="phase" style="background:linear-gradient(135deg,var(--g4),var(--g3))">
+    <div class="k">Step two</div>
+    <h2>Collect It</h2>
+    <p>The judgment says he owes you. Nobody at the courthouse collects it — that is yours.</p>
+  </div>
+
+  <div class="warn">
+    <div class="lbl">Spend in this order</div>
+    <p>Every garnishment costs <b>$100 to the garnishee</b> plus clerk and service fees — paid before you know if anything is there. Firing at all five targets blind is $800 gone.</p>
+  </div>
+
+  <div class="rec">
+    <div><span>1</span> · Fact Info Sheet</div>
+    <div><span>2</span> · Zelle history</div>
+    <div><span>3</span> · Liens</div>
+    <div><span>4</span> · Form 7.342</div>
+    <div><span>5</span> · Bank of America</div>
+    <div><span>6</span> · Employer</div>
+    <div><span>7</span> · Cash App</div>
+  </div>
+
+  <div id="tgs"></div>
+</section>
+
+<section id="frm">
+  <div class="phase">
+    <div class="k">Where everything lives</div>
+    <h2>The Forms</h2>
+    <p>Osceola posts almost none of these. The Florida Bar posts all of them, free.</p>
+  </div>
+
+  <div class="card">
+    <h3>The master source</h3>
+    <p>Every form numbered 7.3xx lives in the <b>Florida Small Claims Rules PDF</b> — free from The Florida Bar and flcourts.gov. Download it once, keep it on your iPad, and you have every form you will ever need in this case.</p>
+    <p>Osceola own forms page has only one small claims item: the <b>Small Claims Packet</b>, which is for starting a case. Nothing for default, nothing for collection.</p>
+  </div>
+
+  <div class="card">
+    <h3>Form 7.351 — the format for your motion</h3>
+    <p>Titled "Format for Defendant's Motion," but its committee note says it <b>may be adapted for use by the plaintiff.</b> The entire official form is: the caption, a title line, the sentence "files this motion to ___, and as grounds therefore, states as follows:", then a certificate of service.</p>
+    <p>Everything else is your own words. That is why your motion in the Win tab looks the way it does.</p>
+  </div>
+
+  <div class="card">
+    <h3>Form 7.340 — Final Judgment</h3>
+    <p><b>Pre-printed:</b> "It is adjudged that the plaintiff(s), ___, recover from the defendant(s), ___, the sum of $___ on principal, $___ as prejudgment interest, $___ for attorneys' fees, with costs of $___, all of which shall bear interest at the rate of ___% per year..."</p>
+    <p><b>You fill in:</b> both names · principal <b>$3,670.00</b> · costs <b>$388.63</b> · the interest rate from the Florida CFO · his last known address · last four of his Social if known.</p>
+    <p><b>Never delete the Enforcement Paragraph.</b> It is marked optional on the form, but Rule 7.221 says the judge <b>shall</b> include it when you request it. Without it, you get no Fact Information Sheet.</p>
+  </div>
+
+  <div class="card">
+    <h3>Form 7.343 — Fact Information Sheet</h3>
+    <p><b>He</b> fills it out under oath. It demands his employer name and address, rate of pay, average paycheck, other income, every checking and savings account <b>with account numbers</b>, real estate, every vehicle with VIN, any property transfer over $100 in the last year, and who owes him money.</p>
+    <p><b>He must attach:</b> last pay stub · last 3 statements for every account · vehicle titles · deeds or leases · last 2 tax returns.</p>
+    <p>The form says in capitals: serve it on the judgment creditor, <b>DO NOT FILE IT WITH THE COURT.</b> It comes to your mailbox. Nobody else sees it. Nobody but you is counting the 45 days.</p>
+  </div>
+
+  <div class="card">
+    <h3>Form 7.342 — Hearing in Aid of Execution</h3>
+    <p><b>You personally qualify and almost nobody uses it.</b> Rule 7.221(b) limits it to a judgment creditor who is a natural person and was not represented by an attorney before judgment. That is you exactly.</p>
+    <p>It is <b>ex parte</b> — no hearing needed to ask. The judge orders him to appear at a set time, 45+ days after judgment, examined <b>under oath</b> about earnings, financial status, and assets, and to bring the completed Fact Information Sheet. Failure to comply is grounds for contempt.</p>
+  </div>
+
+  <div class="card">
+    <h3>Forms 7.344, 7.341, 7.347</h3>
+    <p><b>7.344 Order to Show Cause</b> — when he ignores the hearing. Requires a process server.</p>
+    <p><b>7.341 Execution</b> — commands the sheriff to levy. Rule 7.200: issues on your <b>oral request</b>, no written motion.</p>
+    <p><b>7.347 Satisfaction of Judgment</b> — file only when he has paid in full. Filing early wipes out your judgment permanently.</p>
+  </div>
+
+  <div class="card">
+    <h3>Garnishment — no form exists anywhere</h3>
+    <p>Chapter 77 has no approved statewide form and Osceola posts none. You draft the motion; the clerk issues the writ. Ask the Civil Division at 407-742-3500 whether they keep an unposted local packet — many clerks do even when it is not on the website.</p>
+  </div>
+
+  <div class="card">
+    <h3>Process servers</h3>
+    <p>Osceola posts a <b>Ninth Judicial Circuit Process Servers</b> list on their forms page. Quick Serve already knows your case — Jean Exama served him in May, at 863-594-0066.</p>
+  </div>
+</section>
+
+<section id="mny">
+  <div class="phase">
+    <div class="k">Every dollar</div>
+    <h2>Money</h2>
+    <p>What you have spent, what collection costs, what he still owes.</p>
+  </div>
+
+  <div class="card">
+    <h3>Spent so far</h3>
+    <table>
+      <tr><td>Clerk filing fee</td><td style="text-align:right">$310.00</td></tr>
+      <tr><td>Service — Quick Serve</td><td style="text-align:right">$78.63</td></tr>
+      <tr><td class="tot">Taxable costs</td><td class="tot" style="text-align:right">$388.63</td></tr>
+    </table>
+    <p>Rule 7.175: in a default judgment, no further motion is needed if costs were sought in the statement of claim. You asked for court costs in May, so these ride along automatically.</p>
+  </div>
+
+  <div class="card">
+    <h3>What collection costs</h3>
+    <table>
+      <tr><td>Judgment lien certificate</td><td style="text-align:right">Small</td></tr>
+      <tr><td>Certified copy + recording</td><td style="text-align:right">Small</td></tr>
+      <tr><td>Form 7.342 — hearing in aid</td><td style="text-align:right">Free</td></tr>
+      <tr><td>Writ of execution</td><td style="text-align:right">Free to request</td></tr>
+      <tr><td>Process server — show cause</td><td style="text-align:right">~$80</td></tr>
+      <tr><td><b>Each</b> garnishment — garnishee</td><td style="text-align:right">$100.00</td></tr>
+      <tr><td><b>Each</b> garnishment — clerk + service</td><td style="text-align:right">~$50–130</td></tr>
+    </table>
+    <p>Roughly <b>$150–230 per target</b>, spent before you know if anything is there.</p>
+  </div>
+
+  <div class="card">
+    <h3>The $300 monthly log</h3>
+    <p style="margin-top:4px">Your judgment covers through April only. Every month after is a separate breach — this becomes the evidence for your next action.</p>
+    <div id="mlog" style="margin-top:12px"></div>
+    <div class="tot" id="mtot" style="margin-top:12px;font-size:17px"></div>
+  </div>
+
+  <div class="warn">
+    <div class="lbl">Your exit</div>
+    <h3>Refinance or sell</h3>
+    <p>Your agreement ends his obligation when the loan is satisfied, <b>the vehicle is sold, or refinancing occurs.</b> Two of those three are in your hands. Doing one turns an endless monthly chase into a single fixed number you sue on once — instead of filing every quarter forever.</p>
+    <textarea data-f="car" placeholder="Where the car stands — listed? refi quotes? payoff amount?"></textarea>
+  </div>
+
+  <div class="card">
+    <h3>Intelligence file</h3>
+    <p style="margin-top:4px">Fill in as you learn it. This is what makes a garnishment worth firing.</p>
+    <textarea data-f="i1" placeholder="Bank of America — account number, branch, from Zelle history or a check he wrote"></textarea>
+    <textarea data-f="i2" placeholder="Employer at 1166 E Vine St — legal name + registered agent from Sunbiz"></textarea>
+    <textarea data-f="i3" placeholder="Cash App — P2P only, or direct deposit?"></textarea>
+    <textarea data-f="i4" placeholder="What the Fact Information Sheet revealed"></textarea>
+  </div>
+
+  <div class="card">
+    <h3>Numbers to keep</h3>
+    <table>
+      <tr><td>Mediation Department</td><td>407-742-2451</td></tr>
+      <tr><td>Clerk, Civil Division</td><td>407-742-3500</td></tr>
+      <tr><td>JA Dianne Vargas, Div 60</td><td>407-742-2599</td></tr>
+      <tr><td>Quick Serve — process server</td><td>863-594-0066</td></tr>
+    </table>
+  </div>
+</section>
+
+<footer>✦ J Empire · #rubiaxolinda ✦<br>Drafts and organizing tools only — not legal advice.<br>Verify every rule, form number, and fee before you file.</footer>
+</div>
+
+<script>
+var S={};
+try{S=JSON.parse(localStorage.getItem('jempire-court-v2')||'{}')}catch(e){S={}}
+function save(){try{localStorage.setItem('jempire-court-v2',JSON.stringify(S))}catch(e){}}
+
+var FIXED=[
+{d:'January 16, 2026',h:'Agreement signed',b:'Notarized Vehicle Ownership and Responsibility Agreement. He pays 50 percent of the monthly loan payment, or 300 dollars, until the loan is satisfied, the vehicle is sold, or refinancing occurs.',g:1},
+{d:'May 4, 2026',h:'Case filed',b:'Statement of Claim filed for 3,670 dollars plus a 310 dollar filing fee. Case No. 2026 SC 004578 SP, Summary Claims Division.',g:1},
+{d:'May 8, 2026 at 9:23 pm',h:'Personally served',b:'Served at 1166 E Vine Street, Kissimmee, which is his job, by Jean Exama, Certified Process Server No. CA 1080 7065 100225-1 856, Quick Serve Legal. Service fee 78.63. Return of Service filed May 12.',g:1},
+{d:'June 16, 2026 at 9:00 am',h:'Pretrial Conference. He did not appear.',b:'Courtroom 4B, Judge David Peters. You appeared by video. The Court called for him repeatedly with no response. The Order Following Pretrial Conference checked only one box: parties referred to mediation within 60 days. The Defendant-failed-to-appear box was left blank.',g:1},
+{d:'July 1, 2026',h:'Mediation noticed',b:'Notice and Requirement to Attend Mediation e-filed. Warned that failure to comply may result in sanctions including entry of judgment. Certificate of service listed 2438 Pine Castle Circle. Everything else in the file says Pine Chase.',g:1},
+{d:'July 28, 2026 at 10:00 am',h:'Mediation. He did not appear.',b:'Mediator Eunice Caussade Garcia. You appeared. He did not. Second missed setting. The mediator advised filing a motion for default.',g:1},
+{d:'Now',h:'Waiting on the mediator report',b:'Nothing gets filed until it hits the docket. Call 407-742-2451 and confirm it will say FAILED TO APPEAR, not impasse.',now:1}
+];
+function drawTL(){
+  var el=document.getElementById('tl'),h='';
+  FIXED.forEach(function(e){
+    h+='<div class="ev '+(e.now?'now':(e.g?'gold':''))+'"><div class="d">'+e.d+'</div><div class="h">'+e.h+'</div><div class="b">'+e.b+'</div></div>';
+  });
+  (S.ev||[]).forEach(function(e,i){
+    h+='<div class="ev"><div class="d">'+e.d+'</div><div class="h">'+e.h+'</div><div class="b">'+(e.b||'')+' <a href="#" data-del="'+i+'" style="font-size:11px">remove</a></div></div>';
+  });
+  el.innerHTML=h;
+  el.querySelectorAll('[data-del]').forEach(function(a){
+    a.onclick=function(ev){ev.preventDefault();S.ev.splice(parseInt(a.getAttribute('data-del')),1);save();drawTL()};
+  });
+}
+document.getElementById('eadd').onclick=function(){
+  var d=document.getElementById('ed').value,h=document.getElementById('eh').value,b=document.getElementById('eb').value;
+  if(!d||!h)return;
+  S.ev=S.ev||[];S.ev.push({d:d,h:h,b:b});save();drawTL();
+  document.getElementById('eh').value='';document.getElementById('eb').value='';
+};
+
+var Q=String.fromCharCode(39);
+var CAP='IN THE COUNTY COURT OF THE NINTH JUDICIAL CIRCUIT,\nIN AND FOR OSCEOLA COUNTY, FLORIDA\n\nCASE NO.: 2026 SC 004578 SP\n\nJAZMIN AGUAYO,\n     Plaintiff,\nvs.\nJUAN A MOLINA CRUZ a/k/a\nJUAN ALBERTO CRUZ MOLINA,\n     Defendant.\n_______________________________/\n\nPLAINTIFF'+Q+'S MOTION FOR DEFAULT';
+
+var V=[
+{n:'Caption and title',t:CAP,src:'Type this at the very top. Copy it exactly.'},
+{n:'Opening line',t:'Plaintiff, JAZMIN AGUAYO, files this motion for default against Defendant, JUAN A MOLINA CRUZ, and as grounds therefore, states as follows:',src:'Form 7.351, the official skeleton sentence'},
+{n:'Paragraph 1',t:'1. I filed this case on May 4, 2026. I am asking for $3,670.00 for the Defendant breaching a notarized Vehicle Ownership and Responsibility Agreement dated January 16, 2026, and for his refusal to return my personal property.',src:'Statement of Claim, filed 05/04/2026'},
+{n:'Paragraph 2',t:'2. The Defendant was personally served on May 8, 2026 at 9:23 p.m. at 1166 E Vine Street, Kissimmee, Florida 34744, by Jean Exama, Certified Process Server No. CA 1080 7065 100225-1 856. The Return of Service was filed with this Court on May 12, 2026.',src:'Return of Service, filed 05/12/2026'},
+{n:'Paragraph 3',t:'3. The Notice to Appear ordered the Defendant to appear on June 16, 2026 at 9:00 a.m. in Courtroom 4B for a Pretrial Conference. It warned in bold type that the Defendant must appear on the date specified in order to avoid a default judgment.',src:'Notice to Appear, e-filed 05/04/2026'},
+{n:'Paragraph 4',t:'4. I appeared at the June 16, 2026 Pretrial Conference by video. The Defendant did not appear, in person or by video. The Court called for the Defendant more than once and received no response from him or from anyone on his behalf.',src:'Your sworn affidavit plus the courtroom recording. This is the paragraph the June 16 order does not back up, so your affidavit carries it.'},
+{n:'Paragraph 5',t:'5. The Court did not enter a default that day. Instead the Court referred the parties to mediation to occur within 60 days.',src:'Order Following Pretrial Conference, filed 06/16/2026'},
+{n:'Paragraph 6',t:'6. Mediation was set for July 28, 2026 at 10:00 a.m. before mediator Eunice Caussade Garcia. The Notice stated that failure to comply may result in the imposition of sanctions, including costs, attorney fees, entry of judgment, or dismissal.',src:'Notice and Requirement to Attend Mediation, e-filed 07/01/2026'},
+{n:'Paragraph 7',t:'7. I appeared for the mediation on July 28, 2026. The Defendant did not appear. The mediator report showing his non-appearance was filed on ________________, 2026.',src:'FILL IN the date once the report is docketed'},
+{n:'Paragraph 8',t:'8. Since being served on May 8, 2026, the Defendant has never filed any paper in this case, never served an answer, and never appeared at any scheduled proceeding.',src:'The docket itself. Anyone can verify it.'},
+{n:'Paragraph 9',t:'9. Florida Small Claims Rule 7.170(a) provides that if the defendant does not appear at the scheduled time, the plaintiff is entitled to a default to be entered by either the judge or the clerk.',src:'Rule 7.170(a). Verify before filing.'},
+{n:'Paragraph 10',t:'10. Florida Small Claims Rule 7.090(f) provides that failure to comply with the mediation appearance requirement may result in the imposition of costs and fees incurred by the opposing party.',src:'Rule 7.090(f). Verify before filing.'},
+{n:'Paragraph 11',t:'11. The Defendant is not a minor, is not incompetent, and is not in the military service of the United States. The Return of Service states that a diligent search and inquiry determined the Defendant is not on active duty with the U.S. Armed Forces.',src:'Return of Service, filed 05/12/2026. Your process server already swore to this.'},
+{n:'Paragraph 12',t:'12. My damages are supported by the exhibits already filed with my Statement of Claim on May 4, 2026 and on file with this Court.',src:'This is why you do NOT refile your 31 pages.'},
+{n:'Closing',t:'WHEREFORE, I respectfully ask this Court to enter a default against the Defendant, JUAN A MOLINA CRUZ, and thereafter to enter a Default Final Judgment in my favor for $3,670.00 in principal plus $388.63 in taxable court costs, to include the Enforcement Paragraph of Form 7.340 requiring the Defendant to complete Form 7.343 within 45 days, and to grant any other relief the Court finds just and proper.',src:'The Enforcement Paragraph request is critical. Without it you get no Fact Information Sheet.'},
+{n:'AI disclosure',t:'DISCLOSURE OF USE OF ARTIFICIAL INTELLIGENCE\n\nPursuant to the Courtroom Guidelines, Procedures and Expectations for Osceola County Civil Division 60, Plaintiff discloses that artificial intelligence was used in the preparation of this document. Plaintiff certifies that each and every citation to the law and to the record contained in this paper has been independently verified as accurate.',src:'Required by Division 60. Confirm current wording with JA Dianne Vargas, 407-742-2599.'},
+{n:'Certificate of service',t:'CERTIFICATE OF SERVICE\n\nI certify that a copy hereof has been furnished to JUAN A MOLINA CRUZ, 2438 Pine Chase Circle, St. Cloud, Florida 34769, and to JUAN A MOLINA CRUZ, 1166 E Vine Street, Kissimmee, Florida 34744, by U.S. mail on ________________, 2026.\n\n\n_______________________________\nJAZMIN AGUAYO, Plaintiff, Pro Se\n352 Pineland Ct, Apt B\nSt. Cloud, Florida 34769\n(407) 487-6008\njazmarie624@gmail.com',src:'Required by Form 7.351. Mail to both addresses.'}
+];
+function copy(txt,btn,label){
+  function done(){btn.textContent='Copied';btn.className=btn.className+' ok';
+    setTimeout(function(){btn.textContent=label;btn.className=btn.className.replace(' ok','')},1600)}
+  function fb(){var t=document.createElement('textarea');t.value=txt;t.style.position='fixed';t.style.opacity='0';
+    document.body.appendChild(t);t.select();try{document.execCommand('copy');done()}catch(e){}document.body.removeChild(t)}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,fb)}else{fb()}
+}
+function drawV(){
+  var el=document.getElementById('vb');el.innerHTML='';
+  V.forEach(function(v){
+    var d=document.createElement('div');d.className='pg';
+    d.innerHTML='<div class="top"><span class="pn">'+v.n+'</span><button class="cp">Copy</button></div>'+
+      '<p style="white-space:pre-wrap">'+v.t+'</p><div class="src"><b>Where it comes from:</b> '+v.src+'</div>';
+    d.querySelector('.cp').onclick=function(){copy(v.t,this,'Copy')};
+    el.appendChild(d);
+  });
+}
+document.getElementById('all').onclick=function(){
+  var full=V.map(function(v){return v.t}).join('\n\n');
+  copy(full,this,'Copy the entire motion');
+};
+
+var T=[
+{ic:'📋',t:'Fact Information Sheet, Form 7.343',rk:'Free · Do this first · Highest value',
+need:'Nothing. It is built into your judgment automatically if you request the Enforcement Paragraph.',
+how:'The judgment orders him to complete Form 7.343 under oath and mail it to your house within 45 days. It is not filed with the court and the court never checks.',
+who:'Nobody to call. You wait at your mailbox.',
+cost:'$0',svc:'None',ret:'45 days',
+wrong:'He ignores it, which is likely. Nobody notifies you. YOU count the 45 days. Day 46 with an empty mailbox is your cue to file a Motion for Order to Show Cause. Also, if the Enforcement Paragraph never made it into your judgment, none of this exists. Read the signed judgment carefully.'},
+
+{ic:'🔍',t:'Zelle history, free intelligence',rk:'Free · Do this today',
+need:'Your phone.',
+how:'Open your Zelle history. Every transfer he ever sent you names the bank it came from. Any check he wrote you shows a routing number, which is the bank, and the account number beside it.',
+who:'Nobody.',
+cost:'$0',svc:'None',ret:'Immediate',
+wrong:'Nothing. Zelle itself holds no money so there is nothing to garnish there, but it identifies the Bank of America account you CAN garnish, for free, tonight.'},
+
+{ic:'🏦',t:'Bank of America, Writ of Garnishment',rk:'Confirmed bank · Best odds of real money',
+need:'A final judgment. His account number if you have it. Bank of America legal name and Florida registered agent, which you look up on Sunbiz. Serve the registered agent, never a branch.',
+how:'Draft a Motion for Writ of Garnishment under Chapter 77. The clerk issues the writ. Serve it on the registered agent. The bank freezes whatever is in the account the moment it is served.',
+who:'Clerk Civil Division 407-742-3500. Process server for service on the agent.',
+cost:'$100 garnishee fee plus clerk fee plus service, roughly $150 to $230',svc:'Frozen the day it is served',ret:'20 days for the bank to answer, then a final judgment of garnishment before money moves. Realistically 6 to 10 weeks.',
+wrong:'It is a snapshot, not continuing. It catches only what is sitting there that day, so timing matters and you can repeat it on another date. Bigger risk: wages he deposited stay exempt for six months if he can trace them, so non-wage money is the better target. Within 5 days of the bank answering you must serve him the answer plus a notice of his right to dissolve, and he gets 20 days to claim an exemption.'},
+
+{ic:'💼',t:'Employer at 1166 E Vine St, Continuing Writ',rk:'Highest ceiling · Biggest legal risk',
+need:'The legal name of the business operating at 1166 E Vine Street, Kissimmee, where your process server found him in May. Look it up on Sunbiz and get the registered agent.',
+how:'Motion for Continuing Writ of Garnishment under section 77.0305. Unlike a bank writ, this one attaches to every paycheck until the judgment is paid.',
+who:'Sunbiz for the entity. Clerk to issue. Process server to serve the agent.',
+cost:'$100 garnishee fee plus clerk fee plus service, roughly $150 to $230',svc:'Attaches from the day served',ret:'20 days to answer, then ongoing',
+wrong:'The head of family exemption under section 222.11 is the real obstacle. If he supports a dependent and nets 750 dollars a week or less, his wages are fully exempt and this closes. Above 750 it is still exempt unless he waived it in writing. He must claim it within 20 days of notice or he can lose the protection. Plan for him to claim it. Also, serving the wrong entity or a jobsite instead of the registered agent kills the writ entirely.'},
+
+{ic:'📱',t:'Cash App, Writ of Garnishment',rk:'Confirmed he uses it · Value depends entirely on how',
+need:'A final judgment, and the answer to one question: does his paycheck direct-deposit into Cash App, or is it just peer-to-peer money?',
+how:'Cash App is operated by Block, Inc. and balances sit at partner banks. You need the correct legal entity and its Florida registered agent from Sunbiz before you draft anything. Serving Cash App generally will not work.',
+who:'Sunbiz. Clerk. Process server.',
+cost:'$100 garnishee fee plus clerk fee plus service, roughly $150 to $230',svc:'Snapshot on service',ret:'20 days to answer',
+wrong:'If it is peer-to-peer pocket money you will spend 150 dollars or more to seize 40. If his paycheck lands there, it is effectively a second bank account and worth every dollar. Find out first. The Fact Information Sheet asks him directly. Do not fire blind at this one.'},
+
+{ic:'🚗',t:'Uber',rk:'Weakest target · Mostly useful as pressure',
+need:'The correct Uber entity registered in Florida and its agent. The driver-facing company is often not the one named on the app.',
+how:'He is an independent contractor, so the continuing wage writ does not cleanly apply. An ordinary writ captures only what Uber owes him at the exact instant of service.',
+who:'Sunbiz. Clerk. Process server.',
+cost:'Roughly $150 to $230',svc:'Instant snapshot',ret:'20 days to answer',
+wrong:'Drivers cash out same-day with Instant Pay, so the balance at service is usually near zero. Realistically 150 dollars spent to catch 30. Its real value is proving he has income at a show-cause hearing. Also, Florida courts have applied the head of family exemption to self-employment income in some cases, so he may claim gig money is exempt too.'},
+
+{ic:'🚫',t:'Amscot',rk:'Not a target, but it tells you something',
+need:'Nothing.',
+how:'You cannot garnish a check casher. It holds no accounts and no balances. There is nothing to freeze, ever.',
+who:'Nobody.',
+cost:'$0',svc:'None',ret:'None',
+wrong:'Do not spend a dollar here. But read the signal: a man cashing payroll checks at Amscot is unbanked on purpose. If that is his habit, your Bank of America writ may find an empty account and the employer writ becomes your only real shot at that income stream.'},
+
+{ic:'📜',t:'Judgment Lien Certificate, Sunbiz',rk:'Cheap · Passive · Do it day one',
+need:'A certified copy of your final judgment and his exact legal name.',
+how:'File a Judgment Lien Certificate with the Florida Department of State through Sunbiz. Creates a statewide lien on his personal property, good five years and renewable.',
+who:'Florida Department of State, sunbiz.org.',
+cost:'Small filing fee. Confirm current amount.',svc:'None',ret:'Passive. It waits.',
+wrong:'File it as JUAN A MOLINA CRUZ, exactly as it appears on the judgment. A lien in the wrong name finds nothing. Your Statement of Claim said Cruz Molina and every court order says Molina Cruz, so make sure the judgment carries the a/k/a and both versions are covered.'},
+
+{ic:'🏠',t:'Record certified copy, Osceola Official Records',rk:'Cheap · Only pays if he owns property here',
+need:'Certified copy of the judgment from the clerk.',
+how:'Record it in Osceola County Official Records. Creates a lien on any real property he owns in this county.',
+who:'Osceola Clerk, Official Records, 2 Courthouse Square.',
+cost:'Certified copy plus recording fee',svc:'None',ret:'Passive',
+wrong:'Worthless if he owns no real property, but cheap enough to do anyway, and it is the standard step every judgment creditor takes.'},
+
+{ic:'⚖️',t:'Form 7.342, Hearing in Aid of Execution',rk:'Free · Your strongest move · Almost nobody uses it',
+need:'A final judgment. Nothing else.',
+how:'File Form 7.342. It is ex parte, meaning you do not need a hearing to request one. The judge orders him to appear at a set time, 45 or more days after judgment, to be examined under oath about his earnings, financial status, and assets, and to bring the completed Fact Information Sheet with him.',
+who:'Clerk Civil Division. Judge Peters signs.',
+cost:'$0',svc:'The order gets served on him',ret:'45 or more days out',
+wrong:'You qualify specifically because you are a natural person who was not represented by an attorney before judgment, under Rule 7.221(b). File it early so it runs alongside the 45-day clock instead of after it. Failure to comply is grounds for contempt, which is stated right on the form.'},
+
+{ic:'📨',t:'Motion for Order to Show Cause',rk:'Day 46 · First time you hire someone',
+need:'Proof he blew the 45-day deadline, which is simply your empty mailbox and your own affidavit.',
+how:'File a Motion for Order to Show Cause using Florida Rule of Civil Procedure Form 1.982. Submit proposed Form 7.344 to Division 60 as a Word file. He must appear and explain why he should not be held in contempt.',
+who:'Process server. Quick Serve at 863-594-0066. Jean Exama already knows the case.',
+cost:'Roughly $80 for personal service',svc:'Contempt papers require personal service',ret:'Hearing usually set within a few weeks',
+wrong:'Set your expectations honestly. This is civil contempt, which is coercive rather than punishment. Expect Judge Peters to order compliance plus your costs first. A writ of bodily attachment exists but only after repeated defiance. Do not count on jail. Count on the pressure, which is real and usually works.'},
+
+{ic:'🔨',t:'Writ of Execution and Sheriff levy',rk:'Free to request · Only if there is property worth taking',
+need:'A final judgment and specific property you can identify.',
+how:'Rule 7.200: executions issue on your ORAL request, with no written motion at all. You walk into the clerk office and ask. Then give the sheriff written instructions identifying specific property.',
+who:'Clerk Civil Division. Osceola County Sheriff.',
+cost:'Sheriff deposit',svc:'Sheriff levies',ret:'Weeks to months',
+wrong:'Florida exemptions are generous to debtors. The motor vehicle exemption is small, so a car he owns free and clear can be reachable, but only if there is real equity above the exemption. Do not pay a sheriff deposit to seize something worth less than the fees.'},
+
+{ic:'✅',t:'Form 7.347, Satisfaction of Judgment',rk:'The end · Only when he has actually paid',
+need:'Full payment in your hand.',
+how:'File a Satisfaction of Judgment, signed before a notary.',
+who:'Clerk.',
+cost:'$0',svc:'None',ret:'None',
+wrong:'Filing this early permanently wipes out your judgment. Never file it on a promise. And remember the clock favors you: a Florida judgment is enforceable for 20 years. You are not in a hurry. He is.'}
+];
+function drawT(){
+  var el=document.getElementById('tgs');el.innerHTML='';
+  T.forEach(function(t,i){
+    var done=!!S['t'+i],op=!!S['o'+i];
+    var d=document.createElement('div');
+    d.className='tg'+(done?' done':'')+(op?' open':'');
+    d.innerHTML='<div class="th"><div class="ic">'+t.ic+'</div><div class="t"><h3>'+t.t+'</h3><div class="rk">'+t.rk+'</div></div><span class="cv">▼</span></div>'+
+    '<div class="tb"><div class="tbi">'+
+      '<div class="fld"><span class="lbl">What you need first</span><p>'+t.need+'</p></div>'+
+      '<div class="fld"><span class="lbl">The paperwork</span><p>'+t.how+'</p></div>'+
+      '<div class="fld"><span class="lbl">Who to contact</span><p>'+t.who+'</p></div>'+
+      '<div class="grid2">'+
+        '<div class="mb"><span class="lbl">Cost</span><span class="v">'+t.cost+'</span></div>'+
+        '<div class="mb"><span class="lbl">Service</span><span class="v">'+t.svc+'</span></div>'+
+        '<div class="mb"><span class="lbl">Time to money</span><span class="v">'+t.ret+'</span></div>'+
+        '<div class="mb"><span class="lbl">Done on</span><input type="date" data-f="t'+i+'d" style="background:transparent;border:none;padding:2px 0;font-size:12.5px;font-weight:700"></div>'+
+      '</div>'+
+      '<div class="fld"><span class="lbl">What goes wrong</span><p>'+t.wrong+'</p></div>'+
+      '<div class="chk"><div class="cb">'+(done?'✓':'')+'</div><div class="ct">'+(done?'Done':'Mark this done')+'</div></div>'+
+    '</div></div>';
+    d.querySelector('.th').onclick=function(){d.className=d.className.indexOf('open')>-1?d.className.replace(' open',''):d.className+' open';S['o'+i]=d.className.indexOf('open')>-1;save()};
+    d.querySelector('.chk').onclick=function(e){e.stopPropagation();S['t'+i]=!S['t'+i];save();drawT();bind()};
+    el.appendChild(d);
+  });
+}
+
+var M=['May 2026','June 2026','July 2026','Aug 2026','Sept 2026','Oct 2026','Nov 2026','Dec 2026'];
+function drawM(){
+  var el=document.getElementById('mlog');el.innerHTML='';
+  M.forEach(function(m,i){
+    var v=S['m'+i]||{p:'',n:''};
+    var r=document.createElement('div');r.className='mrow';
+    r.innerHTML='<span class="mo">'+m+'</span><input placeholder="$0 paid" value="'+(v.p||'')+'" data-m="'+i+'" data-k="p" style="flex:0 0 84px"><input placeholder="Note" value="'+(v.n||'')+'" data-m="'+i+'" data-k="n" style="flex:1">';
+    el.appendChild(r);
+  });
+  el.querySelectorAll('[data-m]').forEach(function(x){
+    x.oninput=function(){var i=x.getAttribute('data-m');S['m'+i]=S['m'+i]||{p:'',n:''};S['m'+i][x.getAttribute('data-k')]=x.value;save();mtot()};
+  });
+  mtot();
+}
+function mtot(){
+  var t=0;M.forEach(function(m,i){t+=300-(parseFloat((S['m'+i]||{}).p)||0)});
+  document.getElementById('mtot').textContent='Unpaid since May: $'+t.toFixed(2);
+}
+function bind(){
+  document.querySelectorAll('[data-f]').forEach(function(el){
+    var k=el.getAttribute('data-f');
+    if(S[k]!==undefined&&el.value!==S[k])el.value=S[k];
+    el.oninput=function(){S[k]=el.value;save()};
+    el.onchange=function(){S[k]=el.value;save()};
+  });
+}
+
+drawTL();drawV();drawT();drawM();bind();
+document.querySelectorAll('nav button').forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll('nav button').forEach(function(x){x.className=x.className.replace(' on','').replace('on','')});
+    document.querySelectorAll('section').forEach(function(x){x.className=x.className.replace(' on','').replace('on','')});
+    b.className='on';
+    document.getElementById(b.getAttribute('data-t')).className='on';
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+document.getElementById('tg').onclick=function(){
+  var isDeep=document.body.className.indexOf('deep')>-1;
+  document.body.className=isDeep?'':'deep';
+  this.textContent=isDeep?'Deep':'Light';
+  S.deep=!isDeep;save();
+};
+if(S.deep){document.body.className='deep';document.getElementById('tg').textContent='Light'}
+</script>
+</body>
+</html>
