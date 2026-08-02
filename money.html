@@ -136,6 +136,11 @@
   body.deep .nextdue.late{color:#F3A0A0;}
   .daypaid{border:1px solid var(--line);background:var(--card);color:var(--green);font-weight:900;font-size:13px;border-radius:8px;padding:5px 11px;cursor:pointer;margin-left:6px;flex-shrink:0;}
   .daypaid.on{background:var(--green);color:#fff;border-color:transparent;}
+  .je-bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;justify-content:space-around;align-items:center;background:var(--card);border-top:1px solid var(--line);padding:8px 0 calc(8px + env(safe-area-inset-bottom));box-shadow:0 -4px 22px rgba(120,90,160,.18);}
+  .je-bottomnav a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:21px;color:var(--muted);text-decoration:none;line-height:1;}
+  .je-bottomnav a span{font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;}
+  .je-bottomnav a:active{color:var(--gold);}
+  body{padding-bottom:84px;}
 </style>
 </head>
 <body>
@@ -376,5 +381,10 @@ function toggleMode(){const d=document.body.classList.toggle('deep');document.ge
 (function(){let m='light';try{m=localStorage.getItem('je_money_mode')||'light';}catch(e){}if(m==='deep'){document.body.classList.add('deep');document.getElementById('modeBtn').textContent='☀ Light';}})();
 render();
 </script>
+<nav class="je-bottomnav">
+  <a href="index.html">🏠<span>Home</span></a>
+  <a href="planner.html">🗓️<span>Planner</span></a>
+  <a href="brain_dump.html">🫧<span>Dump</span></a>
+</nav>
 </body>
 </html>
