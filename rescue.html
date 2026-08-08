@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Rent Rescue Chapter · J Empire</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6EDF1;
+  --card:#FFFBFC;
+  --ink:#2E1B2E;
+  --plum:#5B2C4E;
+  --plum-soft:#8A5B7A;
+  --gold:#B8893C;
+  --gold-soft:#E8D5AE;
+  --good:#4F6B4A;
+  --warn:#9B3B3B;
+  --line:rgba(91,44,78,.14);
+  --shadow:0 1px 2px rgba(46,27,46,.05),0 8px 24px rgba(46,27,46,.06);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:1.55;
+  padding-bottom:80px;
+}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px}
+
+/* ---------- masthead ---------- */
+header{
+  padding:38px 0 26px;text-align:center;
+  background:linear-gradient(180deg,#EFE0E8 0%,var(--paper) 100%);
+  border-bottom:1px solid var(--line);
+}
+.crown{font-size:13px;letter-spacing:.34em;color:var(--gold);font-weight:600;text-transform:uppercase}
+h1{
+  font-family:Fraunces,Georgia,serif;font-weight:600;
+  font-size:clamp(30px,7vw,46px);line-height:1.06;margin:12px 0 6px;color:var(--plum);
+}
+.sub{color:var(--plum-soft);font-size:14.5px;max-width:520px;margin:0 auto}
+
+/* the deadline stone */
+.stone{
+  margin:22px auto 0;max-width:430px;background:var(--plum);color:#fff;
+  border-radius:16px;padding:18px 20px;box-shadow:var(--shadow);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;text-align:left;
+}
+.stone .lab{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-soft);font-weight:600}
+.stone .amt{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;line-height:1.1}
+.stone .due{font-size:12.5px;color:#EBD9E4;margin-top:2px}
+
+/* ---------- tabs ---------- */
+.tabbar{
+  position:sticky;top:0;z-index:20;background:rgba(246,237,241,.96);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+}
+.tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;padding:12px 18px;max-width:860px;margin:0 auto}
+.tab{
+  border:1px solid var(--line);background:#fff;color:var(--plum-soft);
+  font-family:Inter,sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;
+  padding:9px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.tab[aria-selected="true"]{background:var(--plum);color:#fff;border-color:var(--plum)}
+.tab:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* ---------- panels ---------- */
+.panel{display:none;padding-top:26px}
+.panel.on{display:block;animation:fade .28s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+h2{
+  font-family:Fraunces,Georgia,serif;font-size:25px;font-weight:600;color:var(--plum);
+  margin:0 0 6px;line-height:1.2;
+}
+.lede{color:var(--plum-soft);font-size:14.5px;margin:0 0 22px;max-width:600px}
+h3{
+  font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);
+  font-weight:700;margin:30px 0 12px;display:flex;align-items:center;gap:10px;
+}
+h3::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card.rescue{border-left:4px solid var(--warn)}
+.card.win{border-left:4px solid var(--good)}
+.card.gold{border-left:4px solid var(--gold)}
+
+.daylab{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--plum);margin-bottom:2px}
+.daynote{font-size:13px;color:var(--plum-soft);margin-bottom:12px}
+
+/* ---------- check rows ---------- */
+.row{
+  display:flex;align-items:flex-start;gap:11px;padding:9px 0;
+  border-top:1px solid var(--line);transition:opacity .4s ease;
+}
+.row:first-of-type{border-top:none}
+.row input{
+  appearance:none;-webkit-appearance:none;flex:0 0 auto;margin-top:2px;
+  width:21px;height:21px;border:1.5px solid var(--plum-soft);border-radius:6px;
+  background:#fff;cursor:pointer;position:relative;transition:all .18s;
+}
+.row input:checked{background:var(--plum);border-color:var(--plum)}
+.row input:checked::after{
+  content:"";position:absolute;left:6.5px;top:2.5px;width:5px;height:10px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg);
+}
+.row input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.row .txt{flex:1;font-size:14.5px;transition:opacity .4s ease}
+.row .txt small{display:block;color:var(--plum-soft);font-size:12.5px;margin-top:1px}
+.row .num{
+  font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;
+  white-space:nowrap;font-variant-numeric:tabular-nums;
+}
+.num.in{color:var(--good)}
+.num.out{color:var(--warn)}
+.num.hold{color:var(--plum-soft)}
+.row.done{opacity:.42}
+.row.done .txt,.row.done .num{text-decoration:line-through;text-decoration-thickness:1px}
+
+/* balance strip */
+.bal{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:12px;padding-top:11px;border-top:1.5px dashed var(--gold-soft);
+  font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--plum-soft);font-weight:600;
+}
+.bal b{font-family:'IBM Plex Mono',monospace;font-size:17px;color:var(--plum);letter-spacing:0;text-transform:none}
+
+/* progress */
+.prog{margin:0 0 20px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 16px}
+.prog .top{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--plum-soft);margin-bottom:8px}
+.bar{height:7px;background:#EADCE4;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--plum));transition:width .45s ease}
+
+/* fork table */
+.fork{display:grid;gap:12px}
+.door{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+.door .hd{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px}
+.door .nm{font-family:Fraunces,serif;font-size:18px;font-weight:600;color:var(--plum)}
+.door .verdict{font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;padding:4px 9px;border-radius:99px;white-space:nowrap}
+.v-yes{background:#E4EDE2;color:var(--good)}
+.v-no{background:#F5E2E2;color:var(--warn)}
+.v-mid{background:#F6EBD8;color:var(--gold)}
+.door p{margin:0 0 10px;font-size:14px;color:var(--ink)}
+.door dl{display:grid;grid-template-columns:1fr auto;gap:5px 12px;margin:0;font-size:13.5px}
+.door dt{color:var(--plum-soft)}
+.door dd{margin:0;font-family:'IBM Plex Mono',monospace;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+
+/* rent fund thermometer */
+.therm{background:var(--plum);color:#fff;border-radius:14px;padding:16px 18px;margin-bottom:16px;box-shadow:var(--shadow)}
+.therm .th{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+.therm .lb{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-soft);font-weight:700}
+.therm .vv{font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600}
+.therm .tube{height:9px;background:rgba(255,255,255,.18);border-radius:99px;overflow:hidden}
+.therm .tube i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-soft),var(--gold));border-radius:99px}
+.therm .note{font-size:12.5px;color:#EBD9E4;margin-top:9px}
+
+.row.move{background:#F4EAF0;margin:0 -18px;padding-left:18px;padding-right:18px}
+.row.move .txt{font-weight:600;color:var(--plum)}
+.num.move{color:var(--gold)}
+
+/* source breakdown */
+.src{background:#F4EAF0;border:1px solid var(--line);border-radius:12px;padding:14px 15px;margin:12px 0 4px}
+.src .st{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--plum);margin-bottom:9px}
+.src table{width:100%;border-collapse:collapse;font-size:13.5px}
+.src td{padding:6px 0;border-bottom:1px solid rgba(91,44,78,.1);vertical-align:top}
+.src tr:last-child td{border-bottom:none}
+.src td.a{font-family:'IBM Plex Mono',monospace;font-weight:600;text-align:right;white-space:nowrap;padding-left:10px;font-variant-numeric:tabular-nums}
+.src td.w{color:var(--plum-soft);font-size:12px}
+.src tr.new td{background:#FBF3DF}
+.src tr.new td.b{font-weight:700;color:var(--gold)}
+.src tr.tot td{border-top:1.5px solid var(--gold-soft);padding-top:9px;font-weight:700;color:var(--plum);font-size:14.5px}
+.onlynew{background:var(--plum);color:#fff;border-radius:10px;padding:11px 13px;margin-top:11px;font-size:13.5px;line-height:1.45}
+.onlynew b{color:var(--gold-soft);font-family:'IBM Plex Mono',monospace;font-size:16px}
+
+
+/* save indicator */
+.savebar{position:sticky;top:96px;z-index:15;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:18px;box-shadow:var(--shadow)}
+.savebar .sl{font-size:12.5px;font-weight:700;color:var(--plum-soft);display:flex;align-items:center;gap:7px}
+.savebar .dot{width:9px;height:9px;border-radius:99px;background:var(--good);flex:0 0 auto}
+.savebar .dot.flash{animation:pop .7s ease}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.9);background:var(--gold)}100%{transform:scale(1)}}
+.savebar .sbtn{border:1px solid var(--plum);background:var(--plum);color:#fff;font-family:Inter,sans-serif;
+  font-size:12px;font-weight:700;padding:8px 14px;border-radius:99px;cursor:pointer;white-space:nowrap}
+.savebar .sbtn:active{opacity:.75}
+.edited{border-color:var(--gold)!important;background:#FDF8EC!important}
+
+/* live calculator */
+.inp{margin-bottom:16px}
+.inp:last-child{margin-bottom:0}
+.inp label{display:block;font-size:12.5px;font-weight:700;color:var(--plum);margin-bottom:6px}
+.ir{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ir .dol{font-family:'IBM Plex Mono',monospace;font-size:19px;color:var(--plum-soft);font-weight:600}
+.ir input{
+  font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:var(--ink);
+  border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;width:135px;background:#fff;
+  -webkit-appearance:none;appearance:none;font-variant-numeric:tabular-nums;
+}
+.ir input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,137,60,.16)}
+.pre{display:flex;gap:5px;flex-wrap:wrap}
+.pre button{
+  border:1px solid var(--line);background:#fff;color:var(--plum-soft);font-family:Inter,sans-serif;
+  font-size:11.5px;font-weight:700;padding:7px 11px;border-radius:99px;cursor:pointer;
+}
+.pre button:active{background:var(--plum);color:#fff}
+.hint{font-size:12px;color:var(--plum-soft);margin-top:5px}
+
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{
+  flex:1;min-width:100px;border:1.5px solid var(--line);background:#fff;color:var(--plum-soft);
+  font-family:Inter,sans-serif;font-size:12.5px;font-weight:700;padding:11px 8px;border-radius:11px;cursor:pointer;
+}
+.seg button.on{background:var(--plum);color:#fff;border-color:var(--plum)}
+.odnote{margin-top:12px;font-size:13.5px;background:#F4EAF0;border-radius:10px;padding:12px 13px;line-height:1.5}
+.odnote b{color:var(--plum)}
+
+.verdict-box{border-radius:16px;padding:19px;margin-bottom:14px;color:#fff;box-shadow:var(--shadow);background:var(--plum)}
+.verdict-box.ok{background:linear-gradient(135deg,#4F6B4A,#3D5539)}
+.verdict-box.warn{background:linear-gradient(135deg,#9B3B3B,#7A2E2E)}
+.verdict-box .vh{font-family:Fraunces,Georgia,serif;font-size:23px;font-weight:600;line-height:1.15}
+.verdict-box .vs{font-size:14px;margin-top:7px;opacity:.93;line-height:1.5}
+.verdict-box .vbar{height:9px;background:rgba(255,255,255,.22);border-radius:99px;overflow:hidden;margin-top:14px}
+.verdict-box .vbar i{display:block;height:100%;background:var(--gold-soft);border-radius:99px;transition:width .4s ease;width:0}
+.verdict-box .vf{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:600;margin-top:8px;opacity:.92}
+
+.callout{background:#EFE3EA;border-radius:12px;padding:15px 17px;font-size:14px;margin:16px 0;border-left:3px solid var(--gold)}
+.callout b{color:var(--plum)}
+
+.rule{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--plum);border-radius:12px;padding:14px 16px;margin-bottom:11px;font-size:14.5px}
+.rule b{display:block;font-family:Fraunces,serif;font-size:16px;color:var(--plum);margin-bottom:3px}
+
+.script{background:var(--plum);color:#F6EDF1;border-radius:14px;padding:18px;font-size:14.5px;line-height:1.6}
+.script b{color:var(--gold-soft)}
+
+.reset{display:block;margin:26px auto 8px;background:none;border:1px solid var(--line);color:var(--plum-soft);
+  font-size:12.5px;padding:8px 16px;border-radius:99px;cursor:pointer;font-family:inherit}
+
+footer{text-align:center;padding:34px 18px 10px;color:var(--gold);font-size:11px;letter-spacing:.3em}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(min-width:700px){.fork{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="crown">♛ J Empire ♛</div>
+  <h1>The Rent Rescue<br>Chapter</h1>
+  <p class="sub">Every path out of August, priced honestly. Pick a lane, then check off the days as you live them.</p>
+  <div class="stone">
+    <div>
+      <div class="lab">Owed to Timberline</div>
+      <div class="amt">$2,049.14</div>
+      <div class="due">3-day notice · pay by Mon Aug 10</div>
+    </div>
+    <div style="font-size:34px">👑</div>
+  </div>
+</header>
+
+<div class="tabbar"><div class="tabs" role="tablist">
+  <button class="tab" role="tab" aria-selected="true" data-p="live">🎛️ Live Numbers</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="all3">👑 You Can Do All Three</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="monday">☀️ Monday Morning</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="rescue">🚨 Rescue · Aug 7–12</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="both">🎯 Car First · Both</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="front">💸 If You Front It</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="crv">🚙 The CR-V Decision</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="planb">🛟 Plan B · No Overdraft</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="fork">⚖️ The Four Doors</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="aug">📓 August Ledger</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="sep">🍂 September · Flex</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="oct">🌉 October Bridge</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="dash">🚗 Dash Engine</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="break">🩹 If It Breaks</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="loop">🔑 Loopholes</button>
+  <button class="tab" role="tab" aria-selected="false" data-p="ideal">💭 The No-Fall-Off Plan</button>
+</div></div>
+
+<div class="wrap">
+
+<!-- ============ LIVE ============ -->
+<section class="panel on" id="live">
+  <h2>Live numbers</h2>
+  <p class="lede">Change any number here and every calculation below rebuilds itself. This tab is the truth — the other tabs are the written version of it. Everything saves automatically.</p>
+
+  <div class="savebar">
+    <span class="sl"><span class="dot" id="saveDot"></span><span id="saveMsg">All numbers saved</span></span>
+    <button class="sbtn" id="saveBtn">Save now</button>
+  </div>
+
+  <div class="callout"><b>How to use it:</b> type a real number over any estimate. Tap a preset to test a scenario. The plan underneath updates instantly and tells you exactly how much dashing is still required. <b>Every change saves by itself</b> &mdash; the dot flashes gold each time. Numbers you&rsquo;ve changed from my estimate get a gold outline so you can see at a glance what&rsquo;s confirmed and what&rsquo;s still a guess.</div>
+
+  <h3>What you have right now</h3>
+  <div class="card">
+    <div class="inp">
+      <label>Balance in the account today</label>
+      <div class="ir"><span class="dol">$</span><input type="number" id="i_bal" value="200" step="1"><div class="pre"><button data-t="i_bal" data-v="0">$0</button><button data-t="i_bal" data-v="50">$50</button><button data-t="i_bal" data-v="200">$200</button></div></div>
+      <div class="hint">What actually cleared after Friday's overdraft and advance</div>
+    </div>
+    <div class="inp">
+      <label>Dashed so far this weekend</label>
+      <div class="ir"><span class="dol">$</span><input type="number" id="i_dash" value="0" step="5"><div class="pre"><button data-t="i_dash" data-v="0">$0</button><button data-t="i_dash" data-v="150">$150</button><button data-t="i_dash" data-v="265">$265</button></div></div>
+      <div class="hint">Update this Sunday night with the real total</div>
+    </div>
+    <div class="inp">
+      <label>Living money you must keep this week</label>
+      <div class="ir"><span class="dol">$</span><input type="number" id="i_live" value="150" step="10"><div class="pre"><button data-t="i_live" data-v="100">$100</button><button data-t="i_live" data-v="150">$150</button></div></div>
+      <div class="hint">Groceries and gas. Never available for rent.</div>
+    </div>
+  </div>
+
+  <h3>The overdraft · which kind is it?</h3>
+  <div class="card">
+    <div class="seg" id="odseg">
+      <button data-od="cash" class="on">Cash / transfer</button>
+      <button data-od="card">Debit card only</button>
+      <button data-od="none">Can't use it</button>
+    </div>
+    <div class="inp" style="margin-top:12px">
+      <label>Overdraft available across both accounts</label>
+      <div class="ir"><span class="dol">$</span><input type="number" id="i_od" value="1000" step="50"><div class="pre"><button data-t="i_od" data-v="0">$0</button><button data-t="i_od" data-v="500">$500</button><button data-t="i_od" data-v="1000">$1,000</button></div></div>
+    </div>
+    <div class="odnote" id="odnote"></div>
+  </div>
+
+  <h3>What you owe</h3>
+  <div class="card">
+    <div class="inp">
+      <label>Rent owed · the notice amount</label>
+      <div class="ir"><span class="dol">$</span><input type="number" id="i_rent" value="2049.14" step="0.01"><div class="pre"><button data-t="i_rent" data-v="2049.14">Notice</button><button data-t="i_rent" data-v="2149.14">+$100 fee</button><button data-t="i_rent" data-v="2249.14">+$200 fee</button></div></div>
+      <div class="hint">Ask Monday whether a late fee has been added since the 5th</div>
+    </div>
+  </div>
+
+  <h3>What's coming in</h3>
+  <div class="card">
+    <div class="inp">
+      <label>Child support · every Tuesday</label>
+      <div class="ir"><span class="dol">$</span><input type="number" id="i_cs1" value="320" step="10"></div>
+      <div class="hint">Weekly. Next one: Tuesday Aug 11.</div>
+    </div>
+    <div class="inp">
+      <label>Child support · every two weeks</label>
+      <div class="ir"><span class="dol">$</span><input type="number" id="i_cs2" value="500" step="10"></div>
+      <div class="hint">First one lands the week of Aug 10, then every 14 days</div>
+    </div>
+    <div class="inp">
+      <label>Paycheck · every two weeks, Fridays</label>
+      <div class="ir"><span class="dol">$</span><input type="number" id="i_pay" value="1100" step="25"></div>
+      <div class="hint">Next: Friday Aug 21</div>
+    </div>
+  </div>
+
+  <h3 id="verdictAnchor">Your plan, right now</h3>
+  <div class="verdict-box" id="verdictBox">
+    <div class="vh" id="vHead">—</div>
+    <div class="vs" id="vSub">—</div>
+    <div class="vbar"><i id="vBar"></i></div>
+    <div class="vf"><span id="vHave">—</span><span id="vNeed">—</span></div>
+  </div>
+
+  <div class="card" id="calcCard">
+    <div class="src">
+      <div class="st" id="calcTitle">Where the money comes from</div>
+      <table id="calcTable"></table>
+      <div class="onlynew" id="calcNote"></div>
+    </div>
+  </div>
+
+  <h3>The car, if you're deciding</h3>
+  <div class="card">
+    <div class="inp">
+      <label>CR-V reinstatement · your share</label>
+      <div class="ir"><span class="dol">$</span><input type="number" id="i_car" value="0" step="50"><div class="pre"><button data-t="i_car" data-v="0">She pays all</button><button data-t="i_car" data-v="791">Split</button><button data-t="i_car" data-v="1391">All you</button></div></div>
+      <div class="hint">Any amount here comes straight out of rent money — watch what happens above</div>
+    </div>
+  </div>
+
+  <h3>Monthly bills · confirmed</h3>
+  <div class="card">
+    <div class="row"><span class="txt">Car loan · Honda CR-V<small>Corrected from $250 — this was wrong in earlier versions</small></span><span class="num out">$580</span></div>
+    <div class="row"><span class="txt">Car insurance</span><span class="num out">$220</span></div>
+    <div class="row"><span class="txt">Light bill</span><span class="num out">$200</span></div>
+    <div class="row"><span class="txt">Cell phone</span><span class="num out">$110</span></div>
+    <div class="row"><span class="txt">Car storage</span><span class="num out">$100</span></div>
+    <div class="row"><span class="txt">Credit cards · Navy + Cap One</span><span class="num out">$50</span></div>
+    <div class="row"><span class="txt">Living money · per week</span><span class="num out">$150</span></div>
+    <div class="bal"><span>Fixed monthly, before rent</span><b>$1,860</b></div>
+  </div>
+
+  <div class="callout"><b>The correction that matters most:</b> the car loan is <b>$580</b>, not the $250 that was in the old blueprint. That's $330 a month more than every earlier version of this plan assumed — about $3,960 a year. It's the single biggest reason the numbers kept feeling wrong to you.</div>
+
+  <button class="reset" id="resetNums">Reset all numbers to defaults</button>
+</section>
+
+<!-- ============ ALL THREE ============ -->
+<section class="panel" id="all3">
+  <h2>You can do all three</h2>
+  <p class="lede">Car back. August rent paid. September&rsquo;s Flex funded. All of it, while your kids eat every week and you still sleep. I ran the whole thing day by day and it never goes negative once. Here is the proof.</p>
+
+  <div class="prog"><div class="top"><span>All-three progress</span><span data-count="all3">0 of 0</span></div><div class="bar"><i data-fill="all3"></i></div></div>
+
+  <div class="verdict-box ok">
+    <div class="vh">Three assignments. Seven weeks. It fits.</div>
+    <div class="vs">The tightest moment in the entire plan is <b>$4.00</b> on Tuesday Aug 11 &mdash; the hour after you get the car back. From there it climbs. You finish September with <b>$532.92</b> in the account and nothing owed to anybody.</div>
+    <div class="vbar"><i style="width:100%"></i></div>
+    <div class="vf"><span>Never goes negative</span><span>End Sept &middot; $532.92</span></div>
+  </div>
+
+  <h3>The three assignments</h3>
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="x1" data-g="all3"><span class="txt"><b>1. Get the CR-V back</b><small>Tuesday Aug 11 &middot; $1,391 &middot; you front it, she repays $650 by Aug 20</small></span><span class="num out">$1,391</span></label>
+    <label class="row"><input type="checkbox" data-k="x2" data-g="all3"><span class="txt"><b>2. Pay August rent in full</b><small>Friday Aug 21 &middot; one transaction &middot; eleven days past the notice, with their written agreement</small></span><span class="num out">$2,049.14</span></label>
+    <label class="row"><input type="checkbox" data-k="x3" data-g="all3"><span class="txt"><b>3. Fund September through Flex</b><small>$1,510 on Sep 5, $515 on Sep 15 &middot; rent hits the office on time, on the 1st</small></span><span class="num out">$2,025</span></label>
+    <div class="bal"><span>Total you move in seven weeks</span><b>$5,465.14</b></div>
+  </div>
+
+  <h3>And you still live</h3>
+  <div class="card win">
+    <div class="daylab">This is not a plan where you starve to win</div>
+    <div class="daynote">$150 comes out every single week for groceries and gas, before rent, before the car, before anything. It is in the timeline below seven separate times. It is never borrowed against.</div>
+    <div class="src">
+      <div class="st">Protected, no matter what</div>
+      <table>
+        <tr><td>Living money &middot; 7 weeks &times; $150</td><td class="a">$1,050</td></tr>
+        <tr><td>Back-to-school &middot; the deferred list</td><td class="a">$200</td></tr>
+        <tr class="new"><td class="b">Never available for rent or the car</td><td class="a b">$1,250</td></tr>
+      </table>
+      <div class="onlynew">If a week comes where $150 isn&rsquo;t enough, take it from the <b>dash target</b>, not from the living money. Being $100 behind on a dash goal is fixable. A week with no groceries is not.</div>
+    </div>
+  </div>
+
+  <h3>The whole thing, day by day</h3>
+
+  <div class="card gold">
+    <div class="daylab">Week 1 &middot; Aug 8&ndash;11 &middot; the car</div>
+    <label class="row"><input type="checkbox" data-k="x4" data-g="all3"><span class="txt">Sat&ndash;Sun &middot; dash<small>Only $25 needed. Anything above it is cushion &mdash; and you should still go hard.</small></span><span class="num in">+$25</span></label>
+    <label class="row"><input type="checkbox" data-k="x5" data-g="all3"><span class="txt">Mon &middot; call Summer Cove, the bank, and Amscot<small>See the Monday Morning tab for exact wording</small></span><span class="num hold">&mdash;</span></label>
+    <label class="row"><input type="checkbox" data-k="x6" data-g="all3"><span class="txt">Tue &middot; child support</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="x7" data-g="all3"><span class="txt">Tue &middot; living money</span><span class="num out">&minus;$150</span></label>
+    <label class="row"><input type="checkbox" data-k="x8" data-g="all3"><span class="txt">Tue &middot; overdraft draw</span><span class="num in">+$1,000</span></label>
+    <label class="row"><input type="checkbox" data-k="x9" data-g="all3"><span class="txt">Tue &middot; PAY THE BANK &mdash; CAR IS BACK &#128663;<small>Written agreement with her signed first. Car stays with you until she pays.</small></span><span class="num out">&minus;$1,391</span></label>
+    <div class="bal"><span>Balance &middot; the tightest hour of the plan</span><b>$4.00</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Week 2 &middot; Aug 12&ndash;18 &middot; hold and dash</div>
+    <div class="daynote">Freeze the debit card. Nothing moves. Dash the dinner rushes after homework starts.</div>
+    <label class="row"><input type="checkbox" data-k="x10" data-g="all3"><span class="txt">Wed &middot; child support &middot; biweekly</span><span class="num in">+$500</span></label>
+    <label class="row"><input type="checkbox" data-k="x11" data-g="all3"><span class="txt">Weeknights &middot; dash target<small>5:30&ndash;8:30, five nights, roughly $60 a night</small></span><span class="num in">+$300</span></label>
+    <label class="row"><input type="checkbox" data-k="x12" data-g="all3"><span class="txt">Thu &middot; Klarna eBay<small>Push it in the app if you can</small></span><span class="num out">&minus;$53.99</span></label>
+    <label class="row"><input type="checkbox" data-k="x13" data-g="all3"><span class="txt">Tue 18 &middot; child support + living money</span><span class="num in">+$170</span></label>
+    <label class="row"><input type="checkbox" data-k="x14" data-g="all3"><span class="txt">Tue 18 &middot; call Summer Cove again to reconfirm the 21st</span><span class="num hold">&mdash;</span></label>
+    <div class="bal"><span>Balance</span><b>$920.01</b></div>
+  </div>
+
+  <div class="card win">
+    <div class="daylab">Week 3 &middot; Aug 20&ndash;21 &middot; rent</div>
+    <div class="src">
+      <div class="st">Where the full $2,049.14 comes from</div>
+      <table>
+        <tr><td>Held since Tuesday<span class="w"> &mdash; two support deposits, untouched</span></td><td class="a">$920.01</td></tr>
+        <tr><td>She repays you<span class="w"> &mdash; deadline in the written agreement</span></td><td class="a">$650</td></tr>
+        <tr><td>Paycheck</td><td class="a">$1,100</td></tr>
+        <tr class="tot"><td>Available Friday</td><td class="a">$2,670.01</td></tr>
+        <tr class="new"><td class="b">More dashing needed for rent</td><td class="a b">$0</td></tr>
+      </table>
+      <div class="onlynew">Pay <b>$2,049.14</b> in one transaction and there&rsquo;s still <b>$620.87</b> standing &mdash; enough to cover the car insurance the same day.</div>
+    </div>
+    <label class="row"><input type="checkbox" data-k="x15" data-g="all3"><span class="txt">Thu 20 &middot; her $650 lands &rarr; straight to the no-card account</span><span class="num move">+$650</span></label>
+    <label class="row"><input type="checkbox" data-k="x16" data-g="all3"><span class="txt">Fri 21 &middot; paycheck</span><span class="num in">+$1,100</span></label>
+    <label class="row"><input type="checkbox" data-k="x17" data-g="all3"><span class="txt">Fri 21 &middot; AUGUST RENT PAID IN FULL &#128081;<small>Screenshot it. Save it. That notice is finally dead.</small></span><span class="num out">&minus;$2,049.14</span></label>
+    <label class="row"><input type="checkbox" data-k="x18" data-g="all3"><span class="txt">Fri 21 &middot; car insurance + Klarna</span><span class="num out">&minus;$231.51</span></label>
+    <div class="bal"><span>Balance</span><b>$389.36</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Weeks 4&ndash;5 &middot; Aug 22&ndash;31 &middot; catch up and build</div>
+    <div class="daynote">All the bills you&rsquo;ve been carrying get cleared, and the September fund starts. This dash window is the one that funds Flex &mdash; don&rsquo;t skip it.</div>
+    <label class="row"><input type="checkbox" data-k="x19" data-g="all3"><span class="txt">Dash target &middot; funds September</span><span class="num in">+$450</span></label>
+    <label class="row"><input type="checkbox" data-k="x20" data-g="all3"><span class="txt">Tue 25 &middot; child support + living money</span><span class="num in">+$170</span></label>
+    <label class="row"><input type="checkbox" data-k="x21" data-g="all3"><span class="txt">Wed 26 &middot; child support &middot; biweekly</span><span class="num in">+$500</span></label>
+    <label class="row"><input type="checkbox" data-k="x22" data-g="all3"><span class="txt">Wed 26 &middot; light, phone, storage, both cards</span><span class="num out">&minus;$460</span></label>
+    <label class="row"><input type="checkbox" data-k="x23" data-g="all3"><span class="txt">Wed 26 &middot; Amscot<small>$0 if the 60-day grace came through &mdash; then you end August at $699</small></span><span class="num out">&minus;$120</span></label>
+    <label class="row"><input type="checkbox" data-k="x24" data-g="all3"><span class="txt">Sun 31 &middot; living money + back-to-school<small>The deferred list. Now you can actually buy it.</small></span><span class="num out">&minus;$350</span></label>
+    <div class="bal"><span>You end August at</span><b>$579.36</b></div>
+  </div>
+
+  <div class="card gold">
+    <div class="daylab">Week 6 &middot; Sep 1&ndash;5 &middot; Flex payment 1</div>
+    <div class="src">
+      <div class="st">Where the $1,510 comes from</div>
+      <table>
+        <tr><td>Carried from August</td><td class="a">$579.36</td></tr>
+        <tr><td>Sep 1 support, less living money</td><td class="a">$170</td></tr>
+        <tr class="new"><td class="b">Dash Sep 1&ndash;4<span class="w"> &mdash; four days, the last real push</span></td><td class="a b">$240</td></tr>
+        <tr><td>Sep 4 paycheck, less Klarna</td><td class="a">$1,048.56</td></tr>
+        <tr class="tot"><td>Available Sep 5</td><td class="a">$2,037.92</td></tr>
+      </table>
+      <div class="onlynew">Flex pays your landlord <b>$2,200</b> on Sep 1. September rent is <b>on time at the office</b> for the first time all year. You just repay Flex on your own paydays.</div>
+    </div>
+    <label class="row"><input type="checkbox" data-k="x25" data-g="all3"><span class="txt">Sep 1 &middot; Flex pays Summer Cove $2,200<small>Nothing leaves your account. Confirm it posted in the app.</small></span><span class="num hold">$0</span></label>
+    <label class="row"><input type="checkbox" data-k="x26" data-g="all3"><span class="txt">Sep 1&ndash;4 &middot; dash target</span><span class="num in">+$240</span></label>
+    <label class="row"><input type="checkbox" data-k="x27" data-g="all3"><span class="txt">Sep 4 &middot; paycheck</span><span class="num in">+$1,100</span></label>
+    <label class="row"><input type="checkbox" data-k="x28" data-g="all3"><span class="txt">Sep 5 &middot; PAY FLEX &mdash; before anything else<small>Do NOT repay the overdraft first. That mistake costs you $862.</small></span><span class="num out">&minus;$1,510</span></label>
+    <div class="bal"><span>Balance</span><b>$527.92</b></div>
+  </div>
+
+  <div class="card win">
+    <div class="daylab">Week 7 &middot; Sep 8&ndash;15 &middot; Flex payment 2</div>
+    <div class="daynote">Zero dashing required. Three support deposits cover it with room to spare.</div>
+    <label class="row"><input type="checkbox" data-k="x29" data-g="all3"><span class="txt">Sep 8 &middot; support + living money</span><span class="num in">+$170</span></label>
+    <label class="row"><input type="checkbox" data-k="x30" data-g="all3"><span class="txt">Sep 9 &middot; support &middot; biweekly</span><span class="num in">+$500</span></label>
+    <label class="row"><input type="checkbox" data-k="x31" data-g="all3"><span class="txt">Sep 15 &middot; support + living money</span><span class="num in">+$170</span></label>
+    <label class="row"><input type="checkbox" data-k="x32" data-g="all3"><span class="txt">Sep 15 &middot; PAY FLEX &mdash; SEPTEMBER RENT DONE &#128081;<small>Total cost $2,030.99 &mdash; cheaper than August&rsquo;s $2,200</small></span><span class="num out">&minus;$515</span></label>
+    <div class="bal"><span>Balance</span><b>$852.92</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Sep 18&ndash;29 &middot; settle up</div>
+    <div class="daynote">The overdraft finally goes back. Spread the bills across the last two support deposits &mdash; the 18th can&rsquo;t carry all of them at once.</div>
+    <label class="row"><input type="checkbox" data-k="x33" data-g="all3"><span class="txt">Sep 18 &middot; paycheck</span><span class="num in">+$1,100</span></label>
+    <label class="row"><input type="checkbox" data-k="x34" data-g="all3"><span class="txt">Sep 18 &middot; REPAY THE OVERDRAFT &mdash; you owe nobody now<small>Seven weeks after you drew it. This is the day it&rsquo;s finally clean.</small></span><span class="num out">&minus;$1,000</span></label>
+    <label class="row"><input type="checkbox" data-k="x35" data-g="all3"><span class="txt">Sep 18 &middot; car loan + insurance<small>The CR-V payment restarts. This is the ongoing cost of keeping it.</small></span><span class="num out">&minus;$800</span></label>
+    <label class="row"><input type="checkbox" data-k="x36" data-g="all3"><span class="txt">Sep 22 &middot; support, living money, light bill</span><span class="num out">&minus;$30</span></label>
+    <label class="row"><input type="checkbox" data-k="x37" data-g="all3"><span class="txt">Sep 23 &middot; support, then phone, storage, cards</span><span class="num in">+$240</span></label>
+    <label class="row"><input type="checkbox" data-k="x38" data-g="all3"><span class="txt">Sep 29 &middot; support + living money</span><span class="num in">+$170</span></label>
+    <div class="bal"><span>You end September at</span><b>$532.92</b></div>
+  </div>
+
+  <h3>What it actually costs you in hours</h3>
+  <div class="card gold">
+    <div class="src">
+      <div class="st">The entire dash bill, seven weeks</div>
+      <table>
+        <tr><td>Aug 8&ndash;9<span class="w"> &mdash; gets the car back</span></td><td class="a">$25</td></tr>
+        <tr><td>Aug 12&ndash;20<span class="w"> &mdash; weeknight dinner rushes</span></td><td class="a">$300</td></tr>
+        <tr><td>Aug 22&ndash;31<span class="w"> &mdash; funds Flex</span></td><td class="a">$450</td></tr>
+        <tr><td>Sep 1&ndash;4<span class="w"> &mdash; the last push</span></td><td class="a">$240</td></tr>
+        <tr class="tot"><td>Total across seven weeks</td><td class="a">$1,015</td></tr>
+        <tr class="new"><td class="b">Per week</td><td class="a b">about $145</td></tr>
+      </table>
+      <div class="onlynew">That&rsquo;s roughly <b>7&ndash;8 hours a week</b> &mdash; two dinner rushes, or one weekend morning. Not every day. Not all day. You have a sitter for the weekends and the weeknight windows are after homework starts. This is a schedule a working mother of five can actually hold.</div>
+    </div>
+  </div>
+
+  <h3>The four rules that make it work</h3>
+  <div class="rule"><b>1. Written agreement before the keys</b>Her $650 is rent money on loan. &ldquo;Paid in full by August 20, 2026,&rdquo; in writing, notarized, and the car stays in your possession until it lands. Everything in this plan after Aug 20 assumes that money shows up.</div>
+  <div class="rule"><b>2. Call Summer Cove Monday and give them Aug 21 in writing</b>You&rsquo;re paying eleven days past a live notice. That call is the only thing standing between you and a filing. Call again on the 18th to reconfirm.</div>
+  <div class="rule"><b>3. Flex before the bank on Sep 5</b>The overdraft has no court date behind it. Rent does. If both can&rsquo;t happen, Flex wins and the overdraft waits until Sep 18. Getting this backwards costs you $862.</div>
+  <div class="rule"><b>4. Living money is untouchable in both directions</b>$150 a week comes out first, every week. And it never gets raided for rent. If a week runs short, the dash target absorbs it &mdash; not the groceries.</div>
+
+  <h3>What would break it</h3>
+  <div class="rule"><b>She doesn&rsquo;t repay by Aug 20</b>Then Aug 21 is $650 short and rent doesn&rsquo;t get paid. Recovery: dash $650 across Aug 22&ndash;31 and pay rent Sept 1 &mdash; but that collides with Flex and September starts underwater. This is the biggest single risk in the plan and it is not in your control. Which is exactly why the paper matters.</div>
+  <div class="rule"><b>Summer Cove files during the eleven days</b>You&rsquo;d be served and have five business days to respond. Don&rsquo;t ignore it. Paying in full usually ends it, though court costs may be added. The written agreement is your best defense.</div>
+  <div class="rule"><b>A support deposit slips</b>There&rsquo;s no overdraft left to absorb it &mdash; it&rsquo;s already in the car. Add a dash shift that same week. Don&rsquo;t wait to see if it resolves.</div>
+  <div class="rule"><b>You skip the Aug 22&ndash;31 window</b>That $450 is what funds Flex. Skip it and Sep 5 comes up short, which puts September&rsquo;s rent at risk and undoes everything August cost you.</div>
+
+  <div class="callout"><b>So here&rsquo;s the honest read.</b> This is the hardest seven weeks you&rsquo;ve planned in a while, and it works. Not barely &mdash; it works with a $532 cushion at the end, groceries every week, back-to-school bought, the car in your driveway, and September&rsquo;s rent hitting the office <em>on time</em>. Two of the pieces depend on other people: the bank moving to Tuesday and her paying you back by the 20th. You&rsquo;ll know both by Monday afternoon. Everything else on this page is just you doing what you already do &mdash; and $145 a week of dashing is genuinely less than you were bracing for.</div>
+</section>
+
+<!-- ============ MONDAY ============ -->
+<section class="panel" id="monday">
+  <h2>Monday morning</h2>
+  <p class="lede">School starts today. The notice expires today. But Summer Cove takes no partial payments — so today you pay them <em>nothing</em>. Today is calls. Wednesday is money.</p>
+
+  <div class="prog"><div class="top"><span>Monday progress</span><span data-count="monday">0 of 0</span></div><div class="bar"><i data-fill="monday"></i></div></div>
+
+  <div class="callout"><b>Why you don't pay today:</b> they won't accept anything less than $2,049.14 in one payment, and today you can reach about $1,635. Handing over a partial they've said they won't take just moves money out of your control. Wednesday the 12th, the $500 support deposit closes the gap and you pay the whole thing at once.</div>
+
+  <div class="card rescue">
+    <div class="daylab">Step 1 · before the kids leave</div>
+    <label class="row"><input type="checkbox" data-k="m1" data-g="monday"><span class="txt">Five kids out the door<small>First day. Whatever's not bought yet, it waits.</small></span><span class="num hold">—</span></label>
+    <label class="row"><input type="checkbox" data-k="m2" data-g="monday"><span class="txt">Count the weekend dash total<small>Whatever it is, it is. The plan bends around the real number.</small></span><span class="num hold">goal $265</span></label>
+    <label class="row"><input type="checkbox" data-k="m3" data-g="monday"><span class="txt">Confirm child support posted</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="m3b" data-g="monday"><span class="txt">Confirm the overdraft can be drawn as CASH<small>Not just a cushion that covers transactions. If it can't — go straight to the Plan B tab.</small></span><span class="num hold">decides everything</span></label>
+  </div>
+
+  <div class="card gold">
+    <div class="daylab">Step 2 · call Timberline / Summer Cove first</div>
+    <div class="daynote">(407) 892-6611 · this call is the one that keeps a filing off your record.</div>
+    <label class="row"><input type="checkbox" data-k="m4" data-g="monday"><span class="txt">Tell them the date: full $2,049.14 on Wednesday Aug 12<small>"I'll have the entire balance Wednesday. I'm not asking to split it — I want you to know the exact date."</small></span><span class="num hold">—</span></label>
+    <label class="row"><input type="checkbox" data-k="m5" data-g="monday"><span class="txt">Ask what's included in the $2,049.14<small>And whether any late fee comes off if it's paid in full that day</small></span><span class="num in">up to $150</span></label>
+    <label class="row"><input type="checkbox" data-k="m6" data-g="monday"><span class="txt">Ask them to email you confirmation<small>"Can you send that to me in writing so I have it?" — this is the paper that matters</small></span><span class="num hold">—</span></label>
+  </div>
+
+  <div class="card rescue">
+    <div class="daylab">Step 3 · call the bank about the CR-V</div>
+    <div class="daynote">Second call, not first. See the CR-V tab for the full breakdown.</div>
+    <label class="row"><input type="checkbox" data-k="m6b" data-g="monday"><span class="txt">Ask: can the $1,391 deadline move to Tuesday or Wednesday?<small>A third party is bringing funds. Her $600 lands Tuesday — a Monday wall makes this impossible.</small></span><span class="num hold">—</span></label>
+    <label class="row"><input type="checkbox" data-k="m6c" data-g="monday"><span class="txt">Ask: has it gone to auction yet?<small>Before auction, you have options. After, you don't.</small></span><span class="num hold">—</span></label>
+    <label class="row"><input type="checkbox" data-k="m6d" data-g="monday"><span class="txt">Ask: can a third party refinance it into their name?<small>The only version that actually gets your name off the loan</small></span><span class="num hold">—</span></label>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Step 4 · hold the money</div>
+    <label class="row"><input type="checkbox" data-k="m9" data-g="monday"><span class="txt">Pull the week's living money<small>Groceries and gas. This one is not negotiable.</small></span><span class="num out">−$150</span></label>
+    <label class="row"><input type="checkbox" data-k="m10" data-g="monday"><span class="txt">Freeze the debit card until Wednesday<small>$635 sitting in an account with a card on it is $635 that can vanish</small></span><span class="num hold">—</span></label>
+    <label class="row"><input type="checkbox" data-k="m7" data-g="monday"><span class="txt">Do NOT draw the overdraft yet<small>Draw it Wednesday, the same day you pay. Not a day sooner.</small></span><span class="num hold">wait</span></label>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Step 5 · the free money calls</div>
+    <div class="daynote">Ten minutes. Worth more than a dash shift.</div>
+    <label class="row"><input type="checkbox" data-k="m11" data-g="monday"><span class="txt">Amscot · ask for the 60-day grace period by name<small>Must be before the due date. Florida law, no fee.</small></span><span class="num in">$120</span></label>
+    <label class="row"><input type="checkbox" data-k="m12" data-g="monday"><span class="txt">Apply for free/reduced school lunch online<small>Biggest recurring win available to you. Today, not "this week."</small></span><span class="num in">~$120/mo</span></label>
+  </div>
+
+  <div class="card win">
+    <div class="daylab">Wednesday Aug 12 · the actual payment</div>
+
+    <div class="src">
+      <div class="st">Where the full $2,049.14 comes from</div>
+      <table>
+        <tr><td>Held from Monday<span class="w"> — $200 on hand + $320 support + $265 dashed, less living money</span></td><td class="a">$635</td></tr>
+        <tr><td>Child support · lands Wednesday</td><td class="a">$500</td></tr>
+        <tr><td>Overdraft draw<span class="w"> — both accounts, repaid Aug 21</span></td><td class="a">$1,000</td></tr>
+        <tr class="new"><td class="b">New money still needed</td><td class="a b">$0</td></tr>
+        <tr class="tot"><td>Available Wednesday</td><td class="a">$2,135</td></tr>
+      </table>
+      <div class="onlynew">Pay <b>$2,049.14</b> in one payment. $85.86 left over. The only new money this whole week asked of you was the <b>$265</b> you dashed over the weekend.</div>
+    </div>
+
+    <label class="row"><input type="checkbox" data-k="m13" data-g="monday"><span class="txt">Draw the overdraft · both accounts</span><span class="num in">+$1,000</span></label>
+    <label class="row"><input type="checkbox" data-k="m14" data-g="monday"><span class="txt">PAY IN FULL — screenshot the confirmation 👑</span><span class="num out">−$2,049.14</span></label>
+  </div>
+
+  <div class="callout"><b>If Monday goes sideways:</b> the only thing that truly has to happen is the Timberline call. Everything else can move to Tuesday. Tell them Wednesday, get it in writing — a landlord holding a written date two days out almost never files.</div>
+</section>
+
+<!-- ============ RESCUE ============ -->
+<section class="panel" id="rescue">
+  <h2>Rescue mode</h2>
+  <p class="lede">Six days. This is the only tab that matters until the rent reads $0. Everything here assumes the overdraft, no advances.</p>
+
+  <div class="prog"><div class="top"><span>Rescue progress</span><span data-count="rescue">0 of 0</span></div><div class="bar"><i data-fill="rescue"></i></div></div>
+
+  <div class="callout"><b>Protected floor:</b> $100–150 a week for groceries and gas never gets touched, not even for rent. A plan the kids can't live inside isn't a plan. It's built into every line below.</div>
+
+  <h3>Friday · Aug 7 · today</h3>
+  <div class="card rescue">
+    <div class="daylab">Today</div>
+    <div class="daynote">Paycheck landed. Overdraft cleared, advance taken. What's left is the starting line.</div>
+    <label class="row"><input type="checkbox" data-k="r1" data-g="rescue"><span class="txt">Confirm what actually cleared<small>Check the real balance after the $540 overdraft and $360 advance</small></span><span class="num hold">≈ $200</span></label>
+    <label class="row"><input type="checkbox" data-k="r2" data-g="rescue"><span class="txt">Freeze the debit card<small>In the app. Nothing swipes until Aug 21 — no accidental $35 fees</small></span><span class="num hold">$0</span></label>
+    <label class="row"><input type="checkbox" data-k="r3" data-g="rescue"><span class="txt">Check overdraft type on both accounts<small>Line of credit = one interest charge. Per-item = $20–35 every swipe</small></span><span class="num hold">—</span></label>
+    <label class="row"><input type="checkbox" data-k="r4" data-g="rescue"><span class="txt">Confirm sitter for Sat + Sun</span><span class="num hold">—</span></label>
+    <div class="bal"><span>Starting balance</span><b>$200</b></div>
+  </div>
+
+  <h3>Sat–Sun · Aug 8–9 · the weekend</h3>
+  <div class="card">
+    <div class="daylab">Dash target · $265</div>
+    <div class="daynote">Roughly 13–15 hours. Multi-app DoorDash and Uber Eats at once, take whatever pays better per mile. Cash out daily. Stop at the number — school starts Monday and you need to be standing.</div>
+    <label class="row"><input type="checkbox" data-k="r5" data-g="rescue"><span class="txt">Saturday 11–2 · lunch rush</span><span class="num in">+$65</span></label>
+    <label class="row"><input type="checkbox" data-k="r6" data-g="rescue"><span class="txt">Saturday 5–9 · dinner rush</span><span class="num in">+$100</span></label>
+    <label class="row"><input type="checkbox" data-k="r7" data-g="rescue"><span class="txt">Sunday 11–2 · lunch rush</span><span class="num in">+$45</span></label>
+    <label class="row"><input type="checkbox" data-k="r8" data-g="rescue"><span class="txt">Sunday 4–8 · dinner rush</span><span class="num in">+$55</span></label>
+    <label class="row"><input type="checkbox" data-k="r9" data-g="rescue"><span class="txt">Cash out both apps Sunday night<small>Instant Pay / Fast Pay — the $1.99 is worth it this week</small></span><span class="num hold">—</span></label>
+    <div class="bal"><span>Running balance</span><b>$465</b></div>
+  </div>
+
+  <h3>Monday · Aug 10 · calls only</h3>
+  <div class="card rescue">
+    <div class="daylab">You pay them nothing today</div>
+    <div class="daynote">Summer Cove accepts no partial payments. Today's job is the phone call and holding the money still.</div>
+
+    <div class="src">
+      <div class="st">What you'll be holding Monday night</div>
+      <table>
+        <tr><td>Already in the account</td><td class="a">$200</td></tr>
+        <tr><td>Child support &middot; lands today</td><td class="a">$320</td></tr>
+        <tr class="new"><td class="b">Dashed Sat + Sun<span class="w"> &mdash; the only new money</span></td><td class="a b">$265</td></tr>
+        <tr><td>Less living money &middot; protected</td><td class="a">&minus;$150</td></tr>
+        <tr class="tot"><td>Held for Wednesday</td><td class="a">$635</td></tr>
+      </table>
+      <div class="onlynew">Only <b>$265</b> of this is money you have to earn. The rest already exists or arrives by itself.</div>
+    </div>
+
+    <label class="row"><input type="checkbox" data-k="r10" data-g="rescue"><span class="txt">Call Summer Cove &middot; (407) 892-6611<small>"I'll have the full $2,049.14 on Wednesday the 12th." Ask for it in writing.</small></span><span class="num hold">&mdash;</span></label>
+    <label class="row"><input type="checkbox" data-k="r11" data-g="rescue"><span class="txt">Call Amscot &middot; ask for the 60-day grace period by name<small>Florida law, no extra fee. Must be before the due date.</small></span><span class="num in">saves $120</span></label>
+    <label class="row"><input type="checkbox" data-k="r12" data-g="rescue"><span class="txt">Child support lands</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="r15" data-g="rescue"><span class="txt">Pull the week's living money<small>Groceries + gas. Untouchable.</small></span><span class="num out">&minus;$150</span></label>
+    <label class="row"><input type="checkbox" data-k="r13" data-g="rescue"><span class="txt">Freeze the debit card &middot; hold $635 still until Wednesday</span><span class="num hold">&mdash;</span></label>
+    <div class="bal"><span>Held for Wednesday</span><b>$635</b></div>
+  </div>
+
+  <h3>Wednesday &middot; Aug 12 &middot; payment day</h3>
+  <div class="card win">
+    <div class="daylab">Full payment, one transaction</div>
+
+    <div class="src">
+      <div class="st">Where the full $2,049.14 comes from</div>
+      <table>
+        <tr><td>Held from Monday</td><td class="a">$635</td></tr>
+        <tr><td>Child support &middot; lands today</td><td class="a">$500</td></tr>
+        <tr><td>Overdraft draw &middot; both accounts<span class="w"> &mdash; repaid Aug 21</span></td><td class="a">$1,000</td></tr>
+        <tr class="new"><td class="b">New money still needed</td><td class="a b">$0</td></tr>
+        <tr class="tot"><td>Available</td><td class="a">$2,135</td></tr>
+      </table>
+      <div class="onlynew">Pay <b>$2,049.14</b> in one transaction. <b>$85.86</b> left standing.</div>
+    </div>
+
+    <label class="row"><input type="checkbox" data-k="r16" data-g="rescue"><span class="txt">Child support lands</span><span class="num in">+$500</span></label>
+    <label class="row"><input type="checkbox" data-k="r14" data-g="rescue"><span class="txt">Draw the overdraft &middot; both accounts<small>Today, not Monday. Same day you pay, so it sits nowhere.</small></span><span class="num in">+$1,000</span></label>
+    <label class="row"><input type="checkbox" data-k="r17" data-g="rescue"><span class="txt">PAY IN FULL &mdash; August rent CLEARED &#128081;<small>Screenshot the confirmation. Save it. The notice is dead.</small></span><span class="num out">&minus;$2,049.14</span></label>
+    <div class="bal"><span>Left over</span><b>$85.86</b></div>
+  </div>
+</section>
+
+<!-- ============ PLAN B ============ -->
+<section class="panel" id="planb">
+  <h2>Plan B · no overdraft</h2>
+  <p class="lede">If that $1,000 can't be pulled out as cash, this is the plan. August still closes — and you end the month with the exact same money. What changes is the calendar, and the risk.</p>
+
+  <div class="prog"><div class="top"><span>Plan B progress</span><span data-count="planb">0 of 0</span></div><div class="bar"><i data-fill="planb"></i></div></div>
+
+  <div class="callout"><b>Read this before you panic:</b> Plan A and Plan B both end August at <b>$362.17</b>. The overdraft was never extra money — it was borrowed on the 12th and repaid on the 21st. Losing it doesn't cost you a dollar. It costs you <b>nine days</b>, and those nine days are the whole risk.</div>
+
+  <h3>What actually changes</h3>
+  <div class="card">
+    <div class="src">
+      <div class="st">Plan A vs Plan B, side by side</div>
+      <table>
+        <tr><td>Rent paid <span class="w">— Plan A, with overdraft</span></td><td class="a">Aug 12</td></tr>
+        <tr><td>Rent paid <span class="w">— Plan B, without</span></td><td class="a">Aug 21</td></tr>
+        <tr><td>Days past the notice</td><td class="a">2 vs 11</td></tr>
+        <tr><td>Overdraft fees avoided</td><td class="a">+$25–40</td></tr>
+        <tr class="new"><td class="b">Extra dashing required</td><td class="a b">$0</td></tr>
+        <tr class="tot"><td>End of August, both plans</td><td class="a">$362.17</td></tr>
+      </table>
+      <div class="onlynew">Plan B is very slightly <b>cheaper</b>. It is also the only one where an eviction can be filed while you're waiting for payday. That's the trade — money isn't the problem here, exposure is.</div>
+    </div>
+  </div>
+
+  <h3>The one thing that makes Plan B work</h3>
+  <div class="card gold">
+    <div class="daylab">Monday's phone call becomes everything</div>
+    <div class="daynote">In Plan A the call is a courtesy. In Plan B it's the only thing standing between you and a filing.</div>
+    <label class="row"><input type="checkbox" data-k="b1" data-g="planb"><span class="txt">Call Monday and give them the exact date: Friday Aug 21<small>"I get paid the 21st. I'll have the entire $2,049.14 that day. I'm not asking to split it."</small></span><span class="num hold">—</span></label>
+    <label class="row"><input type="checkbox" data-k="b2" data-g="planb"><span class="txt">Ask them to put it in writing<small>Email or text. A landlord who agreed in writing to a date rarely files before it.</small></span><span class="num hold">—</span></label>
+    <label class="row"><input type="checkbox" data-k="b3" data-g="planb"><span class="txt">Ask what the late fee grows to by the 21st<small>Budget for it now, not on payday</small></span><span class="num out">unknown</span></label>
+    <label class="row"><input type="checkbox" data-k="b4" data-g="planb"><span class="txt">Call again Aug 18 to reconfirm<small>Three days out. Keeps you visible and cooperative on their file.</small></span><span class="num hold">—</span></label>
+    <label class="row"><input type="checkbox" data-k="b5" data-g="planb"><span class="txt">If they file anyway — you have 5 business days to respond<small>Do not ignore court papers. Responding preserves everything.</small></span><span class="num hold">—</span></label>
+  </div>
+
+  <h3>Plan B ledger · Aug 10 → Aug 21</h3>
+
+  <div class="card rescue">
+    <div class="daylab">Mon Aug 10</div>
+    <label class="row"><input type="checkbox" data-k="b6" data-g="planb"><span class="txt">Child support</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="b7" data-g="planb"><span class="txt">Living money · week</span><span class="num out">−$150</span></label>
+    <label class="row"><input type="checkbox" data-k="b8" data-g="planb"><span class="txt">Freeze the debit card — nothing moves until the 21st<small>Eleven days of holding money still. This is the hard part.</small></span><span class="num hold">—</span></label>
+    <div class="bal"><span>Held</span><b>$635.00</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Wed Aug 12 – Wed Aug 20</div>
+    <label class="row"><input type="checkbox" data-k="b9" data-g="planb"><span class="txt">Aug 12 · child support</span><span class="num in">+$500</span></label>
+    <label class="row"><input type="checkbox" data-k="b10" data-g="planb"><span class="txt">Aug 14 · Klarna eBay<small>Push it in-app if you can — see the Loopholes tab</small></span><span class="num out">−$53.99</span></label>
+    <label class="row"><input type="checkbox" data-k="b11" data-g="planb"><span class="txt">Weeknight dash · same $300 target as Plan A</span><span class="num in">+$300</span></label>
+    <label class="row"><input type="checkbox" data-k="b12" data-g="planb"><span class="txt">Aug 17 · child support</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="b13" data-g="planb"><span class="txt">Aug 17 · living money + Klarna VS</span><span class="num out">−$168.19</span></label>
+    <div class="bal"><span>Held</span><b>$1,532.82</b></div>
+  </div>
+
+  <div class="card win">
+    <div class="daylab">Fri Aug 21 · payday · rent day</div>
+
+    <div class="src">
+      <div class="st">Where the full $2,049.14 comes from</div>
+      <table>
+        <tr><td>Held since Aug 10<span class="w"> — support deposits, untouched</span></td><td class="a">$1,232.82</td></tr>
+        <tr class="new"><td class="b">Dashed Aug 8–20<span class="w"> — the only new money, same as Plan A</span></td><td class="a b">$565</td></tr>
+        <tr><td>Paycheck</td><td class="a">$1,100</td></tr>
+        <tr><td>Less bills already paid<span class="w"> — Klarna, living money</span></td><td class="a">−$232.18</td></tr>
+        <tr class="tot"><td>Available Aug 21</td><td class="a">$2,632.82</td></tr>
+      </table>
+      <div class="onlynew">Pay <b>$2,049.14</b> in one transaction. <b>$583.68</b> left — which covers the car loan and insurance the same day.</div>
+    </div>
+
+    <label class="row"><input type="checkbox" data-k="b14" data-g="planb"><span class="txt">Paycheck</span><span class="num in">+$1,100</span></label>
+    <label class="row"><input type="checkbox" data-k="b15" data-g="planb"><span class="txt">PAY IN FULL — August rent CLEARED 👑</span><span class="num out">−$2,049.14</span></label>
+    <label class="row"><input type="checkbox" data-k="b16" data-g="planb"><span class="txt">Car loan · Honda CR-V</span><span class="num out">−$580</span></label>
+    <label class="row"><input type="checkbox" data-k="b17" data-g="planb"><span class="txt">Car insurance</span><span class="num out">−$220</span></label>
+    <label class="row"><input type="checkbox" data-k="b18" data-g="planb"><span class="txt">Klarna · Ulta</span><span class="num out">−$11.51</span></label>
+    <div class="bal"><span>Balance</span><b>$102.17</b></div>
+  </div>
+
+  <div class="callout"><b>From Aug 22 onward, Plan A and Plan B are identical.</b> Same $200 dash target, same bills, same $362.17 at month end, same September. Switch back to the August Ledger tab from the 22nd on — everything there still applies.</div>
+
+  <h3>Where Plan B is fragile</h3>
+  <div class="rule"><b>Eleven days of holding money still</b>$1,500 sitting in an account with five kids and a school year starting is the real test. Freeze the card. If you can, move it to the account with no card attached. This is the single most likely way Plan B fails, and it has nothing to do with math.</div>
+  <div class="rule"><b>A missed deposit hurts more here</b>There's no overdraft to absorb a shock. If a support payment slips, add a dash shift immediately — don't wait to see if it resolves.</div>
+  <div class="rule"><b>The late fee grows</b>Nine extra days may add to what's owed. Ask Monday so the 21st doesn't surprise you.</div>
+  <div class="rule"><b>Do not let the car take from this</b>In Plan B there is zero slack. Any dollar toward the $1,391 means rent isn't paid on the 21st either — and there's no next payday until Sept 4.</div>
+</section>
+
+<!-- ============ CAR FIRST ============ -->
+<section class="panel" id="both">
+  <h2>Car first, then rent</h2>
+  <p class="lede">You asked whether there&rsquo;s any way to save both. There is. It runs on three conditions, and it is the hardest version of August &mdash; but it is real, and here is every number.</p>
+
+  <div class="prog"><div class="top"><span>Car-first progress</span><span data-count="both">0 of 0</span></div><div class="bar"><i data-fill="both"></i></div></div>
+
+  <div class="callout"><b>The short answer: yes.</b> Reinstate the CR-V Tuesday Aug 11, then pay rent in full Friday Aug 21 when the paycheck lands. Nothing else in the plan changes. What it costs is <b>eleven days of eviction exposure</b> and roughly <b>$1,200 of dashing</b> across three and a half weeks.</div>
+
+  <h3>The three conditions</h3>
+  <div class="card rescue">
+    <div class="daylab">All three must be true. If any one fails, this plan fails.</div>
+    <label class="row"><input type="checkbox" data-k="t1" data-g="both"><span class="txt"><b>1. The bank extends to Tuesday Aug 11</b><small>Their deadline is Monday. Your Tuesday support and her money both land Tuesday. Call Monday morning and ask &mdash; this is the very first thing.</small></span><span class="num hold">must confirm</span></label>
+    <label class="row"><input type="checkbox" data-k="t2" data-g="both"><span class="txt"><b>2. She sends $650 by Tuesday</b><small>Without her money this collapses &mdash; see the bottom of this tab for what it looks like at $0 from her.</small></span><span class="num in">$650</span></label>
+    <label class="row"><input type="checkbox" data-k="t3" data-g="both"><span class="txt"><b>3. Summer Cove is told Monday that rent lands Aug 21</b><small>In writing. This call is the only thing standing between you and a filing during those eleven days.</small></span><span class="num hold">critical</span></label>
+  </div>
+
+  <h3>Tuesday Aug 11 &middot; the car</h3>
+  <div class="card gold">
+    <div class="src">
+      <div class="st">Where the $1,391 comes from</div>
+      <table>
+        <tr><td>In the account today</td><td class="a">$200</td></tr>
+        <tr class="new"><td class="b">Weekend dash<span class="w"> &mdash; target raised from $265</span></td><td class="a b">$400</td></tr>
+        <tr><td>Child support &middot; Tuesday</td><td class="a">$320</td></tr>
+        <tr><td>Less living money &middot; protected</td><td class="a">&minus;$150</td></tr>
+        <tr><td>Your friend sends</td><td class="a">$650</td></tr>
+        <tr class="tot"><td>Available Tuesday</td><td class="a">$1,420</td></tr>
+        <tr class="tot"><td>Pay the bank</td><td class="a">&minus;$1,391</td></tr>
+      </table>
+      <div class="onlynew">Leaves <b>$29</b>. The weekend dash target moves from $265 to <b>$400</b> &mdash; that&rsquo;s the price of doing the car first. Overdraft stays completely untouched.</div>
+    </div>
+    <label class="row"><input type="checkbox" data-k="t4" data-g="both"><span class="txt">Weekend dash &middot; $400 target<small>Higher than Plan A&rsquo;s $265. This is the single hardest ask of the whole month.</small></span><span class="num in">+$400</span></label>
+    <label class="row"><input type="checkbox" data-k="t5" data-g="both"><span class="txt">Child support &middot; Tuesday</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="t6" data-g="both"><span class="txt">Her $650 clears<small>Confirm it has actually landed before you pay the bank</small></span><span class="num in">+$650</span></label>
+    <label class="row"><input type="checkbox" data-k="t7" data-g="both"><span class="txt">PAY THE BANK &mdash; CR-V reinstated &#128663;<small>Get a receipt and written confirmation the repo is reversed</small></span><span class="num out">&minus;$1,391</span></label>
+    <div class="bal"><span>Balance</span><b>$29.00</b></div>
+  </div>
+
+  <h3>Aug 12 &ndash; Aug 20 &middot; the hold</h3>
+  <div class="card">
+    <div class="daylab">Nine days of holding money still</div>
+    <div class="daynote">Freeze the debit card. Move every dollar to the account with no card on it. This stretch is where the plan is most likely to break &mdash; not on math, on temptation.</div>
+    <label class="row"><input type="checkbox" data-k="t8" data-g="both"><span class="txt">Aug 12 &middot; child support &middot; biweekly</span><span class="num in">+$500</span></label>
+    <label class="row"><input type="checkbox" data-k="t9" data-g="both"><span class="txt">Aug 14 &middot; Klarna eBay<small>Push it in-app if you can &mdash; see Loopholes</small></span><span class="num out">&minus;$53.99</span></label>
+    <label class="row"><input type="checkbox" data-k="t10" data-g="both"><span class="txt">Weeknight dash &middot; $300 target<small>Dinner rushes only, 5:30&ndash;8:30, five nights</small></span><span class="num in">+$300</span></label>
+    <label class="row"><input type="checkbox" data-k="t11" data-g="both"><span class="txt">Aug 18 &middot; child support &middot; Tuesday</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="t12" data-g="both"><span class="txt">Aug 18 &middot; living money</span><span class="num out">&minus;$150</span></label>
+    <label class="row"><input type="checkbox" data-k="t13" data-g="both"><span class="txt">Call Summer Cove again Aug 18 to reconfirm the 21st<small>Three days out. Keeps you visible and cooperative on their file.</small></span><span class="num hold">&mdash;</span></label>
+    <div class="bal"><span>Held for rent</span><b>$945.01</b></div>
+  </div>
+
+  <h3>Friday Aug 21 &middot; rent day</h3>
+  <div class="card win">
+    <div class="src">
+      <div class="st">Where the full $2,049.14 comes from</div>
+      <table>
+        <tr><td>Held since Tuesday<span class="w"> &mdash; support deposits, untouched</span></td><td class="a">$645.01</td></tr>
+        <tr class="new"><td class="b">Dashed Aug 12&ndash;20</td><td class="a b">$300</td></tr>
+        <tr><td>Paycheck</td><td class="a">$1,100</td></tr>
+        <tr class="tot"><td>Available</td><td class="a">$2,045.01</td></tr>
+        <tr class="tot"><td>Rent owed</td><td class="a">$2,049.14</td></tr>
+      </table>
+      <div class="onlynew">Short by <b>$4.13</b>. That&rsquo;s not a rounding joke &mdash; it means this day has <em>zero</em> slack. One order more over those nine days covers it. But car insurance ($220) and Klarna ($11.51) are also due, so realistically you want <b>$550</b> from the weeknight window, not $300.</div>
+    </div>
+    <label class="row"><input type="checkbox" data-k="t14" data-g="both"><span class="txt">Paycheck</span><span class="num in">+$1,100</span></label>
+    <label class="row"><input type="checkbox" data-k="t15" data-g="both"><span class="txt">PAY RENT IN FULL &mdash; one transaction &#128081;<small>Screenshot it. Eleven days late, but paid and documented.</small></span><span class="num out">&minus;$2,049.14</span></label>
+    <label class="row"><input type="checkbox" data-k="t16" data-g="both"><span class="txt">Car insurance</span><span class="num out">&minus;$220</span></label>
+    <label class="row"><input type="checkbox" data-k="t17" data-g="both"><span class="txt">Klarna &middot; Ulta</span><span class="num out">&minus;$11.51</span></label>
+    <div class="bal"><span>If weeknight dash hit $550</span><b>$14.36</b></div>
+  </div>
+
+  <h3>Aug 22 &ndash; Aug 31 &middot; the rest of the month</h3>
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="t18" data-g="both"><span class="txt">Dash &middot; $450 target<small>Higher than Plan A&rsquo;s $200. This is what funds September.</small></span><span class="num in">+$450</span></label>
+    <label class="row"><input type="checkbox" data-k="t19" data-g="both"><span class="txt">Aug 25 &middot; support $320, living $150</span><span class="num in">+$170</span></label>
+    <label class="row"><input type="checkbox" data-k="t20" data-g="both"><span class="txt">Aug 26 &middot; support biweekly</span><span class="num in">+$500</span></label>
+    <label class="row"><input type="checkbox" data-k="t21" data-g="both"><span class="txt">Aug 26 &middot; light $200, phone $110, storage $100, cards $50</span><span class="num out">&minus;$460</span></label>
+    <label class="row"><input type="checkbox" data-k="t22" data-g="both"><span class="txt">Aug 26 &middot; Amscot<small>$0 if the 60-day grace came through</small></span><span class="num out">&minus;$120</span></label>
+    <label class="row"><input type="checkbox" data-k="t23" data-g="both"><span class="txt">Aug 31 &middot; living $150, back-to-school $200</span><span class="num out">&minus;$350</span></label>
+    <div class="bal"><span>You end August at</span><b>$204.36</b></div>
+  </div>
+
+  <h3>The total dash bill</h3>
+  <div class="card gold">
+    <div class="src">
+      <div class="st">Car-first vs let-it-go, side by side</div>
+      <table>
+        <tr><td>Weekend Aug 8&ndash;9<span class="w"> &mdash; vs $265 in Plan A</span></td><td class="a">$400</td></tr>
+        <tr><td>Weeknights Aug 12&ndash;20<span class="w"> &mdash; vs $300</span></td><td class="a">$550</td></tr>
+        <tr><td>Aug 22&ndash;31<span class="w"> &mdash; vs $200</span></td><td class="a">$450</td></tr>
+        <tr class="tot"><td>Car-first total</td><td class="a">$1,400</td></tr>
+        <tr class="tot"><td>Let-it-go total</td><td class="a">$765</td></tr>
+        <tr class="new"><td class="b">Extra dashing to save the car</td><td class="a b">$635</td></tr>
+      </table>
+      <div class="onlynew">Saving the CR-V costs you about <b>$635</b> of extra dashing spread over 24 days &mdash; roughly <b>$26 a day</b>. Against a $10&ndash;12K deficiency risk, that is a very good trade. The question is whether you can sustain it while school starts and football runs.</div>
+    </div>
+  </div>
+
+  <h3>September, under this plan</h3>
+  <div class="card">
+    <div class="src">
+      <div class="st">The month still works &mdash; but the car payment is back</div>
+      <table>
+        <tr><td>Carried in from August</td><td class="a">$204</td></tr>
+        <tr><td>Money in<span class="w"> &mdash; 2 paychecks, 5 Tuesdays, 2 biweeklies</span></td><td class="a">$4,800</td></tr>
+        <tr><td>Flex &middot; rent<span class="w"> &mdash; $1,510 on the 5th, $515 on the 15th</span></td><td class="a">&minus;$2,025</td></tr>
+        <tr><td>Car loan &middot; CR-V<span class="w"> &mdash; this is the new cost of keeping it</span></td><td class="a">&minus;$580</td></tr>
+        <tr><td>Insurance, light, phone, storage, cards</td><td class="a">&minus;$680</td></tr>
+        <tr><td>Living money &middot; 4 weeks + Klarna</td><td class="a">&minus;$670</td></tr>
+        <tr class="tot"><td>You end September at</td><td class="a">$1,049</td></tr>
+      </table>
+      <div class="onlynew">Roughly <b>$240</b> of dashing needed Sep 1&ndash;4 so the $1,510 lands clean on the 5th. After that September is comfortable &mdash; and you&rsquo;d still walk into October with about <b>$1,049</b> banked.</div>
+    </div>
+  </div>
+
+  <h3>The risk you&rsquo;re accepting</h3>
+  <div class="rule"><b>Eleven days on a live notice</b>The notice expired Aug 10. Paying Aug 21 means eleven days where Summer Cove can legally file. Most landlords holding a written date don&rsquo;t &mdash; filing costs them money and they&rsquo;d rather have the check. But it is their choice, not yours, and this is the real price of the car.</div>
+  <div class="rule"><b>If they file anyway</b>You get served and have five business days to respond. Do not ignore it. Responding preserves everything, and paying the full amount usually ends it &mdash; though court costs may be added.</div>
+  <div class="rule"><b>Zero slack on Aug 21</b>The math lands $4 short at the $300 dash target. Aim for $550 in that window so insurance and Klarna are covered too. Any missed deposit in this plan has to be replaced by dashing the same week &mdash; there&rsquo;s nothing to absorb it.</div>
+  <div class="rule"><b>The overdraft stays sealed</b>Do not touch it in this plan. It&rsquo;s your only shock absorber for the whole month, and if you spend it on the car you have nothing left for a flat tire or a sick kid.</div>
+  <div class="rule"><b>Reinstating only helps if payments continue</b>$580 starts again in September. If it goes delinquent in November you&rsquo;ll have spent all of this and taken the repo anyway. Only do this if the plan for those payments is real &mdash; ideally her money, in writing.</div>
+
+  <h3>If she sends nothing</h3>
+  <div class="card rescue">
+    <div class="src">
+      <div class="st">The same plan with $0 from her</div>
+      <table>
+        <tr><td>You&rsquo;d cover the full reinstatement</td><td class="a">$1,391</td></tr>
+        <tr><td>End of August<span class="w"> &mdash; even with $960 dashed</span></td><td class="a">&minus;$886</td></tr>
+        <tr class="new"><td class="b">Extra dashing required to break even</td><td class="a b">$1,846</td></tr>
+      </table>
+      <div class="onlynew">That&rsquo;s about <b>$77 every single day</b> for 24 straight days, on top of work, school, and football. This is the version that isn&rsquo;t real. If she sends nothing by Tuesday night, pay the rent and let the car go.</div>
+    </div>
+  </div>
+
+  <div class="callout"><b>So here is your homework answer:</b> yes, you can save both &mdash; if the bank moves to Tuesday, if she sends $650, and if you accept eleven days of exposure and about $1,400 of dashing. Two of those three are other people&rsquo;s decisions, and you&rsquo;ll know both by Monday afternoon. Make the bank call first thing Monday, text her a number and a date tonight, and let Tuesday tell you which plan you&rsquo;re living in. Either way you have a roof and a paid-off minivan &mdash; that&rsquo;s the floor, and it&rsquo;s a real one.</div>
+</section>
+
+<!-- ============ FRONT IT ============ -->
+<section class="panel" id="front">
+  <h2>If you front it</h2>
+  <p class="lede">You pay the full $1,391 Tuesday. She pays you back $650 later this week. This version surprised me &mdash; the weekend gets <em>easier</em>, not harder. But the cost doesn&rsquo;t disappear. It moves into September.</p>
+
+  <div class="prog"><div class="top"><span>Front-it progress</span><span data-count="front">0 of 0</span></div><div class="bar"><i data-fill="front"></i></div></div>
+
+  <div class="callout"><b>The surprise:</b> your weekend dash target drops from <b>$400</b> to about <b>$25</b>. Because the overdraft covers the car on Tuesday, you barely need to dash before then at all. That is real relief &mdash; but read the September section before you celebrate, because the overdraft repayment lands on the exact check that funds Flex.</div>
+
+  <h3>Tuesday Aug 11 &middot; you pay it all</h3>
+  <div class="card gold">
+    <div class="src">
+      <div class="st">Where the full $1,391 comes from &mdash; all yours</div>
+      <table>
+        <tr><td>In the account today</td><td class="a">$200</td></tr>
+        <tr class="new"><td class="b">Weekend dash<span class="w"> &mdash; only $25 needed, not $400</span></td><td class="a b">$25</td></tr>
+        <tr><td>Child support &middot; Tuesday</td><td class="a">$320</td></tr>
+        <tr><td>Less living money &middot; protected</td><td class="a">&minus;$150</td></tr>
+        <tr><td>Overdraft draw<span class="w"> &mdash; this is what buys the car</span></td><td class="a">$1,000</td></tr>
+        <tr class="tot"><td>Available Tuesday</td><td class="a">$1,395</td></tr>
+        <tr class="tot"><td>Pay the bank</td><td class="a">&minus;$1,391</td></tr>
+      </table>
+      <div class="onlynew">Leaves <b>$4</b>. Anything you dash beyond $25 this weekend is pure cushion &mdash; and you should still dash hard, because it all counts toward rent later.</div>
+    </div>
+    <label class="row"><input type="checkbox" data-k="f1" data-g="front"><span class="txt">Get the written agreement signed FIRST<small>Amount, repayment date, and that the car stays in your possession until she pays. You&rsquo;re a notary &mdash; paper is free for you.</small></span><span class="num hold">before you pay</span></label>
+    <label class="row"><input type="checkbox" data-k="f2" data-g="front"><span class="txt">Draw the overdraft</span><span class="num in">+$1,000</span></label>
+    <label class="row"><input type="checkbox" data-k="f3" data-g="front"><span class="txt">PAY THE BANK &mdash; CR-V reinstated<small>Receipt, and written confirmation the repo is reversed</small></span><span class="num out">&minus;$1,391</span></label>
+  </div>
+
+  <h3>When she pays you back &mdash; and why the date matters less than you think</h3>
+  <div class="card">
+    <div class="src">
+      <div class="st">Her $650 arriving on different days</div>
+      <table>
+        <tr><td>She repays Wed Aug 12</td><td class="a">works</td></tr>
+        <tr><td>She repays Thu Aug 20</td><td class="a">works</td></tr>
+        <tr class="new"><td class="b">Either way, end of August</td><td class="a b">$579</td></tr>
+        <tr><td>She repays after Aug 21</td><td class="a">rent fails</td></tr>
+        <tr><td>She never repays</td><td class="a">&minus;$71</td></tr>
+      </table>
+      <div class="onlynew">Any date <b>on or before Aug 20</b> lands you in exactly the same place, because you don&rsquo;t need the money until rent day. What you cannot accept is a date <em>after</em> Aug 21. That&rsquo;s the line in the written agreement: <b>&ldquo;paid in full by August 20.&rdquo;</b></div>
+    </div>
+  </div>
+
+  <h3>How the $650 replenishes the rent target</h3>
+  <div class="card win">
+    <div class="daylab">This is the answer to your question</div>
+    <div class="daynote">Her repayment is not spending money. It is rent money that was temporarily lent to a car. The moment it lands, it goes into the no-card account and doesn&rsquo;t come back out.</div>
+
+    <div class="src">
+      <div class="st">Rent target, before and after her $650</div>
+      <table>
+        <tr><td>Rent owed Aug 21</td><td class="a">$2,049.14</td></tr>
+        <tr><td>Support held Aug 12&ndash;18<span class="w"> &mdash; $500 + $320, less living + Klarna</span></td><td class="a">$616.01</td></tr>
+        <tr><td>Aug 21 paycheck</td><td class="a">$1,100</td></tr>
+        <tr class="tot"><td>Without her money, you&rsquo;d be short</td><td class="a">$333.13</td></tr>
+        <tr><td>Her $650 lands</td><td class="a">$650</td></tr>
+        <tr class="new"><td class="b">Dash still needed for rent</td><td class="a b">$0</td></tr>
+        <tr class="tot"><td>Cushion after rent</td><td class="a">$316.87</td></tr>
+      </table>
+      <div class="onlynew">Her $650 doesn&rsquo;t just replenish the target &mdash; it <b>overshoots</b> it by $317. That covers the car insurance due the same day. If she pays you back on time, your dashing goes from mandatory to optional for rent.</div>
+    </div>
+
+    <label class="row"><input type="checkbox" data-k="f4" data-g="front"><span class="txt">The moment her $650 lands, move it to the no-card account<small>Don&rsquo;t let it sit where a debit card can reach it. It is rent money, not a windfall.</small></span><span class="num move">$650</span></label>
+    <label class="row"><input type="checkbox" data-k="f5" data-g="front"><span class="txt">Keep dashing anyway &mdash; $300 weeknights, $450 late August<small>Now it builds September instead of scrambling for rent. Same hours, better job.</small></span><span class="num in">+$750</span></label>
+    <label class="row"><input type="checkbox" data-k="f6" data-g="front"><span class="txt">Aug 21 &middot; PAY RENT IN FULL</span><span class="num out">&minus;$2,049.14</span></label>
+    <label class="row"><input type="checkbox" data-k="f7" data-g="front"><span class="txt">Aug 21 &middot; car insurance + Klarna</span><span class="num out">&minus;$231.51</span></label>
+    <div class="bal"><span>You end August at</span><b>$579.36</b></div>
+  </div>
+
+  <h3>The catch &mdash; and it&rsquo;s a real one</h3>
+  <div class="card rescue">
+    <div class="src">
+      <div class="st">You end August looking richer than you are</div>
+      <table>
+        <tr><td>Cash in the account Aug 31</td><td class="a">$579.36</td></tr>
+        <tr class="new"><td class="b">Overdraft still owed<span class="w"> &mdash; it went into the car, not rent</span></td><td class="a b">&minus;$1,000</td></tr>
+        <tr class="tot"><td>True position</td><td class="a">&minus;$420.64</td></tr>
+      </table>
+      <div class="onlynew">In every other plan the overdraft gets repaid on <b>Aug 21</b>. Here it can&rsquo;t &mdash; rent takes that whole check. So it repays on <b>Sept 4</b>, which is the exact paycheck funding Flex&rsquo;s $1,510 on Sept 5. That&rsquo;s the hidden price of fronting.</div>
+    </div>
+  </div>
+
+  <h3>September, under this plan</h3>
+  <div class="card">
+    <div class="daylab">It still works &mdash; but the order matters enormously</div>
+    <div class="daynote">Pay Flex first, repay the overdraft second. If you repay the bank on Sept 4 before Flex clears on Sept 5, you&rsquo;ll be $862 short on rent.</div>
+    <div class="src">
+      <div class="st">The safe sequence</div>
+      <table>
+        <tr><td>Sep 4 &middot; paycheck, less Klarna and living</td><td class="a">$899</td></tr>
+        <tr><td>Plus carried from August + Sep 1 support</td><td class="a">$749</td></tr>
+        <tr class="tot"><td>Sep 5 &middot; PAY FLEX FIRST</td><td class="a">&minus;$1,510</td></tr>
+        <tr><td>Sep 8, 9, 15 support</td><td class="a">$1,140</td></tr>
+        <tr><td>Sep 15 &middot; Flex payment 2</td><td class="a">&minus;$515</td></tr>
+        <tr><td>Sep 18 &middot; paycheck</td><td class="a">$1,100</td></tr>
+        <tr class="new"><td class="b">Sep 18 &middot; repay the overdraft HERE</td><td class="a b">&minus;$1,000</td></tr>
+        <tr><td>Sep 18 &middot; car loan restarts</td><td class="a">&minus;$580</td></tr>
+        <tr><td>Remaining bills + living to Sep 30</td><td class="a">&minus;$1,010</td></tr>
+        <tr class="tot"><td>You end September at</td><td class="a">$424</td></tr>
+      </table>
+      <div class="onlynew">Compare: if she paid the bank directly instead, September ends around <b>$1,049</b>. So fronting the money costs you roughly <b>$625</b> of September cushion &mdash; not because of her, but because the overdraft repayment slid a month.</div>
+    </div>
+    <label class="row"><input type="checkbox" data-k="f8" data-g="front"><span class="txt">Sep 5 &middot; pay Flex BEFORE touching the overdraft</span><span class="num out">&minus;$1,510</span></label>
+    <label class="row"><input type="checkbox" data-k="f9" data-g="front"><span class="txt">Sep 18 &middot; repay the overdraft from the second paycheck</span><span class="num out">&minus;$1,000</span></label>
+  </div>
+
+  <h3>Best case / worst case</h3>
+  <div class="fork">
+    <div class="door">
+      <div class="hd"><span class="nm">Best case</span><span class="verdict v-yes">She pays by Aug 20</span></div>
+      <p>Car reinstated. Rent paid in full Aug 21. Insurance covered. Overdraft repaid Sept 18.</p>
+      <dl>
+        <dt>Weekend dash needed</dt><dd>$25</dd>
+        <dt>End of August</dt><dd>$579</dd>
+        <dt>End of September</dt><dd>$424</dd>
+        <dt>Deficiency risk</dt><dd>gone</dd>
+      </dl>
+    </div>
+    <div class="door">
+      <div class="hd"><span class="nm">Worst case</span><span class="verdict v-no">She never pays</span></div>
+      <p>You covered $1,391 alone. Rent still gets paid Aug 21 &mdash; but only if you dash $450+ in late August.</p>
+      <dl>
+        <dt>Cash Aug 31</dt><dd class="num out">&minus;$71</dd>
+        <dt>True position</dt><dd class="num out">&minus;$1,071</dd>
+        <dt>Extra dashing needed</dt><dd class="num out">$650</dd>
+        <dt>September</dt><dd class="num out">breaks Flex</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h3>Guardrails if you front it</h3>
+  <div class="rule"><b>Written agreement before a single dollar moves</b>Amount, the words <em>&ldquo;paid in full by August 20, 2026,&rdquo;</em> and that the vehicle stays in your possession until she pays. Notarize it. This is not distrust &mdash; it&rsquo;s that you cannot absorb a misunderstanding this month.</div>
+  <div class="rule"><b>The car doesn&rsquo;t leave until the money lands</b>The single strongest position you have is possession. Once she has the keys and no money has changed hands, you have a promise and a bill.</div>
+  <div class="rule"><b>Her $650 is rent money, not new money</b>The day it arrives it goes to the no-card account. Nothing else. It was already spent &mdash; on rent &mdash; before it got lent to a car.</div>
+  <div class="rule"><b>Pay Flex before the bank in September</b>The overdraft has no deadline that ends with a court date. Rent does. If both can&rsquo;t happen on Sept 4, Flex wins and the overdraft waits until the 18th.</div>
+  <div class="rule"><b>Don&rsquo;t stop dashing just because the weekend got easier</b>$25 gets the car. But rent, insurance, and September still need roughly $750 across the rest of the month. The relief is in the <em>timing</em>, not the total.</div>
+
+  <div class="callout"><b>Honest bottom line:</b> fronting it is workable, and it makes this weekend much lighter than the Car First plan. But it converts a <em>this-week</em> problem into a <em>September</em> problem, and it puts $650 of your rent money in someone else&rsquo;s hands on a promise. If she can Cash App you $650 on Tuesday while you&rsquo;re standing at the bank, take that version instead &mdash; same outcome, none of the risk. Fronting should be the fallback, not the plan.</div>
+</section>
+
+<!-- ============ CR-V ============ -->
+<section class="panel" id="crv">
+  <h2>The CR-V decision</h2>
+  <p class="lede">Repossessed Thursday. $1,391 to reinstate, deadline Monday &mdash; the same week rent is due. Everything we worked through, priced honestly, with the numbers corrected.</p>
+
+  <div class="prog"><div class="top"><span>CR-V steps</span><span data-count="crv">0 of 0</span></div><div class="bar"><i data-fill="crv"></i></div></div>
+
+  <div class="callout"><b>First, the good news you keep forgetting:</b> your minivan is paid off and it&rsquo;s your personal vehicle. You can dash, get five kids to school, and get to work no matter what happens to the CR-V. This is <em>not</em> a survival decision. It&rsquo;s a strategy decision, and you get to make it calmly.</div>
+
+  <h3>What it actually costs &mdash; corrected</h3>
+  <div class="card">
+    <div class="src">
+      <div class="st">CR-V monthly carrying cost</div>
+      <table>
+        <tr><td>Loan payment<span class="w"> &mdash; corrected from $250, which was wrong in the old blueprint</span></td><td class="a">$580</td></tr>
+        <tr><td>Insurance &middot; CR-V portion only<span class="w"> &mdash; not the full $220 two-car premium</span></td><td class="a">$150</td></tr>
+        <tr><td>Car storage<span class="w"> &mdash; that&rsquo;s a different vehicle entirely, not this decision</span></td><td class="a">$0</td></tr>
+        <tr class="tot"><td>True cost per month</td><td class="a">$730</td></tr>
+        <tr><td>Earning from MAS Host<span class="w"> &mdash; they dropped the vehicle</span></td><td class="a">$0</td></tr>
+      </table>
+      <div class="onlynew">Letting it go frees <b>$730</b> a month &mdash; not the $900 I said earlier. I&rsquo;d wrongly charged the whole two-car insurance premium to this one car, which made letting it go look better than it is.</div>
+    </div>
+  </div>
+
+  <h3>What&rsquo;s owed vs what it&rsquo;s worth</h3>
+  <div class="card rescue">
+    <div class="src">
+      <div class="st">The underwater math</div>
+      <table>
+        <tr><td>Balance on the loan</td><td class="a">$19,000</td></tr>
+        <tr><td>What the vehicle is worth</td><td class="a">$11,000</td></tr>
+        <tr class="tot"><td>Underwater by</td><td class="a">$8,000</td></tr>
+        <tr><td>Likely auction price<span class="w"> &mdash; auctions run well below retail</span></td><td class="a">$7,000&ndash;9,000</td></tr>
+        <tr class="new"><td class="b">Deficiency they could pursue you for</td><td class="a b">$10,000&ndash;12,000</td></tr>
+      </table>
+      <div class="onlynew">This is the strongest single argument for reinstating. If it goes to auction, the shortfall doesn&rsquo;t vanish with the car &mdash; the bank can come after you for it. Reinstating makes that risk disappear completely.</div>
+    </div>
+  </div>
+
+  <h3>The three real options</h3>
+
+  <div class="fork">
+    <div class="door">
+      <div class="hd"><span class="nm">Option A &middot; She pays all $1,391</span><span class="verdict v-yes">Best</span></div>
+      <p>Your friend pays the bank directly. Her money, her name on the payment. You touch nothing.</p>
+      <dl>
+        <dt>Costs you now</dt><dd>$0</dd>
+        <dt>Rent paid</dt><dd>Aug 12 &#10003;</dd>
+        <dt>September untouched</dt><dd>yes</dd>
+        <dt>Deficiency risk</dt><dd>gone</dd>
+        <dt>Loan still in your name</dt><dd class="num out">yes</dd>
+      </dl>
+    </div>
+
+    <div class="door">
+      <div class="hd"><span class="nm">Option B &middot; She sends ~$650, you find $700</span><span class="verdict v-mid">Depends where</span></div>
+      <p>Works beautifully <em>if</em> your $700 comes from outside the rent money. Breaks badly if it comes from Wednesday&rsquo;s pile.</p>
+      <dl>
+        <dt>Costs you now</dt><dd>$700</dd>
+        <dt>If from outside</dt><dd>everything works</dd>
+        <dt>If from rent money</dt><dd class="num out">rent slides to Aug 21</dd>
+        <dt>Hidden cost</dt><dd class="num out">hits September</dd>
+      </dl>
+    </div>
+
+    <div class="door">
+      <div class="hd"><span class="nm">Option C &middot; Let it go</span><span class="verdict v-mid">Survivable</span></div>
+      <p>No reinstatement. Rent paid in full Wednesday. Car goes to auction.</p>
+      <dl>
+        <dt>Costs you now</dt><dd>$0</dd>
+        <dt>Rent paid</dt><dd>Aug 12 &#10003;</dd>
+        <dt>Frees per month</dt><dd>$730</dd>
+        <dt>Repo on credit</dt><dd class="num out">7 years</dd>
+        <dt>Deficiency risk</dt><dd class="num out">$10&ndash;12K</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h3>The hidden cost nobody sees</h3>
+  <div class="card rescue">
+    <div class="src">
+      <div class="st">Why $700 from the rent pile costs far more than $700</div>
+      <table>
+        <tr><td>Available Wednesday Aug 12</td><td class="a">$2,135</td></tr>
+        <tr><td>Your share of the CR-V</td><td class="a">&minus;$700</td></tr>
+        <tr><td>Left for rent</td><td class="a">$1,435</td></tr>
+        <tr><td>Rent owed<span class="w"> &mdash; they accept nothing partial</span></td><td class="a">$2,049.14</td></tr>
+        <tr class="new"><td class="b">Short &mdash; so rent isn&rsquo;t paid at all Wednesday</td><td class="a b">$614.14</td></tr>
+      </table>
+      <div class="onlynew">Here&rsquo;s the part that&rsquo;s invisible: if rent slides to <b>Aug 21</b>, you draw the overdraft on the 21st instead of the 12th &mdash; and then there&rsquo;s no paycheck to repay it until <b>Sept 4</b>. That&rsquo;s the same check funding Flex&rsquo;s $1,510 on Sept 5. One week&rsquo;s decision reaches into next month&rsquo;s rent.</div>
+    </div>
+  </div>
+
+  <div class="callout"><b>So the question changes shape.</b> It was never &ldquo;can she cover part of the car.&rdquo; It&rsquo;s <b>&ldquo;can I raise $700 this week from anywhere that isn&rsquo;t my rent money.&rdquo;</b> Family, a friend, anyone you&rsquo;d call. If yes, both problems solve. If no, the car has to wait for someone else&rsquo;s money.</div>
+
+  <h3>Why you should keep it</h3>
+
+  <div class="rule"><b>The deficiency is the real monster</b>$19K owed on $11K of value. After auction the bank can pursue you for $10,000&ndash;12,000 in unsecured debt, and it does not disappear because the car did. Reinstating erases that entirely. Nothing else on this page is worth that much.</div>
+
+  <div class="rule"><b>A repo blocks the SUV harder than the payment does</b>You&rsquo;re worried the $580 will sink you at the dealership. It won&rsquo;t help &mdash; but a repossession is one of the most severe marks a lender sees, and a solo borrower with no cosigner is exactly who gets denied over one. A payment is a math problem a lender can work around with the right down payment. A repo is a door that closes.</div>
+
+  <div class="rule"><b>The refinance endgame is genuinely excellent</b>If she buys it next year and refinances into her own name, the loan leaves your credit report completely. Your debt-to-income clears. You walk into the dealership with a paid-off minivan to trade and zero auto debt. That is the best possible version of this story &mdash; and it only exists if the car survives this week.</div>
+
+  <div class="rule"><b>January is real money, not a hope</b>$10,000&ndash;13,000 in refunds with five dependents is reliable. If the car survives to January you can set aside months of payments in one move, which changes the whole risk profile of holding it through the fall.</div>
+
+  <div class="rule"><b>Two drivers are coming</b>Jaylani is in high school. A second vehicle within eighteen months isn&rsquo;t a luxury &mdash; it&rsquo;s a household that doesn&rsquo;t collapse when one car breaks down.</div>
+
+  <div class="rule"><b>The bank is treating you better than last time</b>Last time they demanded the full balance. A $1,391 reinstatement is a real courtesy, and offers like it aren&rsquo;t guaranteed to come again.</div>
+
+  <h3>Why you should let it go</h3>
+
+  <div class="rule"><b>It earns nothing now</b>MAS Host dropped the vehicle. The entire financial case for this car was that it generated income. That case is gone. You&rsquo;d be paying $730 a month for an asset producing $0.</div>
+
+  <div class="rule"><b>&ldquo;Taking over payments&rdquo; is not a legal thing</b>The loan stays in your name no matter what she promises. If she pays five months and stops, it&rsquo;s your credit, your debt, your repo &mdash; a second one &mdash; and she drives away. Only a refinance into her name or an outright sale changes that.</div>
+
+  <div class="rule"><b>It counts against you even while she&rsquo;s paying</b>Lenders count the full $580 against your debt-to-income whether or not someone else sends the money. So until she refinances, the car you&rsquo;re protecting for the SUV is also the thing standing in front of it.</div>
+
+  <div class="rule"><b>$730 a month is a rent cushion</b>Freed from September onward, that&rsquo;s $2,920 by year end &mdash; more than a full month of rent. It&rsquo;s the exact cushion the whole blueprint has been chasing, sitting in one line item.</div>
+
+  <div class="rule"><b>Rent has a court date. A car does not.</b>An eviction filing is public record and follows every rental application for years. A repo is a credit line you can rebuild around. If only one survives this week, housing is the one that protects the children.</div>
+
+  <div class="rule"><b>Reinstating only helps if the payments actually get made</b>This is the real test, not the $1,391. A reinstated loan that goes delinquent again in November leaves you worse off than today &mdash; you&rsquo;d have spent the money and still taken the repo. Only reinstate if the payment plan is real.</div>
+
+  <h3>The test that settles it</h3>
+  <div class="card gold">
+    <div class="src">
+      <div class="st">If she wants the car, this is what yes looks like</div>
+      <table>
+        <tr><td>She pays the bank directly<span class="w"> &mdash; her money, not you fronting it</span></td><td class="a">$1,391</td></tr>
+        <tr><td>Or at minimum, by Tuesday</td><td class="a">$650</td></tr>
+        <tr><td>Insurance in her name before keys change hands</td><td class="a">required</td></tr>
+        <tr><td>Written, notarized agreement<span class="w"> &mdash; you&rsquo;re a notary, use it</span></td><td class="a">required</td></tr>
+        <tr><td>Refinance or purchase in her name<span class="w"> &mdash; hard deadline</span></td><td class="a">12 months</td></tr>
+        <tr class="new"><td class="b">Ideal cost to you</td><td class="a b">$0</td></tr>
+      </table>
+      <div class="onlynew">If she genuinely plans to buy it next year, <b>$1,391</b> now is simply her down payment on a car she already wants. If she can&rsquo;t put money in before she gets the keys, she won&rsquo;t send <b>$580</b> a month for a year either.</div>
+    </div>
+  </div>
+
+  <h3>Do these today</h3>
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="c1" data-g="crv"><span class="txt">Text her a number and a date &mdash; not an open question<small>&ldquo;Can you do $650 by Tuesday?&rdquo; Open-ended asks sit unanswered. Specific ones get replies.</small></span><span class="num hold">now</span></label>
+    <label class="row"><input type="checkbox" data-k="c1b" data-g="crv"><span class="txt">Send her the full terms in the same message<small>Insurance in her name, written agreement, refinance within 12 months &mdash; so a yes means yes to all of it</small></span><span class="num hold">now</span></label>
+    <label class="row"><input type="checkbox" data-k="c1c" data-g="crv"><span class="txt">Make the second call &mdash; the $700 from outside<small>Whoever you&rsquo;d think of. Ask today, not Tuesday. You need the answer before Wednesday, not on it.</small></span><span class="num in">$700</span></label>
+  </div>
+
+  <h3>Do these Monday</h3>
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="c2" data-g="crv"><span class="txt">Ask the bank if the deadline moves to Tuesday or Wednesday<small>Her money lands Tuesday. A Monday wall makes every split version impossible.</small></span><span class="num hold">&mdash;</span></label>
+    <label class="row"><input type="checkbox" data-k="c3" data-g="crv"><span class="txt">Ask whether it&rsquo;s already been to auction<small>Before auction you have options. After, you don&rsquo;t.</small></span><span class="num hold">&mdash;</span></label>
+    <label class="row"><input type="checkbox" data-k="c4" data-g="crv"><span class="txt">Ask whether a third party can refinance it into their name<small>The only outcome that gets you off this loan permanently &mdash; and the one that clears the path to the SUV</small></span><span class="num hold">&mdash;</span></label>
+    <label class="row"><input type="checkbox" data-k="c4b" data-g="crv"><span class="txt">Ask what the reinstatement covers<small>How many payments, what fees, and what the next due date becomes</small></span><span class="num hold">&mdash;</span></label>
+    <label class="row"><input type="checkbox" data-k="c5" data-g="crv"><span class="txt">If letting it go &mdash; ask about settling the deficiency<small>Banks often settle for 30&ndash;50%. Ask before the auction, not after.</small></span><span class="num in">saves thousands</span></label>
+    <label class="row"><input type="checkbox" data-k="c6" data-g="crv"><span class="txt">Ask your insurer to confirm the CR-V portion<small>Used $150 here. Confirm it, and know what drops off if the car goes.</small></span><span class="num hold">&mdash;</span></label>
+  </div>
+
+  <h3>Where this lands</h3>
+  <div class="callout"><b>Option A costs nothing and saves everything</b> &mdash; it lives or dies on her answer. <b>Option B works only if the $700 comes from outside the rent money</b>; from inside, it&rsquo;s the worst of the three, because it&rsquo;s the only one that puts your housing in front of a judge and drags the damage into September. <b>Option C is survivable</b> and buys back $730 a month, but carries a $10&ndash;12K deficiency you&rsquo;d have to negotiate down.<br><br>If nobody else&rsquo;s money shows up by Tuesday night, pay the rent and let the car go. You can rebuild a credit score. You cannot rebuild a housing record &mdash; and you have five kids who need the address more than the second car.</div>
+
+  <div class="callout"><b>And the thing to hold onto:</b> you said you just need to survive until next year and then you&rsquo;ll be fine. That&rsquo;s not wishful &mdash; the MLO license, the process server certification, the notary work, and a January refund are all real and all landing inside twelve months. Every decision this week should be judged by one question: <em>does this get me to next year with a roof and a working vehicle?</em> By that test, rent wins, the minivan matters more than the CR-V, and anything someone else pays for is free upside.</div>
+</section>
+
+
+<!-- ============ FORK ============ -->
+<section class="panel" id="fork">
+  <h2>The four doors</h2>
+  <p class="lede">Same $2,049.14. Four ways to get there. The only thing that changes is where you're standing on September 30 — and that's the whole game.</p>
+
+  <div class="fork">
+    <div class="door">
+      <div class="hd"><span class="nm">Door 1 · Overdraft only</span><span class="verdict v-yes">Take this</span></div>
+      <p>Draw $1,000 across both accounts Monday. No advances. Repay in one shot on Aug 21.</p>
+      <dl>
+        <dt>Cost in fees</dt><dd>~$25–40</dd>
+        <dt>Rent cleared</dt><dd>Aug 12</dd>
+        <dt>Aug 21 paycheck left</dt><dd>$583</dd>
+        <dt>End of August</dt><dd>$362</dd>
+        <dt>Flex Sept 5</dt><dd>covered</dd>
+        <dt>End of September</dt><dd>$1,198</dd>
+      </dl>
+    </div>
+
+    <div class="door">
+      <div class="hd"><span class="nm">Door 2 · Advances only</span><span class="verdict v-no">The loop</span></div>
+      <p>No overdraft. Stack 4–5 apps to reach $1,264. Each one drafts on its own date, not yours.</p>
+      <dl>
+        <dt>Cost in fees</dt><dd>~$100–140</dd>
+        <dt>Rent cleared</dt><dd>Aug 12</dd>
+        <dt>Aug 21 paycheck left</dt><dd>~$100</dd>
+        <dt>End of August</dt><dd>~−$150</dd>
+        <dt>Flex Sept 5</dt><dd class="num out">missed</dd>
+        <dt>End of September</dt><dd class="num out">new notice</dd>
+      </dl>
+    </div>
+
+    <div class="door">
+      <div class="hd"><span class="nm">Door 3 · Both</span><span class="verdict v-no">Never</span></div>
+      <p>Overdraft <em>and</em> advances. Feels safest on Monday. Aug 21 owes $1,000 to the bank and ~$700 to the apps against an $1,100 check.</p>
+      <dl>
+        <dt>Cost in fees</dt><dd>~$180–300</dd>
+        <dt>Aug 21 paycheck left</dt><dd class="num out">−$600</dd>
+        <dt>Overdrawn again</dt><dd class="num out">Aug 21</dd>
+        <dt>Flex Sept 5</dt><dd class="num out">missed</dd>
+        <dt>End of September</dt><dd class="num out">worse than today</dd>
+      </dl>
+    </div>
+
+    <div class="door">
+      <div class="hd"><span class="nm">Door 4 · Borrow nothing</span><span class="verdict v-mid">Costs more</span></div>
+      <p>Hold everything, pay nothing Monday. Earliest full payment is Aug 21 — eleven days past the notice.</p>
+      <dl>
+        <dt>Cost in fees</dt><dd>$0 borrowed</dd>
+        <dt>Eviction filing risk</dt><dd class="num out">high</dd>
+        <dt>Court + filing costs</dt><dd class="num out">~$400+</dd>
+        <dt>Goes on record</dt><dd class="num out">yes</dd>
+        <dt>End of September</dt><dd>unknowable</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="callout"><b>The whole argument in one line:</b> the overdraft is one number, on your calendar, that you control. An advance is somebody else's hand in your account on a date you didn't pick. This morning is the proof — $360 gone before you were awake.</div>
+</section>
+
+<!-- ============ AUGUST ============ -->
+<section class="panel" id="aug">
+  <h2>August ledger</h2>
+  <p class="lede">Aug 12 through Aug 31, verified line by line. Every deposit, every bill, every dollar of living money.</p>
+
+  <div class="prog"><div class="top"><span>August progress</span><span data-count="aug">0 of 0</span></div><div class="bar"><i data-fill="aug"></i></div></div>
+
+  <div class="therm">
+    <div class="th"><span class="lb">👑 September rent fund</span><span class="vv">$300 / $1,510</span></div>
+    <div class="tube"><i style="width:20%"></i></div>
+    <div class="note">Every gold <b>→ RENT FUND</b> line below moves money into the no-card account. It leaves your spending account and stops being spendable. This is how Sept 5 gets paid.</div>
+  </div>
+
+  <div class="callout"><b>Why August only builds $300:</b> after clearing the notice, August's job is to survive and catch up on bills. The rent fund starts on the 24th, once the overdraft is repaid and the car is paid. The real build happens Sept 1–4 — see the September tab.</div>
+
+  <div class="card">
+    <div class="daylab">Fri Aug 14</div>
+    <label class="row"><input type="checkbox" data-k="a1" data-g="aug"><span class="txt">Klarna · eBay</span><span class="num out">−$53.99</span></label>
+    <div class="bal"><span>Balance</span><b>$31.87</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Mon Aug 11 – Wed Aug 20</div>
+    <div class="daynote">Weeknight dash window. Dinner rush only, 5:30–8:30, after homework's started. This pays the car.</div>
+    <label class="row"><input type="checkbox" data-k="a2" data-g="aug"><span class="txt">Dash target for the stretch<small>~$60 a night, five nights. Split however works</small></span><span class="num in">+$300</span></label>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Sun Aug 17</div>
+    <label class="row"><input type="checkbox" data-k="a3" data-g="aug"><span class="txt">Child support</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="a4" data-g="aug"><span class="txt">Living money · week</span><span class="num out">−$150</span></label>
+    <label class="row"><input type="checkbox" data-k="a5" data-g="aug"><span class="txt">Klarna · Victoria's Secret</span><span class="num out">−$18.19</span></label>
+    <div class="bal"><span>Balance</span><b>$483.68</b></div>
+  </div>
+
+  <div class="card gold">
+    <div class="daylab">Fri Aug 21 · payday</div>
+    <div class="daynote">The overdraft comes back out today. Expect the check to feel small — that's the plan working, not failing.</div>
+
+    <div class="src">
+      <div class="st">Where the Aug 21 paycheck actually goes</div>
+      <table>
+        <tr><td>Paycheck</td><td class="a">$1,100</td></tr>
+        <tr><td>Already in the account<span class="w"> — support + weeknight dashing</span></td><td class="a">$333.68</td></tr>
+        <tr><td>Overdraft repaid<span class="w"> — the loan closes here</span></td><td class="a">−$1,000</td></tr>
+        <tr><td>Car loan · Honda CR-V</td><td class="a">−$580</td></tr>
+        <tr><td>Car insurance</td><td class="a">−$220</td></tr>
+        <tr><td>Klarna · Ulta</td><td class="a">−$11.51</td></tr>
+        <tr class="tot"><td>Left standing</td><td class="a">$102.17</td></tr>
+      </table>
+      <div class="onlynew">This is the tightest day of the plan. It only works because the <b>$300</b> weeknight dash already went in. Without it, this day is negative $198.</div>
+    </div>
+    <label class="row"><input type="checkbox" data-k="a6" data-g="aug"><span class="txt">Paycheck</span><span class="num in">+$1,100</span></label>
+    <label class="row"><input type="checkbox" data-k="a7" data-g="aug"><span class="txt">Repay the overdraft · both accounts<small>Do this first, same day. Unfreeze the debit card after.</small></span><span class="num out">−$1,000</span></label>
+    <label class="row"><input type="checkbox" data-k="a8" data-g="aug"><span class="txt">Klarna · Ulta</span><span class="num out">−$11.51</span></label>
+    <label class="row"><input type="checkbox" data-k="a9" data-g="aug"><span class="txt">Car loan · Honda CR-V</span><span class="num out">−$580</span></label>
+    <label class="row"><input type="checkbox" data-k="a10" data-g="aug"><span class="txt">Car insurance</span><span class="num out">−$220</span></label>
+    <div class="bal"><span>Balance</span><b>$102.17</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Fri Aug 22 – Sun Aug 31</div>
+    <label class="row"><input type="checkbox" data-k="a11" data-g="aug"><span class="txt">Dash target · builds the September cushion<small>This is the one that makes Flex work. Don't skip it.</small></span><span class="num in">+$200</span></label>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Sun Aug 24</div>
+    <label class="row"><input type="checkbox" data-k="a12" data-g="aug"><span class="txt">Child support</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="a13" data-g="aug"><span class="txt">Living money · week</span><span class="num out">−$150</span></label>
+    <label class="row"><input type="checkbox" data-k="a14" data-g="aug"><span class="txt">Cell phone</span><span class="num out">−$110</span></label>
+    <label class="row"><input type="checkbox" data-k="a15" data-g="aug"><span class="txt">Car storage</span><span class="num out">−$100</span></label>
+    <label class="row move"><input type="checkbox" data-k="a15b" data-g="aug"><span class="txt">→ RENT FUND · first September deposit<small>Move it to the no-card account. It's gone from spending.</small></span><span class="num move">$150</span></label>
+    <div class="bal"><span>Spending / Rent fund</span><b>$112 · $150</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Tue Aug 26</div>
+    <label class="row"><input type="checkbox" data-k="a16" data-g="aug"><span class="txt">Child support</span><span class="num in">+$500</span></label>
+    <label class="row"><input type="checkbox" data-k="a17" data-g="aug"><span class="txt">Light bill</span><span class="num out">−$200</span></label>
+    <label class="row"><input type="checkbox" data-k="a18" data-g="aug"><span class="txt">Credit card · Navy</span><span class="num out">−$25</span></label>
+    <label class="row"><input type="checkbox" data-k="a19" data-g="aug"><span class="txt">Credit card · Cap One</span><span class="num out">−$25</span></label>
+    <label class="row"><input type="checkbox" data-k="a20" data-g="aug"><span class="txt">Amscot<small>$0 here if the 60-day grace came through — then this transfer becomes $270</small></span><span class="num out">−$120</span></label>
+    <label class="row move"><input type="checkbox" data-k="a20b" data-g="aug"><span class="txt">→ RENT FUND · second September deposit</span><span class="num move">$150</span></label>
+    <div class="bal"><span>Spending / Rent fund</span><b>$92 · $300</b></div>
+  </div>
+
+  <div class="card win">
+    <div class="daylab">Sun Aug 31 · month end</div>
+    <label class="row"><input type="checkbox" data-k="a21" data-g="aug"><span class="txt">Child support</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="a22" data-g="aug"><span class="txt">Living money · week</span><span class="num out">−$150</span></label>
+    <label class="row"><input type="checkbox" data-k="a23" data-g="aug"><span class="txt">Back-to-school · the deferred list<small>The $200 you pushed. Now you can actually buy it.</small></span><span class="num out">−$200</span></label>
+    <div class="bal"><span>👑 Rent fund</span><b>$300.00</b></div>
+    <div class="bal"><span>Spending account</span><b>$62.17</b></div>
+    <div class="bal"><span>Total</span><b>$362.17</b></div>
+  </div>
+</section>
+
+<!-- ============ SEPTEMBER ============ -->
+<section class="panel" id="sep">
+  <h2>September · the Flex month</h2>
+  <p class="lede">Flex pays Timberline $2,200 on the 1st. You repay Flex $1,510 on the 5th and $515 on the 15th. Rent is never late again — the scramble moves off your landlord's desk.</p>
+
+  <div class="prog"><div class="top"><span>September progress</span><span data-count="sep">0 of 0</span></div><div class="bar"><i data-fill="sep"></i></div></div>
+
+  <div class="therm">
+    <div class="th"><span class="lb">👑 Rent fund · carried in from August</span><span class="vv">$300 / $1,510</span></div>
+    <div class="tube"><i style="width:20%"></i></div>
+    <div class="note">$300 already banked. The Sept 1–4 dash adds $250. The Sept 4 paycheck adds the rest — and it goes straight to the rent fund the day it lands, before anything can eat it.</div>
+  </div>
+
+  <div class="card gold">
+    <div class="daylab">Mon Sep 1</div>
+    <label class="row"><input type="checkbox" data-k="s1" data-g="sep"><span class="txt">Flex pays the landlord · $2,200<small>Nothing leaves your account today. Confirm it posted in the Flex app.</small></span><span class="num hold">$0</span></label>
+    <div class="bal"><span>Balance</span><b>$362.17</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Mon Sep 1 – Thu Sep 4</div>
+    <label class="row"><input type="checkbox" data-k="s2" data-g="sep"><span class="txt">Dash target · four days<small>This is what makes the $1,510 land clean. Highest-leverage dashing of the whole plan.</small></span><span class="num in">+$250</span></label>
+    <label class="row move"><input type="checkbox" data-k="s2b" data-g="sep"><span class="txt">→ RENT FUND · cash out and move it same night<small>Don't let dash money sit in the spending account over a weekend</small></span><span class="num move">$250</span></label>
+    <div class="bal"><span>👑 Rent fund</span><b>$550.00</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Fri Sep 4 · payday</div>
+    <label class="row"><input type="checkbox" data-k="s3" data-g="sep"><span class="txt">Paycheck</span><span class="num in">+$1,100</span></label>
+    <label class="row"><input type="checkbox" data-k="s4" data-g="sep"><span class="txt">Klarna · MAS Host + Ulta</span><span class="num out">−$51.44</span></label>
+    <label class="row"><input type="checkbox" data-k="s5" data-g="sep"><span class="txt">Living money · week</span><span class="num out">−$150</span></label>
+    <label class="row move"><input type="checkbox" data-k="s5b" data-g="sep"><span class="txt">→ RENT FUND · the big one<small>Move it the moment the check clears. Rent fund is now full.</small></span><span class="num move">$960</span></label>
+    <div class="bal"><span>👑 Rent fund</span><b>$1,510.00</b></div>
+    <div class="bal"><span>Spending account</span><b>$0.73</b></div>
+  </div>
+
+  <div class="card rescue">
+    <div class="daylab">Sat Sep 5 · Flex payment 1</div>
+
+    <div class="src">
+      <div class="st">Where the $1,510 comes from</div>
+      <table>
+        <tr><td>Banked Aug 24<span class="w"> — already in the rent fund</span></td><td class="a">$150</td></tr>
+        <tr><td>Banked Aug 26<span class="w"> — already in the rent fund</span></td><td class="a">$150</td></tr>
+        <tr class="new"><td class="b">Dashed Sep 1–4<span class="w"> — the only new money</span></td><td class="a b">$250</td></tr>
+        <tr><td>Sep 4 paycheck<span class="w"> — after Klarna + living money</span></td><td class="a">$960</td></tr>
+        <tr class="tot"><td>Rent fund on Sep 5</td><td class="a">$1,510</td></tr>
+      </table>
+      <div class="onlynew">Four weeks of warning, and only <b>$250</b> of it is new money. That is the entire reason Flex is worth using.</div>
+    </div>
+    <label class="row"><input type="checkbox" data-k="s6" data-g="sep"><span class="txt">Pay Flex · from the RENT FUND<small>Exactly what's sitting there. Nothing touches your spending account.</small></span><span class="num out">−$1,510</span></label>
+    <div class="bal"><span>👑 Rent fund</span><b>$0.00</b></div>
+    <div class="bal"><span>Next target · Flex #2 on the 15th</span><b>$515.00</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Mon Sep 7</div>
+    <label class="row"><input type="checkbox" data-k="s7" data-g="sep"><span class="txt">Child support</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="s8" data-g="sep"><span class="txt">Living money · week</span><span class="num out">−$150</span></label>
+    <div class="bal"><span>Balance</span><b>$170.73</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Wed Sep 9</div>
+    <label class="row"><input type="checkbox" data-k="s9" data-g="sep"><span class="txt">Child support</span><span class="num in">+$500</span></label>
+    <label class="row"><input type="checkbox" data-k="s10" data-g="sep"><span class="txt">Amscot<small>Skip if the grace period pushed it out</small></span><span class="num out">−$120</span></label>
+    <label class="row move"><input type="checkbox" data-k="s10b" data-g="sep"><span class="txt">→ RENT FUND · covers Flex #2 six days early<small>Fully funded before the 15th. Nothing to scramble for.</small></span><span class="num move">$515</span></label>
+    <div class="bal"><span>👑 Rent fund</span><b>$515.00</b></div>
+    <div class="bal"><span>Spending account</span><b>$35.73</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Mon Sep 14</div>
+    <label class="row"><input type="checkbox" data-k="s11" data-g="sep"><span class="txt">Child support</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="s12" data-g="sep"><span class="txt">Living money · week</span><span class="num out">−$150</span></label>
+    <div class="bal"><span>Balance</span><b>$720.73</b></div>
+  </div>
+
+  <div class="card gold">
+    <div class="daylab">Tue Sep 15 · Flex payment 2</div>
+
+    <div class="src">
+      <div class="st">Where the $515 comes from</div>
+      <table>
+        <tr><td>Sep 7 child support<span class="w"> — after living money</span></td><td class="a">$170</td></tr>
+        <tr><td>Sep 9 child support<span class="w"> — after Amscot</span></td><td class="a">$380</td></tr>
+        <tr class="new"><td class="b">New money needed</td><td class="a b">$0</td></tr>
+        <tr class="tot"><td>Banked by Sep 9 · six days early</td><td class="a">$515</td></tr>
+      </table>
+      <div class="onlynew">Zero dashing. Two child support deposits cover it with <b>$35</b> left over.</div>
+    </div>
+    <label class="row"><input type="checkbox" data-k="s13" data-g="sep"><span class="txt">Pay Flex · final · from the RENT FUND<small>September rent fully done. Total cost $2,030.99 — cheaper than August's $2,200.</small></span><span class="num out">−$515</span></label>
+    <div class="bal"><span>👑 Rent fund · now building for October</span><b>$0.00</b></div>
+    <div class="bal"><span>Spending account</span><b>$205.73</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Fri Sep 18 · payday · bill day</div>
+    <label class="row"><input type="checkbox" data-k="s14" data-g="sep"><span class="txt">Paycheck</span><span class="num in">+$1,100</span></label>
+    <label class="row"><input type="checkbox" data-k="s15" data-g="sep"><span class="txt">Car loan · Honda CR-V</span><span class="num out">−$580</span></label>
+    <label class="row"><input type="checkbox" data-k="s16" data-g="sep"><span class="txt">Car insurance</span><span class="num out">−$220</span></label>
+    <label class="row"><input type="checkbox" data-k="s17" data-g="sep"><span class="txt">Cell phone</span><span class="num out">−$110</span></label>
+    <label class="row"><input type="checkbox" data-k="s18" data-g="sep"><span class="txt">Light bill</span><span class="num out">−$200</span></label>
+    <label class="row"><input type="checkbox" data-k="s19" data-g="sep"><span class="txt">Credit cards · Navy + Cap One</span><span class="num out">−$50</span></label>
+    <label class="row"><input type="checkbox" data-k="s20" data-g="sep"><span class="txt">Car storage</span><span class="num out">−$100</span></label>
+    <label class="row"><input type="checkbox" data-k="s21" data-g="sep"><span class="txt">Klarna · Victoria's Secret</span><span class="num out">−$18.19</span></label>
+    <div class="bal"><span>Balance</span><b>$357.54</b></div>
+  </div>
+
+  <div class="card win">
+    <div class="daylab">Sep 21 – Sep 28 · the build</div>
+    <div class="daynote">Nothing left to pay. Every deposit from here is October's rent.</div>
+    <label class="row"><input type="checkbox" data-k="s22" data-g="sep"><span class="txt">Sep 21 · child support</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="s23" data-g="sep"><span class="txt">Sep 21 · living money</span><span class="num out">−$150</span></label>
+    <label class="row move"><input type="checkbox" data-k="s23b" data-g="sep"><span class="txt">→ RENT FUND · October begins</span><span class="num move">$300</span></label>
+    <label class="row"><input type="checkbox" data-k="s24" data-g="sep"><span class="txt">Sep 23 · child support</span><span class="num in">+$500</span></label>
+    <label class="row move"><input type="checkbox" data-k="s24b" data-g="sep"><span class="txt">→ RENT FUND</span><span class="num move">$500</span></label>
+    <label class="row"><input type="checkbox" data-k="s25" data-g="sep"><span class="txt">Sep 28 · child support</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="s26" data-g="sep"><span class="txt">Sep 28 · living money</span><span class="num out">−$150</span></label>
+    <label class="row move"><input type="checkbox" data-k="s26b" data-g="sep"><span class="txt">→ RENT FUND</span><span class="num move">$300</span></label>
+    <div class="bal"><span>👑 October rent fund</span><b>$1,100.00</b></div>
+    <div class="bal"><span>Spending account</span><b>$97.54</b></div>
+    <div class="bal"><span>Total</span><b>$1,197.54</b></div>
+  </div>
+
+  <div class="callout"><b>What that means:</b> you walk into October with $1,198 already sitting there — more than half of rent, before a single October dollar arrives. That's the first time all year the month starts ahead instead of behind. Use Flex again in October if you want the cushion; by November the original blueprint's on-time target is back in reach.</div>
+</section>
+
+<!-- ============ OCTOBER ============ -->
+<section class="panel" id="oct">
+  <h2>The October bridge</h2>
+  <p class="lede">September ends with $1,100 in the rent fund against $2,200 of rent. Here's how that gap closes — and why October is the month you stop needing Flex.</p>
+
+  <div class="prog"><div class="top"><span>October progress</span><span data-count="oct">0 of 0</span></div><div class="bar"><i data-fill="oct"></i></div></div>
+
+  <div class="callout"><b>October has three paychecks.</b> Oct 2, Oct 16, and Oct 30. That third one is the whole reason this month works — it's the first time all year you get a paycheck that isn't already spoken for.</div>
+
+  <h3>The choice on Oct 1</h3>
+  <div class="fork">
+    <div class="door">
+      <div class="hd"><span class="nm">Use Flex one more month</span><span class="verdict v-yes">Take this</span></div>
+      <p>You have $1,100. Full rent needs $2,200 by Oct 1 — but your paycheck doesn't land until Oct 2. One day short.</p>
+      <dl>
+        <dt>Extra needed by Oct 5</dt><dd>$410</dd>
+        <dt>Comes from</dt><dd>Oct 2 check</dd>
+        <dt>Dashing required</dt><dd>$0</dd>
+        <dt>Cost</dt><dd>~$31</dd>
+      </dl>
+    </div>
+    <div class="door">
+      <div class="hd"><span class="nm">Pay in full Oct 1</span><span class="verdict v-mid">One day off</span></div>
+      <p>Would need $1,100 more before Oct 1 — meaning a brutal late-September dash on top of everything else, to save $31.</p>
+      <dl>
+        <dt>Extra needed by Oct 1</dt><dd>$1,100</dd>
+        <dt>Dashing required</dt><dd>~55 hrs</dd>
+        <dt>Saves you</dt><dd>$31</dd>
+        <dt>Worth it</dt><dd>no</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h3>October ledger</h3>
+
+  <div class="card gold">
+    <div class="daylab">Thu Oct 2 · payday</div>
+    <label class="row"><input type="checkbox" data-k="o1" data-g="oct"><span class="txt">Paycheck</span><span class="num in">+$1,100</span></label>
+    <label class="row"><input type="checkbox" data-k="o2" data-g="oct"><span class="txt">Klarna · MAS Host<small>Last MAS Host payment</small></span><span class="num out">−$39.93</span></label>
+    <label class="row"><input type="checkbox" data-k="o3" data-g="oct"><span class="txt">Living money · week</span><span class="num out">−$150</span></label>
+    <label class="row move"><input type="checkbox" data-k="o4" data-g="oct"><span class="txt">→ RENT FUND · tops up Flex payment 1</span><span class="num move">$410</span></label>
+    <div class="bal"><span>👑 Rent fund</span><b>$1,510.00</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Sun Oct 5 · Flex payment 1</div>
+
+    <div class="src">
+      <div class="st">Where October's $1,510 comes from</div>
+      <table>
+        <tr><td>Carried in from September<span class="w"> — already banked</span></td><td class="a">$1,100</td></tr>
+        <tr><td>Oct 2 paycheck<span class="w"> — after Klarna + living money</span></td><td class="a">$410</td></tr>
+        <tr class="new"><td class="b">New money needed</td><td class="a b">$0</td></tr>
+        <tr class="tot"><td>Rent fund on Oct 5</td><td class="a">$1,510</td></tr>
+      </table>
+      <div class="onlynew">October needs <b>zero</b> hours of dashing. Everything you earn this month is cushion on top.</div>
+    </div>
+    <label class="row"><input type="checkbox" data-k="o5" data-g="oct"><span class="txt">Pay Flex · from the rent fund</span><span class="num out">−$1,510</span></label>
+    <label class="row"><input type="checkbox" data-k="o6" data-g="oct"><span class="txt">Child support</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="o7" data-g="oct"><span class="txt">Living money · week</span><span class="num out">−$150</span></label>
+    <label class="row move"><input type="checkbox" data-k="o8" data-g="oct"><span class="txt">→ RENT FUND · Flex #2, ten days early</span><span class="num move">$515</span></label>
+    <div class="bal"><span>👑 Rent fund</span><b>$515.00</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Oct 7 – Oct 15</div>
+    <label class="row"><input type="checkbox" data-k="o9" data-g="oct"><span class="txt">Oct 7 · child support</span><span class="num in">+$500</span></label>
+    <label class="row"><input type="checkbox" data-k="o10" data-g="oct"><span class="txt">Oct 12 · child support</span><span class="num in">+$320</span></label>
+    <label class="row"><input type="checkbox" data-k="o11" data-g="oct"><span class="txt">Oct 12 · living money</span><span class="num out">−$150</span></label>
+    <label class="row"><input type="checkbox" data-k="o12" data-g="oct"><span class="txt">Oct 15 · Flex payment 2 · October rent DONE 👑</span><span class="num out">−$515</span></label>
+    <div class="bal"><span>Spending account</span><b>$922.61</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Fri Oct 16 · payday · bill day</div>
+    <label class="row"><input type="checkbox" data-k="o13" data-g="oct"><span class="txt">Paycheck</span><span class="num in">+$1,100</span></label>
+    <label class="row"><input type="checkbox" data-k="o14" data-g="oct"><span class="txt">All monthly bills<small>Car loan, insurance, phone, light, both cards, storage, last Klarna</small></span><span class="num out">−$948.18</span></label>
+    <label class="row"><input type="checkbox" data-k="o15" data-g="oct"><span class="txt">Living money · week</span><span class="num out">−$150</span></label>
+    <label class="row move"><input type="checkbox" data-k="o16" data-g="oct"><span class="txt">→ RENT FUND · November begins here</span><span class="num move">$900</span></label>
+    <div class="bal"><span>👑 November rent fund</span><b>$900.00</b></div>
+  </div>
+
+  <div class="card">
+    <div class="daylab">Oct 19 – Oct 26 · the build</div>
+    <div class="daynote">Every bill is paid. Everything from here is November's rent.</div>
+    <label class="row"><input type="checkbox" data-k="o17" data-g="oct"><span class="txt">Oct 19 · support $320, living $150</span><span class="num move">→ $170</span></label>
+    <label class="row"><input type="checkbox" data-k="o18" data-g="oct"><span class="txt">Oct 21 · support $500</span><span class="num move">→ $500</span></label>
+    <label class="row"><input type="checkbox" data-k="o19" data-g="oct"><span class="txt">Oct 26 · support $320, living $150</span><span class="num move">→ $170</span></label>
+    <div class="bal"><span>👑 November rent fund</span><b>$1,740.00</b></div>
+  </div>
+
+  <div class="card win">
+    <div class="daylab">Fri Oct 30 · the third paycheck</div>
+    <label class="row"><input type="checkbox" data-k="o20" data-g="oct"><span class="txt">Paycheck</span><span class="num in">+$1,100</span></label>
+    <label class="row move"><input type="checkbox" data-k="o21" data-g="oct"><span class="txt">→ RENT FUND · fund is FULL</span><span class="num move">$460</span></label>
+    <div class="bal"><span>👑 November rent fund</span><b>$2,200.00</b></div>
+    <div class="bal"><span>Spending account</span><b>$664.43</b></div>
+  </div>
+
+  <div class="card win">
+    <div class="daylab">☀️ Sunday Nov 1</div>
+
+    <div class="src">
+      <div class="st">Where November's $2,200 comes from</div>
+      <table>
+        <tr><td>Oct 16 paycheck<span class="w"> — after every bill was paid</span></td><td class="a">$900</td></tr>
+        <tr><td>Oct 19 child support</td><td class="a">$170</td></tr>
+        <tr><td>Oct 21 child support</td><td class="a">$500</td></tr>
+        <tr><td>Oct 26 child support</td><td class="a">$170</td></tr>
+        <tr><td>Oct 30 paycheck<span class="w"> — the third check</span></td><td class="a">$460</td></tr>
+        <tr class="new"><td class="b">New money needed</td><td class="a b">$0</td></tr>
+        <tr class="tot"><td>Sitting in the rent fund Nov 1</td><td class="a">$2,200</td></tr>
+      </table>
+      <div class="onlynew">Full rent, paid on the 1st, from money you already had. No Flex, no overdraft, no advance — and <b>$664</b> still in the spending account.</div>
+    </div>
+    <label class="row"><input type="checkbox" data-k="o22" data-g="oct"><span class="txt">Pay rent in full. On time. No Flex, no overdraft, no advance. 👑<small>You had it saved before the month started.</small></span><span class="num out">−$2,200</span></label>
+  </div>
+
+  <div class="callout"><b>Read the dash line:</b> October needs <em>zero</em> dashing to hit this. Every dollar you earn in October is cushion on top — exactly what the original blueprint promised. And you'd end October at $2,864 total versus the blueprint's $2,407, still ahead.</div>
+</section>
+
+<!-- ============ DASH ============ -->
+<section class="panel" id="dash">
+  <h2>The dash engine</h2>
+  <p class="lede">$1,015 across four weeks. Not one heroic weekend — four ordinary ones. Each window has a job.</p>
+
+  <div class="prog"><div class="top"><span>Dash windows hit</span><span data-count="dash">0 of 0</span></div><div class="bar"><i data-fill="dash"></i></div></div>
+
+  <div class="card rescue">
+    <label class="row"><input type="checkbox" data-k="d1" data-g="dash"><span class="txt"><b>Aug 8–9 · $265</b><small>Job: closes the rent gap. Sitter's covered. ~14 hrs.</small></span><span class="num in">$265</span></label>
+  </div>
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="d2" data-g="dash"><span class="txt"><b>Aug 11–20 · $300</b><small>Job: pays the car loan + insurance on the 21st. Weeknight dinner rushes, ~$60 a night × 5.</small></span><span class="num in">$300</span></label>
+  </div>
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="d3" data-g="dash"><span class="txt"><b>Aug 22–31 · $200</b><small>Job: builds the cushion you carry into September. Two light weekends.</small></span><span class="num in">$200</span></label>
+  </div>
+  <div class="card gold">
+    <label class="row"><input type="checkbox" data-k="d4" data-g="dash"><span class="txt"><b>Sep 1–4 · $250</b><small>Job: makes the $1,510 Flex payment land clean. Highest-stakes window in the plan.</small></span><span class="num in">$250</span></label>
+  </div>
+
+  <h3>How to make the hours count</h3>
+  <div class="rule"><b>Run both apps at once</b>DoorDash and Uber Eats open together. Accept whichever offer pays better per mile, decline the rest. This alone is worth 20–30% more per hour than single-apping.</div>
+  <div class="rule"><b>Only work the rushes</b>11–2 and 5–9. The dead hours between them cost you gas and give you nothing. Go home, do laundry, come back.</div>
+  <div class="rule"><b>Cash out every night</b>Instant Pay and Fast Pay cost about $1.99. When money has a deadline, same-day beats free.</div>
+  <div class="rule"><b>Stop at the number</b>When the window's target is hit, go home. Burning yourself out in week one is how week three gets skipped.</div>
+  <div class="rule"><b>Track gas as a real cost</b>Roughly 20% of what you gross goes back into the tank. The targets above are already net — they're what should land in the account.</div>
+</section>
+
+<!-- ============ IF IT BREAKS ============ -->
+<section class="panel" id="break">
+  <h2>If it breaks</h2>
+  <p class="lede">Things will go sideways. That's not failure — it's Tuesday. Here's what to do instead of reaching for an app.</p>
+
+  <div class="rule"><b>Timberline refuses partial payments</b>Don't pay anything Monday. Hold all of it and pay the full $2,049.14 on Wednesday Aug 12 when child support lands. Two days late on a notice, paid in full, with a documented phone call — landlords almost never file on that. Call them Monday to tell them the date so it's on record.</div>
+
+  <div class="rule"><b>A child support deposit doesn't land</b>Do not borrow to cover it. Push a bill instead, in this order: car storage → Amscot → credit card minimums → light bill. Utilities and the car loan hold. Then add one dash shift to the next window.</div>
+
+  <div class="rule"><b>The dash target comes up short</b>Take it out of the September cushion window, not out of rent or living money. Being $100 short in August is survivable; being $100 short on Sept 5 breaks Flex.</div>
+
+  <div class="rule"><b>A kid emergency hits</b>Use the living money for the week and eat simple. That's what it's there for. If it's over $150 — that is a genuine emergency and the overdraft exists. One draw, written on the calendar, repaid next payday. Never an advance.</div>
+
+  <div class="rule"><b>You miss the Flex Sept 5 payment</b>Call Flex the same day, before they draft. Ask what a late payment does to the account and whether the date can move. Don't let it silently fail — Flex reporting a default is what would take October's option away.</div>
+
+  <div class="rule"><b>You're tempted by an advance</b>Open Door 3 in the fork tab and read the Aug 21 line. That's not a lecture, it's arithmetic. Then check whether the thing you're covering can wait 48 hours for the next deposit. It almost always can.</div>
+
+  <div class="callout"><b>The one rule underneath all of it:</b> living money and rent money don't borrow from each other. Everything else on this page is negotiable.</div>
+</section>
+
+<!-- ============ LOOPHOLES ============ -->
+<section class="panel" id="loop">
+  <h2>Loopholes worth trying</h2>
+  <p class="lede">Free money and free time, ranked by what actually moves the needle for you. Most of these are one phone call or one online form.</p>
+
+  <div class="prog"><div class="top"><span>Tried so far</span><span data-count="loop">0 of 0</span></div><div class="bar"><i data-fill="loop"></i></div></div>
+
+  <h3>Do these this week</h3>
+
+  <div class="card gold">
+    <label class="row"><input type="checkbox" data-k="l1" data-g="loop"><span class="txt"><b>Free &amp; reduced school lunch — apply Monday</b><small>Household of six on your income almost certainly qualifies. Three kids packing lunch is real grocery money every single week, and it applies retroactively once approved. Osceola County schools take it online — do it the first day.</small></span><span class="num in">~$120/mo</span></label>
+  </div>
+
+  <div class="card gold">
+    <label class="row"><input type="checkbox" data-k="l2" data-g="loop"><span class="txt"><b>Amscot 60-day grace period</b><small>Florida law. No extra fee. You must tell them <em>before</em> the due date and complete a credit counseling session during the grace. Ask for it by name.</small></span><span class="num in">$120</span></label>
+  </div>
+
+  <div class="card gold">
+    <label class="row"><input type="checkbox" data-k="l3" data-g="loop"><span class="txt"><b>Ask Timberline to waive the late fee</b><small>Your notice reads $2,049.14 — less than the $2,200 you expected. Ask what's included and whether they'll drop any late fee if it's paid in full by the 12th. Worst answer is no.</small></span><span class="num in">up to $150</span></label>
+  </div>
+
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="l4" data-g="loop"><span class="txt"><b>SNAP — reapply or check your case</b><small>Six in the household changes the math a lot. Even a partial benefit replaces the grocery half of your $150/week. Apply through MyACCESS Florida.</small></span><span class="num in">varies</span></label>
+  </div>
+
+  <h3>Cut the fixed bills</h3>
+
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="l5" data-g="loop"><span class="txt"><b>Car insurance — call and restructure</b><small>Ask about a payment plan, a higher deductible, and whether comprehensive/collision still makes sense given what the car's worth. $220/mo is your second-biggest bill after rent and it's the most negotiable one on the list.</small></span><span class="num in">$40–80/mo</span></label>
+  </div>
+
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="l6" data-g="loop"><span class="txt"><b>Light bill — budget billing + LIHEAP</b><small>Budget billing flattens the summer spike into one predictable number. LIHEAP is utility-specific assistance, separate from the rental program you already used — being turned down for rent help doesn't disqualify you here.</small></span><span class="num in">$50–200</span></label>
+  </div>
+
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="l7" data-g="loop"><span class="txt"><b>Cell phone — Lifeline discount</b><small>Federal program, income-based. If you qualify for SNAP or Medicaid you generally qualify here. Your carrier can tell you in one call.</small></span><span class="num in">up to $9.25/mo</span></label>
+  </div>
+
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="l8" data-g="loop"><span class="txt"><b>Klarna — reschedule, don't miss</b><small>Klarna lets you push a payment date in-app, usually free, before it's late. Moving the Aug 14 eBay payment past the 21st buys you $54 in the tightest week.</small></span><span class="num in">$54 timing</span></label>
+  </div>
+
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="l9" data-g="loop"><span class="txt"><b>Car storage — is it still needed?</b><small>$100/month for a vehicle that isn't earning. Worth asking whether that spend still makes sense, or whether that car should be the thing that gets sold.</small></span><span class="num in">$100/mo</span></label>
+  </div>
+
+  <h3>Bigger levers, longer fuse</h3>
+
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="l10" data-g="loop"><span class="txt"><b>The CR-V decision</b><small>~$19K owed on ~$11K of value, and it's an open-ended monthly obligation tied to someone who's already not showing up in court. Selling or refinancing it is the single largest structural change available to you — bigger than any month of dashing. Not a this-week task, but it belongs on the November list.</small></span><span class="num hold">$580/mo</span></label>
+  </div>
+
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="l11" data-g="loop"><span class="txt"><b>Default judgment in the small claims case</b><small>$3,670 plus $388.63 in costs. He's missed both the pretrial and mediation. Once the mediator's report lands, file. A judgment isn't cash in hand, but it's the only line on this page that could pay a whole month of rent at once.</small></span><span class="num hold">$4,058.63</span></label>
+  </div>
+
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="l12" data-g="loop"><span class="txt"><b>DoorDash Peak Pay + challenges</b><small>Check the promos tab before every shift. Peak Pay zones and weekly challenges can add 15–25% for the same hours you were already going to work. Free money for reading a screen.</small></span><span class="num in">15–25%</span></label>
+  </div>
+
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="l13" data-g="loop"><span class="txt"><b>Notary and process server work</b><small>You already hold the credentials. A single loan signing pays what four hours of dashing pays, and it's on your own schedule. Worth listing yourself on the signing-agent platforms during a slow week.</small></span><span class="num in">$75–150/job</span></label>
+  </div>
+
+  <div class="card">
+    <label class="row"><input type="checkbox" data-k="l14" data-g="loop"><span class="txt"><b>Check your W-4 and dependents</b><small>Six dependents and this income means the Earned Income Credit is likely significant. Worth confirming you're claiming everyone correctly — and that January refund is a real number to plan around, not a surprise.</small></span><span class="num hold">January</span></label>
+  </div>
+
+  <div class="callout"><b>If you only do four:</b> school lunch, Amscot grace, the late-fee ask, and car insurance. Together those are worth roughly $300–450 a month — more than the entire Sept 1–4 dash window, for about an hour of phone calls.</div>
+</section>
+
+<!-- ============ IDEAL ============ -->
+<section class="panel" id="ideal">
+  <h2>The no-fall-off plan</h2>
+  <p class="lede">This is the original Full Money Blueprint — what August through December looked like before the notice. It isn't dead. It's the road you rejoin, and September is the on-ramp.</p>
+
+  <div class="callout"><b>Why it fell off:</b> the blueprint assumed August rent got funded from the Aug 7 and Aug 21 paychecks. What actually happened is that the Aug 7 check landed on a $540 overdraft and a $360 advance — so it arrived as $200 instead of $1,100. That's a $900 hole in a plan with no slack. Nothing about the blueprint was wrong. It just had no shock absorber.</div>
+
+  <h3>What the original targeted</h3>
+  <div class="card">
+    <div class="row"><span class="txt">End of August<small>Rent paid, savings started</small></span><span class="num hold">$194.85</span></div>
+    <div class="row"><span class="txt">End of September</span><span class="num hold">$635.22</span></div>
+    <div class="row"><span class="txt">End of October<small>Three paychecks — the build month</small></span><span class="num hold">$2,407.11</span></div>
+    <div class="row"><span class="txt">Nov 1 · rent paid ON TIME 🎉</span><span class="num in">the goal</span></div>
+    <div class="row"><span class="txt">End of December</span><span class="num hold">$4,577.11</span></div>
+  </div>
+
+  <h3>Where rescue mode actually lands you</h3>
+  <div class="card win">
+    <div class="row"><span class="txt">End of August<small>vs $194.85 planned</small></span><span class="num in">$362.17</span></div>
+    <div class="row"><span class="txt">End of September<small>vs $635.22 planned</small></span><span class="num in">$1,197.54</span></div>
+    <div class="row"><span class="txt">Difference<small>Because Flex splits September across two paychecks instead of one</small></span><span class="num in">+$562 ahead</span></div>
+  </div>
+
+  <div class="callout"><b>Read that again.</b> If you hold this plan, you don't just recover — you end September <em>ahead</em> of where the original blueprint had you. Flex is the shock absorber the first plan was missing. The November on-time target is still live.</div>
+
+  <h3>The three rules that carry forward</h3>
+  <div class="rule"><b>Rent money lives where there's no card</b>Child support lands in the RENT account. No debit card on it. You can't overspend what you can't swipe.</div>
+  <div class="rule"><b>$150 a week, every week</b>Groceries and gas. Protected in both directions — rent doesn't take it, and it doesn't take from rent.</div>
+  <div class="rule"><b>DoorDash is the engine, not the emergency</b>In August and September it closes real gaps. From November on, it's pure cushion. That's the difference between surviving and being ahead.</div>
+
+  <button class="reset" id="reset">Clear all check marks</button>
+</section>
+
+</div>
+
+<footer>♛ J E M P I R E · # R U B I A X O L I N D A ♛</footer>
+
+<script>
+(function(){
+  var KEY='jempire_rent_rescue_v1';
+  var state={};
+  try{ state=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ state={}; }
+
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){} }
+
+  var boxes=[].slice.call(document.querySelectorAll('input[type=checkbox][data-k]'));
+
+  function paint(cb){
+    var row=cb.closest('.row');
+    if(row) row.classList.toggle('done',cb.checked);
+  }
+
+  function tallies(){
+    var groups={};
+    boxes.forEach(function(cb){
+      var g=cb.dataset.g; if(!g) return;
+      groups[g]=groups[g]||{n:0,d:0};
+      groups[g].n++;
+      if(cb.checked) groups[g].d++;
+    });
+    Object.keys(groups).forEach(function(g){
+      var c=document.querySelector('[data-count="'+g+'"]');
+      var f=document.querySelector('[data-fill="'+g+'"]');
+      if(c) c.textContent=groups[g].d+' of '+groups[g].n;
+      if(f) f.style.width=(groups[g].n?(groups[g].d/groups[g].n*100):0)+'%';
+    });
+  }
+
+  boxes.forEach(function(cb){
+    if(state[cb.dataset.k]) cb.checked=true;
+    paint(cb);
+    cb.addEventListener('change',function(){
+      state[cb.dataset.k]=cb.checked;
+      if(!cb.checked) delete state[cb.dataset.k];
+      save(); paint(cb); tallies();
+    });
+  });
+  tallies();
+
+  // tabs
+  var tabs=[].slice.call(document.querySelectorAll('.tab'));
+  var panels=[].slice.call(document.querySelectorAll('.panel'));
+  function show(id){
+    tabs.forEach(function(t){ t.setAttribute('aria-selected', t.dataset.p===id ? 'true':'false'); });
+    panels.forEach(function(p){ p.classList.toggle('on', p.id===id); });
+    try{ localStorage.setItem(KEY+'_tab',id); }catch(e){}
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  tabs.forEach(function(t){ t.addEventListener('click',function(){ show(t.dataset.p); }); });
+  try{
+    var last=localStorage.getItem(KEY+'_tab');
+    if(last && document.getElementById(last)) show(last);
+  }catch(e){}
+
+  document.getElementById('reset').addEventListener('click',function(){
+    if(!confirm('Clear every check mark? This cannot be undone.')) return;
+    state={}; save();
+    boxes.forEach(function(cb){ cb.checked=false; paint(cb); });
+    tallies();
+  });
+})();
+
+/* ===== LIVE CALCULATOR ===== */
+(function(){
+  var NK='jempire_rescue_nums_v1';
+  var F=['i_bal','i_dash','i_live','i_od','i_rent','i_cs1','i_cs2','i_pay','i_car'];
+  var D={i_bal:200,i_dash:0,i_live:150,i_od:1000,i_rent:2049.14,i_cs1:320,i_cs2:500,i_pay:1100,i_car:0};
+  var N={},odType='cash';
+  try{var s=JSON.parse(localStorage.getItem(NK)||'{}');N=s.n||{};odType=s.od||'cash';}catch(e){}
+
+  function el(id){return document.getElementById(id);}
+  if(!el('i_bal'))return;
+
+  function stamp(){
+    var d=new Date();
+    var hh=d.getHours(),mm=('0'+d.getMinutes()).slice(-2),ap=hh<12?'AM':'PM';
+    hh=hh%12; if(hh===0)hh=12;
+    return hh+':'+mm+' '+ap;
+  }
+  function saveN(announce){
+    try{
+      localStorage.setItem(NK,JSON.stringify({n:N,od:odType,at:stamp()}));
+      var m=el('saveMsg'),dt=el('saveDot');
+      if(m) m.textContent='Saved at '+stamp();
+      if(dt&&announce){dt.classList.remove('flash');void dt.offsetWidth;dt.classList.add('flash');}
+    }catch(e){
+      var m2=el('saveMsg'); if(m2) m2.textContent='Could not save on this device';
+    }
+  }
+  function markEdited(){
+    F.forEach(function(id){
+      var e=el(id);
+      var changed = N[id]!==undefined && parseFloat(N[id])!==D[id];
+      e.classList.toggle('edited',!!changed);
+    });
+  }
+  function money(v){
+    var neg=v<0; v=Math.abs(v);
+    var s=v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+    if(s.slice(-3)==='.00')s=s.slice(0,-3);
+    return (neg?'\u2212$':'$')+s;
+  }
+  function val(id){var v=parseFloat(el(id).value);return isNaN(v)?0:v;}
+
+  F.forEach(function(id){
+    if(N[id]!==undefined) el(id).value=N[id];
+    el(id).addEventListener('input',function(){N[id]=el(id).value;saveN(true);markEdited();calc();});
+  });
+  document.querySelectorAll('.pre button').forEach(function(b){
+    b.addEventListener('click',function(){
+      var t=el(b.dataset.t); t.value=b.dataset.v; N[b.dataset.t]=b.dataset.v; saveN(true); markEdited(); calc();
+    });
+  });
+  document.querySelectorAll('#odseg button').forEach(function(b){
+    b.addEventListener('click',function(){
+      odType=b.dataset.od;
+      document.querySelectorAll('#odseg button').forEach(function(x){x.classList.toggle('on',x.dataset.od===odType);});
+      saveN(true); calc();
+    });
+  });
+  document.querySelectorAll('#odseg button').forEach(function(x){x.classList.toggle('on',x.dataset.od===odType);});
+  el('saveBtn').addEventListener('click',function(){saveN(true);markEdited();});
+
+  function calc(){
+    var bal=val('i_bal'), dash=val('i_dash'), live=val('i_live'),
+        od=val('i_od'), rent=val('i_rent'), cs1=val('i_cs1'),
+        cs2=val('i_cs2'), pay=val('i_pay'), car=val('i_car');
+
+    var odUse = odType==='none' ? 0 : od;
+    var have = bal + dash + cs1 + cs2 + odUse - live - car;
+    var gap = rent - have;
+
+    var rows=[];
+    rows.push(['In the account today','',bal,false]);
+    if(dash>0) rows.push(['Dashed so far','',dash,true]);
+    rows.push(['Child support \u00b7 Tuesday Aug 11','',cs1,false]);
+    rows.push(['Child support \u00b7 biweekly, week of Aug 10','',cs2,false]);
+    if(odUse>0) rows.push(['Overdraft draw','repaid Aug 21',odUse,false]);
+    else rows.push(['Overdraft','not available',0,false]);
+    rows.push(['Less living money','protected',-live,false]);
+    if(car>0) rows.push(['Less your share of the CR-V','comes out of rent money',-car,false]);
+
+    var html='';
+    rows.forEach(function(r){
+      html+='<tr'+(r[3]?' class="new"':'')+'><td'+(r[3]?' class="b"':'')+'>'+r[0]+
+        (r[1]?'<span class="w"> \u2014 '+r[1]+'</span>':'')+'</td><td class="a'+(r[3]?' b':'')+'">'+money(r[2])+'</td></tr>';
+    });
+    html+='<tr class="tot"><td>Available by Wed Aug 12</td><td class="a">'+money(have)+'</td></tr>';
+    html+='<tr class="tot"><td>Rent owed \u00b7 no partials accepted</td><td class="a">'+money(rent)+'</td></tr>';
+    el('calcTable').innerHTML=html;
+
+    var box=el('verdictBox'); box.className='verdict-box';
+    var pct=Math.max(0,Math.min(100,have/rent*100));
+    el('vBar').style.width=pct+'%';
+    el('vHave').textContent=money(have)+' ready';
+    el('vNeed').textContent=Math.round(pct)+'% of rent';
+
+    if(gap<=0){
+      box.classList.add('ok');
+      el('vHead').textContent='Rent is covered by Wednesday.';
+      el('vSub').textContent='Pay the full '+money(rent)+' in one transaction on Aug 12. You would have '+money(-gap)+' left standing afterward.';
+      el('calcNote').innerHTML='No further dashing required for rent. Anything you earn from here goes toward the car loan and insurance on the 21st.';
+    } else if(gap<=450){
+      el('vHead').textContent='Short '+money(gap)+' for Wednesday.';
+      el('vSub').textContent='That is a reachable weekend number. Hit it and you pay in full on the 12th, two days past the notice.';
+      el('calcNote').innerHTML='You need <b>'+money(gap)+'</b> more before Wednesday. Everything else on this page already exists or arrives on its own.';
+    } else {
+      box.classList.add('warn');
+      el('vHead').textContent='Wednesday is not reachable \u2014 short '+money(gap)+'.';
+      el('vSub').textContent='Switch to Plan B: hold every dollar and pay the full amount on Friday Aug 21 when the paycheck lands. Call them Monday and give them that date in writing.';
+      var by21 = have + pay + cs1 + cs2 - live;
+      el('calcNote').innerHTML='By <b>Aug 21</b> you would have roughly <b>'+money(by21)+'</b> against '+money(rent)+
+        (by21>=rent?' \u2014 enough to clear it in full.':' \u2014 still short '+money(rent-by21)+', so dashing has to close that.');
+    }
+
+    var on=el('odnote');
+    if(odType==='cash'){
+      on.innerHTML='<b>Best case.</b> You can move it however they take payment. Draw it Wednesday, the same day you pay \u2014 never sooner, so it cannot sit and get spent.';
+    } else if(odType==='card'){
+      on.innerHTML='<b>Still workable</b> if Summer Cove accepts debit card or online payment. Pay the rent directly with the card and let the account go negative. Ask whether they add a card fee. If they only take cash, check, or money order, treat this as unavailable.';
+    } else {
+      on.innerHTML='<b>Plan B.</b> Rent moves to Friday Aug 21. You end August with the same money either way \u2014 what you lose is nine days of cover. Monday\u2019s phone call becomes the thing protecting you.';
+    }
+  }
+
+  el('resetNums').addEventListener('click',function(){
+    if(!confirm('Reset every number back to the defaults?'))return;
+    N={};odType='cash';saveN(true);
+    F.forEach(function(id){el(id).value=D[id];});
+    markEdited();
+    document.querySelectorAll('#odseg button').forEach(function(x){x.classList.toggle('on',x.dataset.od==='cash');});
+    calc();
+  });
+
+  try{
+    var st=JSON.parse(localStorage.getItem(NK)||'{}');
+    if(st.at && el('saveMsg')) el('saveMsg').textContent='Saved at '+st.at;
+  }catch(e){}
+  markEdited();
+  calc();
+})();
+
+</script>
+</body>
+</html>
